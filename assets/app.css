@@ -9,6 +9,21 @@
 }
 
 /*
+ * Native widgets (scrollbars, form controls) follow the visitor's light/dark preference. Without this
+ * declaration browsers draw light scrollbars even on a dark page.
+ */
+:root {
+  color-scheme: light dark;
+}
+
+/* Code blocks are always dark, so their scrollbars must be dark in both themes. */
+.prose pre {
+  color-scheme: dark;
+  scrollbar-width: thin;
+  scrollbar-color: #52525b #27272a; /* thumb, track */
+}
+
+/*
  * Syntax highlighting for fenced code blocks. The class names are Pygments' (see src/docx86/highlight.py).
  * Code blocks are always dark (prose-pre:bg-zinc-900), so one palette serves the light and dark themes.
  * Every colour has at least 5.5:1 contrast on zinc-900.

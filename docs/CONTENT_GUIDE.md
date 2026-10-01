@@ -126,6 +126,10 @@ they are the biggest lever on search quality.
   noun that are specific to the instruction ("multiply by 3, 5 or 9 in one instruction", "count a loop down to zero").
 - **Cover the instruction's most common job explicitly.** OR initially had phrases for masks and flags but none for the
   commonest request, setting a single bit, so it lost that query to unrelated pages.
+- **Write the phrase the way people ask, and keep the words they naturally use.** POPCNT lost its own best query
+  ("how many 1s are in this number") to CMP's "which of two numbers is bigger" by 0.001 after a clean-up removed the word
+  "number" from its phrases; adding "count the 1 bits in a number" fixed it. Scores within about 0.01 are a tie, so a
+  page needs a phrase that is clearly closer, not merely similar.
 - **Re-run `make eval` after adding a page.** A new page can steal queries from older ones; if `hit@1` drops, rewrite the
   new page's phrases (not the old ones) first. To compare candidate phrases, embed them and look at their similarity to the
   queries they should and should not win; do not tune against the eval until it passes by memorising it.

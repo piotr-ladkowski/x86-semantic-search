@@ -1,0 +1,5 @@
+shl_by(3,4)=48 fill=aaaaXXX copy=hello mulhi=1 divmod=-3,-1 sum_array=10 vendor_len=12
+add3=6 sum7=28 keep_rbx=9 frame_demo=1234
+partial: 0000000000000001 ffffffffffff0001 00000000ffffffff
+strings: strlen=5,0 equal=1,0,1 overlap_fwd=ababab overlap_back=ababcd qwords=123
+answer = 42

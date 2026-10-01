@@ -59,6 +59,14 @@ be applied.
 | Pure synonyms (`SAL` = `SHL`) | **Alias**, not a page | Same opcode. `/instructions/sal` redirects to `/instructions/shl`. |
 | Instructions with a legacy and a 64-bit name (`CBW`/`CWDE`/`CDQE`, `CWD`/`CDQ`/`CQO`) | One page named after the **64-bit** form | Long mode is the point of v1. |
 
+## Articles may go beyond instructions
+
+The instruction scope above limits *instruction pages* and the roster. Articles may also cover what people need around
+those instructions: the special roles of registers, calling conventions (System V on Linux, Microsoft x64 on Windows),
+and assembling, linking and running NASM programs on both systems. They do not count toward instruction progress, and
+the rule for them is verification, not roster membership: see "Articles about tools, operating systems and ABIs" in
+`CONTENT_GUIDE.md`.
+
 ## Open decisions (owner input needed)
 
 These live in `content/roster.yaml` under `deferred`. They are **not** counted in progress.
@@ -81,6 +89,11 @@ at ring 3 in 64-bit mode").
 - Authority: **Intel(R) 64 and IA-32 Architectures Software Developer's Manual, combined volumes**,
   revision recorded in `content/roster.yaml` (`sdm_revision`, currently `325462-093`). Download it as
   described in `README.md`; the PDF is git-ignored and is **not** shipped in the image.
+- **Secondary source, for topics the SDM does not cover** (assemblers, operating systems, calling
+  conventions): the Wikibooks book *x86 Assembly* (`docs/wikibooks_x86.html`, CC BY-SA, git-ignored, read with
+  `docx86 wiki ...`). It is mostly 32-bit and informal, so it is a map of what to check, not an authority: verify
+  64-bit and ABI claims by running a real toolchain or against the primary ABI documents, and cite the section in
+  `extra_sources`. Never copy its text (the share-alike licence would attach to ours).
 - Page text must be **original summaries**. Do not paste or closely paraphrase SDM prose, and do not
   reproduce its pseudocode. Opcode bytes, mnemonics, operand shapes and flag effects are facts and are fine.
 - Any claim that is not in the SDM (compiler behaviour, microarchitecture folklore) must be named in the

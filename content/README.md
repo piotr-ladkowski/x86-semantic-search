@@ -2,53 +2,53 @@
 
 # Content progress
 
-Roster against Intel SDM `325462-093`. **4 / 102** instruction pages written (0 reviewed, 4 draft). `draft` = written and checked against the SDM by an LLM; `reviewed` = a human has checked it. To add a page, follow [docs/CONTENT_GUIDE.md](../docs/CONTENT_GUIDE.md).
+Roster against Intel SDM `325462-093`. **32 / 102** instruction pages written (0 reviewed, 32 draft). `draft` = written and checked against the SDM by an LLM; `reviewed` = a human has checked it. To add a page, follow [docs/CONTENT_GUIDE.md](../docs/CONTENT_GUIDE.md).
 
-## Data transfer (0/13)
+## Data transfer (6/13)
 
-- [ ] `MOV` (`mov`) — todo
-- [ ] `MOVZX` (`movzx`) — todo
-- [ ] `MOVSX` (`movsx`) — todo
+- [x] [`MOV`](instructions/mov.md) — draft
+- [x] [`MOVZX`](instructions/movzx.md) — draft
+- [x] [`MOVSX`](instructions/movsx.md) — draft
 - [ ] `CMOVCC` (`cmovcc`) — todo
-- [ ] `XCHG` (`xchg`) — todo
+- [x] [`XCHG`](instructions/xchg.md) — draft
 - [ ] `BSWAP` (`bswap`) — todo
 - [ ] `XADD` (`xadd`) — todo
 - [ ] `CMPXCHG` (`cmpxchg`) — todo
 - [ ] `CMPXCHG16B` (`cmpxchg16b`) — todo
-- [ ] `PUSH` (`push`) — todo
-- [ ] `POP` (`pop`) — todo
+- [x] [`PUSH`](instructions/push.md) — draft
+- [x] [`POP`](instructions/pop.md) — draft
 - [ ] `CDQE` (`cdqe`) — todo
 - [ ] `CQO` (`cqo`) — todo
 
-## Binary arithmetic (1/14)
+## Binary arithmetic (10/14)
 
 - [x] [`ADD`](instructions/add.md) — draft
 - [ ] `ADC` (`adc`) — todo
 - [ ] `ADCX` (`adcx`) — todo
 - [ ] `ADOX` (`adox`) — todo
-- [ ] `SUB` (`sub`) — todo
+- [x] [`SUB`](instructions/sub.md) — draft
 - [ ] `SBB` (`sbb`) — todo
-- [ ] `IMUL` (`imul`) — todo
-- [ ] `MUL` (`mul`) — todo
-- [ ] `IDIV` (`idiv`) — todo
-- [ ] `DIV` (`div`) — todo
-- [ ] `INC` (`inc`) — todo
-- [ ] `DEC` (`dec`) — todo
-- [ ] `NEG` (`neg`) — todo
-- [ ] `CMP` (`cmp`) — todo
+- [x] [`IMUL`](instructions/imul.md) — draft
+- [x] [`MUL`](instructions/mul.md) — draft
+- [x] [`IDIV`](instructions/idiv.md) — draft
+- [x] [`DIV`](instructions/div.md) — draft
+- [x] [`INC`](instructions/inc.md) — draft
+- [x] [`DEC`](instructions/dec.md) — draft
+- [x] [`NEG`](instructions/neg.md) — draft
+- [x] [`CMP`](instructions/cmp.md) — draft
 
-## Logical (1/4)
+## Logical (4/4)
 
-- [ ] `AND` (`and`) — todo
-- [ ] `OR` (`or`) — todo
+- [x] [`AND`](instructions/and.md) — draft
+- [x] [`OR`](instructions/or.md) — draft
 - [x] [`XOR`](instructions/xor.md) — draft
-- [ ] `NOT` (`not`) — todo
+- [x] [`NOT`](instructions/not.md) — draft
 
-## Shift & rotate (0/9)
+## Shift & rotate (3/9)
 
-- [ ] `SHL` (`shl`) — todo
-- [ ] `SHR` (`shr`) — todo
-- [ ] `SAR` (`sar`) — todo
+- [x] [`SHL`](instructions/shl.md) — draft
+- [x] [`SHR`](instructions/shr.md) — draft
+- [x] [`SAR`](instructions/sar.md) — draft
 - [ ] `SHLD` (`shld`) — todo
 - [ ] `SHRD` (`shrd`) — todo
 - [ ] `ROL` (`rol`) — todo
@@ -56,7 +56,7 @@ Roster against Intel SDM `325462-093`. **4 / 102** instruction pages written (0 
 - [ ] `RCL` (`rcl`) — todo
 - [ ] `RCR` (`rcr`) — todo
 
-## Bit & byte (1/10)
+## Bit & byte (2/10)
 
 - [ ] `BT` (`bt`) — todo
 - [ ] `BTS` (`bts`) — todo
@@ -65,29 +65,29 @@ Roster against Intel SDM `325462-093`. **4 / 102** instruction pages written (0 
 - [ ] `BSF` (`bsf`) — todo
 - [ ] `BSR` (`bsr`) — todo
 - [ ] `SETCC` (`setcc`) — todo
-- [ ] `TEST` (`test`) — todo
+- [x] [`TEST`](instructions/test.md) — draft
 - [ ] `CRC32` (`crc32`) — todo
 - [x] [`POPCNT`](instructions/popcnt.md) — draft
 
-## Control transfer (0/8)
+## Control transfer (2/8)
 
 - [ ] `JMP` (`jmp`) — todo
-- [ ] `JCC` (`jcc`) — todo
+- [x] [`JCC`](instructions/jcc.md) — draft
 - [ ] `CALL` (`call`) — todo
 - [ ] `RET` (`ret`) — todo
-- [ ] `LOOP` (`loop`) — todo
+- [x] [`LOOP`](instructions/loop.md) — draft
 - [ ] `INT` (`int`) — todo
 - [ ] `ENTER` (`enter`) — todo
 - [ ] `LEAVE` (`leave`) — todo
 
-## String (0/6)
+## String (3/6)
 
-- [ ] `MOVS` (`movs`) — todo
+- [x] [`MOVS`](instructions/movs.md) — draft
 - [ ] `CMPS` (`cmps`) — todo
 - [ ] `SCAS` (`scas`) — todo
 - [ ] `LODS` (`lods`) — todo
-- [ ] `STOS` (`stos`) — todo
-- [ ] `REP` (`rep`) — todo
+- [x] [`STOS`](instructions/stos.md) — draft
+- [x] [`REP`](instructions/rep.md) — draft
 
 ## Flag control (0/9)
 
@@ -101,10 +101,10 @@ Roster against Intel SDM `325462-093`. **4 / 102** instruction pages written (0 
 - [ ] `PUSHF` (`pushf`) — todo
 - [ ] `POPF` (`popf`) — todo
 
-## Miscellaneous (1/12)
+## Miscellaneous (2/12)
 
 - [x] [`LEA`](instructions/lea.md) — draft
-- [ ] `NOP` (`nop`) — todo
+- [x] [`NOP`](instructions/nop.md) — draft
 - [ ] `UD2` (`ud2`) — todo
 - [ ] `XLAT` (`xlat`) — todo
 - [ ] `CPUID` (`cpuid`) — todo
@@ -141,7 +141,16 @@ Roster against Intel SDM `325462-093`. **4 / 102** instruction pages written (0 
 
 ## Articles
 
+- [Calling convention on Windows: the Microsoft x64 ABI](articles/abi-microsoft-x64-windows.md) — draft
+- [Calling convention on Linux: the System V AMD64 ABI](articles/abi-system-v-linux.md) — draft
+- [Assemble, link and run a NASM program on Linux](articles/nasm-linux.md) — draft
+- [Assemble, link and run a NASM program on Windows](articles/nasm-windows.md) — draft
 - [Why writing EAX clears the top half of RAX](articles/partial-register-writes.md) — draft
+- [RAX and RDX: the registers multiplication, division and sign extension insist on](articles/rax-rdx-implicit-operands.md) — draft
+- [RCX: the count register, and what ECX and CL can do that no other register can](articles/rcx-count-register.md) — draft
+- [The 16 general-purpose registers and what each one is for](articles/registers-cheat-sheet.md) — draft
+- [RSI and RDI: the pointer registers behind the string instructions](articles/rsi-rdi-string-registers.md) — draft
+- [RSP and RBP: the stack pointer and the frame pointer](articles/rsp-rbp-stack-and-frame.md) — draft
 
 ## Deferred (decision pending, not counted above)
 

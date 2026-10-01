@@ -23,6 +23,7 @@ make test       # pytest (hash embedder; no model/network)
 uv run pytest tests/test_search.py::test_semantic_ranking   # a single test
 make validate   # uv run docx86 validate   (add --sdm to check roster titles against the PDF)
 make progress   # regenerate README progress block + content/README.md (never hand-edit them)
+make verify-asm # assemble + run the articles' example programs in Docker (tests/asm; Windows ones under Wine)
 make index      # embed content/ -> index/   (needed when search-relevant text changed)
 make eval       # real-model search regression check (content/eval.yaml); downloads the model once
 make fmt        # ruff fix + format
@@ -31,6 +32,9 @@ make image IMAGE=... TAG=...    # docker build; manifests in deploy/k8s (kustomi
 
 On NixOS, `uv run`/`make` may fail with `ImportError: libstdc++.so.6` (numpy's extension can't find it):
 `export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH` first. Details in README.md under Development.
+
+Wikibooks lookup (needs `docs/wikibooks_x86.html`, a secondary source for assemblers, OS and ABI topics only):
+`uv run docx86 wiki find|show|grep <text>`. Never copy its prose (CC BY-SA); cite the section in `extra_sources`.
 
 SDM lookup (needs `docs/docs.x86.pdf`; download command is in README.md):
 `uv run docx86 sdm find <text>` lists matching entries with PDF pages;
@@ -56,6 +60,10 @@ The schema in `src/docx86/models.py` is the content contract; `tests/test_docs.p
   requirement must be checked against the SDM text via `docx86 sdm show`. Anything not in the SDM goes in
   `extra_sources` or is cut.
 - **Never paste or closely paraphrase SDM prose or pseudocode** (copyright). Write original summaries.
+- **Code in articles must be tested.** Any `nasm` listing of 5+ lines in an article has to exist in `tests/asm/` (run
+  `make verify-asm`); `make test` enforces it. Conventions and tooling claims need a primary source or a real run, not
+  just Wikibooks. State what was *not* run (for example real Windows).
+- **Label code fences** (```` ```nasm ````, ```` ```bash ````): they are highlighted on the server by `highlight.py`; colours are rules in `assets/app.css` (run `make css`), and a test fails if content uses a token class that has no rule.
 - **Authors write `status: draft`.** Only a human sets `reviewed`.
 - **Generated files:** `content/README.md`, the block between `<!-- progress:start/end -->` in `README.md`,
   `index/`, `src/docx86/static/app.css`. Regenerate with `make progress` / `make index` / `make css`.

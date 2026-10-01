@@ -20,7 +20,7 @@ search_phrases:
   - count the number of set bits
   - population count
   - hamming weight
-  - count ones in a register
+  - count the ones in a bit pattern
   - number of 1 bits in a bitmask
   - hamming distance between two values
 related: [lzcnt, tzcnt, bsf, bsr, xor]

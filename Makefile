@@ -3,7 +3,7 @@ IMAGE ?= docx86
 TAG   ?= 0.1.0
 
 .DEFAULT_GOAL := help
-.PHONY: help setup css index validate progress test eval lint fmt check dev image
+.PHONY: help setup css index validate progress test eval verify-asm lint fmt check dev image
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-10s %s\n", $$1, $$2}'
@@ -29,6 +29,10 @@ test: ## Run the test suite (no model download needed)
 
 eval: index ## Search-quality check with the real model (downloads it once)
 	uv run docx86 eval
+
+verify-asm: ## Assemble and run the articles' example programs (needs Docker; Windows ones run under Wine)
+	docker build -q -t docx86-asm-toolchain tests/asm
+	docker run --rm -v $(CURDIR)/tests/asm:/work:ro docx86-asm-toolchain sh /work/run.sh
 
 lint: ## Ruff lint + format check
 	uv run ruff check .

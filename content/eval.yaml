@@ -4,7 +4,8 @@
 # Rules for adding entries (see docs/CONTENT_GUIDE.md):
 #   * Write 2-3 per new page, phrased the way a *user* would ask.
 #   * Do NOT copy a page's `search_phrases`; a verbatim copy always scores ~1.0 and tests nothing.
-#   * `expect` must be a slug in roster.yaml. The check passes if it is in the top 3 instruction results.
+#   * `expect` must be a slug in roster.yaml (or, with `kind: article`, an article slug). The check passes if it is
+#     in the top 3 results of that kind.
 queries:
   - {query: "how many 1s are in this number", expect: popcnt}
   - {query: "which bits differ between two values", expect: xor}
@@ -14,3 +15,50 @@ queries:
   - {query: "get pointer to a global without a memory access", expect: lea}
   - {query: "sum of two integers", expect: add}
   - {query: "carry flag after addition", expect: add}
+  # batch 2: foundations
+  - {query: "copy rbx into rax", expect: mov}
+  - {query: "put the number 42 in a register", expect: mov}
+  - {query: "save rbx before calling a function", expect: push}
+  - {query: "get back the value I saved on the stack", expect: pop}
+  - {query: "subtract two integers", expect: sub}
+  - {query: "is rax greater than rbx", expect: cmp}
+  - {query: "check if rcx is zero", expect: test}
+  - {query: "is bit 3 set in this flags value", expect: test}
+  - {query: "keep only the low byte of a value", expect: and}
+  - {query: "align a pointer down to a 16-byte boundary", expect: and}
+  - {query: "turn on bit 5 in a register", expect: or}
+  - {query: "reverse all the bits of a number", expect: not}
+  - {query: "step an index by one but keep the carry", expect: inc}
+  - {query: "count down a loop register", expect: dec}
+  - {query: "turn 5 into -5", expect: neg}
+  # batch 3: multiply, divide, shift, widen, swap
+  - {query: "multiply two 64-bit numbers and keep the full 128-bit result", expect: mul}
+  - {query: "multiply a register by a constant", expect: imul}
+  - {query: "divide a negative number by a positive one", expect: idiv}
+  - {query: "what is the remainder after dividing", expect: div}
+  - {query: "shift a register left by three", expect: shl}
+  - {query: "divide an unsigned value by eight with a shift", expect: shr}
+  - {query: "shift right but keep the negative sign", expect: sar}
+  - {query: "convert an unsigned char to a larger integer", expect: movzx}
+  - {query: "extend a negative 32-bit integer to 64 bits", expect: movsx}
+  - {query: "swap rax and rbx", expect: xchg}
+  - {query: "insert filler bytes so the next function is aligned", expect: nop}
+  # batch 4: loops and conditional jumps
+  - {query: "execute some code a fixed number of times using the counter register", expect: loop}
+  - {query: "go to a label when one number is smaller than another", expect: jcc}
+  - {query: "skip this code when the zero flag is set", expect: jcc}
+  # articles (kind: article) -- written the way a person would ask, not copied from search_phrases
+  - {query: "why does the shift count have to be in cl", kind: article, expect: rcx-count-register}
+  - {query: "which register receives the high half of a multiplication", kind: article, expect: rax-rdx-implicit-operands}
+  - {query: "which argument registers does linux use for function calls", kind: article, expect: abi-system-v-linux}
+  - {query: "what is the 32 byte home area the caller reserves on windows", kind: article, expect: abi-microsoft-x64-windows}
+  - {query: "how do I build a nasm program on linux", kind: article, expect: nasm-linux}
+  - {query: "how do I build a nasm program on windows", kind: article, expect: nasm-windows}
+  - {query: "which pointers do the string instructions use", kind: article, expect: rsi-rdi-string-registers}
+  - {query: "what is a stack frame and what is rbp for", kind: article, expect: rsp-rbp-stack-and-frame}
+  - {query: "which registers are special and why", kind: article, expect: registers-cheat-sheet}
+  # batch 5: string instructions
+  - {query: "copy the memory at rsi to the address in rdi", expect: movs}
+  - {query: "fill an array with the same value quickly", expect: stos}
+  - {query: "find the length of a zero-terminated string", expect: rep}
+  - {query: "repeat one instruction until the counter register is zero", expect: rep}

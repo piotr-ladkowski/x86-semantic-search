@@ -43,7 +43,7 @@ done. Never hand-edit generated files (`content/README.md`, the progress block i
    valid in 64-bit mode, CPUID requirement, faults). Do not write from memory. If a claim is not in the SDM,
    either cut it or cite where it comes from in `extra_sources`.
 7. **Add 2-3 lines to `content/eval.yaml`** with queries phrased as a user would, not copied from your
-   `search_phrases`.
+   `search_phrases`. For an article add `kind: article` to the line and `expect` the article's slug.
 8. **Run the gate:**
    ```bash
    make validate    # schema, cross-references, roster consistency
@@ -105,6 +105,7 @@ Style rules:
 - Write for a competent programmer who does not know this instruction. Be concrete: name registers and values.
 - Use backticks for mnemonics, registers and flags in running text. Lowercase mnemonics in code, uppercase in prose headings.
 - Do not use raw HTML (it is escaped). Tables and lists are fine.
+- **Label every code fence** so it is coloured: ```` ```nasm ```` for x86 assembly (Intel syntax; `asm` is treated as the same), ```` ```bash ```` for shell commands, ```` ```bat ```` for Windows command lines. An unlabelled fence stays plain, which suits program output.
 - Keep it small: the whole body should fit on one screen or two. If a page needs more, it is probably two instructions.
 - Do not put a "See also" section in the body; use `related`.
 
@@ -118,6 +119,16 @@ they are the biggest lever on search quality.
 - Cover distinct intents and the common synonyms or other names (`population count`, `hamming weight`).
 - Be specific. A phrase that fits several instructions (`multiply`, `compare two values`) pulls the wrong
   page; say what is different (`multiply and keep the full 128-bit result`).
+- **Avoid generic filler and bare digits.** The embedding model treats the *shape* of a short sentence as much as its
+  content, so a phrase like "put a 64-bit number in a register" or "multiply a register by 3, 5 or 9" attracts every query
+  shaped like "... a register" or containing a digit, whatever they are about. Measured when the first 16 pages were
+  written: such phrases pulled "turn on bit 5 in a register" to MOV and "turn 5 into -5" to LEA. Lead with the verb and
+  noun that are specific to the instruction ("multiply by 3, 5 or 9 in one instruction", "count a loop down to zero").
+- **Cover the instruction's most common job explicitly.** OR initially had phrases for masks and flags but none for the
+  commonest request, setting a single bit, so it lost that query to unrelated pages.
+- **Re-run `make eval` after adding a page.** A new page can steal queries from older ones; if `hit@1` drops, rewrite the
+  new page's phrases (not the old ones) first. To compare candidate phrases, embed them and look at their similarity to the
+  queries they should and should not win; do not tune against the eval until it passes by memorising it.
 - Never include the mnemonic alone: exact mnemonic and alias lookups are handled separately and win automatically.
 - Do not copy phrases into `content/eval.yaml`: that file must test *unseen* wording.
 
@@ -128,6 +139,28 @@ example "why writing EAX clears the top half of RAX"). Fields: `slug`, `title`, 
 `tags`, `status`, `related_instructions` (roster slugs), `sdm_refs` (volume/section/PDF pages you verified
 against), `extra_sources`, `search_phrases`. The body is free-form Markdown with no H1; `##` headings are
 fine. The same accuracy and no-copying rules apply. Articles never count toward instruction progress.
+
+### Articles about tools, operating systems and ABIs
+
+Topics such as assemblers, linking, calling conventions and register roles are outside the SDM, so the usual
+"verify against the SDM" step is replaced by a stricter one. Everything in such an article must come from one of:
+
+1. **The SDM**, for what a register or instruction does (list the entries in `sdm_refs`).
+2. **A primary document**, for conventions: the System V AMD64 ABI, Microsoft's x64 documentation. Cite the section
+   in `extra_sources`.
+3. **Running a real toolchain.** Every command and every listing of five or more lines must have been executed.
+4. **The Wikibooks book** (`uv run docx86 wiki find|show|grep`) only as a *map*: it is largely 32-bit and informal.
+   Cite the section in `extra_sources`, never copy its prose (CC BY-SA), and re-check anything 64-bit.
+
+Rules for code in articles:
+
+- **Put each long listing in `tests/asm/` and run `make verify-asm`.** The runner (Docker: NASM, GCC, MinGW-w64, Wine)
+  assembles, links and runs every program there and compares the output with `expected_*.txt`. Windows programs run
+  under Wine, so say plainly in the article that they were not run on real Windows.
+- `tests/test_asm_examples.py` (part of `make test`) fails if an article contains a `nasm` listing of five or more
+  code lines that is not present in `tests/asm/`. Comments may differ; code may not.
+- Commands you could not run (for example `link.exe`) must be labelled as not run in the article itself.
+- State tool versions that were tested in `extra_sources`.
 
 ## Reviewing a page (for humans)
 

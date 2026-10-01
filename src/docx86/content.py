@@ -13,11 +13,18 @@ import yaml
 from markdown_it import MarkdownIt
 from pydantic import ValidationError
 
+from .highlight import highlight_code
 from .models import Article, ArticleMeta, Instruction, InstructionMeta, Roster
 
 REQUIRED_SECTIONS = ("What it does", "When to use it", "Gotchas", "Example")
 
-_md = MarkdownIt("commonmark", {"html": False}).enable("table")
+
+def _highlight_fence(code: str, lang: str, _attrs: str) -> str:
+    return highlight_code(code, lang)
+
+
+# Raw HTML in Markdown stays disabled; highlighted code is produced (and escaped) by Pygments.
+_md = MarkdownIt("commonmark", {"html": False, "highlight": _highlight_fence}).enable("table")
 
 
 class ContentError(Exception):

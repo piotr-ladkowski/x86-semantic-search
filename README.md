@@ -16,19 +16,19 @@ trace service name).
 ## Progress
 
 <!-- progress:start -->
-**Instructions documented: 4 / 102 (4%)** · reviewed: 0 · draft: 4 · articles: 1
+**Instructions documented: 32 / 102 (31%)** · reviewed: 0 · draft: 32 · articles: 10
 
 | Category | Documented | Total | Reviewed |
 |---|---:|---:|---:|
-| Data transfer | 0 | 13 | 0 |
-| Binary arithmetic | 1 | 14 | 0 |
-| Logical | 1 | 4 | 0 |
-| Shift & rotate | 0 | 9 | 0 |
-| Bit & byte | 1 | 10 | 0 |
-| Control transfer | 0 | 8 | 0 |
-| String | 0 | 6 | 0 |
+| Data transfer | 6 | 13 | 0 |
+| Binary arithmetic | 10 | 14 | 0 |
+| Logical | 4 | 4 | 0 |
+| Shift & rotate | 3 | 9 | 0 |
+| Bit & byte | 2 | 10 | 0 |
+| Control transfer | 2 | 8 | 0 |
+| String | 3 | 6 | 0 |
 | Flag control | 0 | 9 | 0 |
-| Miscellaneous | 1 | 12 | 0 |
+| Miscellaneous | 2 | 12 | 0 |
 | Random number | 0 | 2 | 0 |
 | BMI1 / BMI2 | 0 | 15 | 0 |
 
@@ -52,10 +52,17 @@ The docs are written to be read by LLMs as well as people. Start with `CLAUDE.md
 Download the documentation for local llm access
 ```bash
 wget https://cdrdv2-public.intel.com/929349/325462-093-sdm-vol-1-2abcd-3abcd-4.pdf -O ./docs/docs.x86.pdf
+wget https://en.wikibooks.org/wiki/X86_Assembly/Print_Version -O ./docs/wikibooks_x86.html
 ```
 
-The PDF is git-ignored (`*.x86.pdf`) and is only used while authoring content; it is not needed to
-run or test the app, and it is not shipped in the container image.
+A second, secondary reference covers what the SDM does not: assemblers, operating systems and calling
+conventions (it is the "x86 Assembly" Wikibooks book, CC BY-SA):
+```bash
+wget https://en.wikibooks.org/wiki/X86_Assembly/Print_Version -O ./docs/wikibooks_x86.html
+```
+
+Both downloads are git-ignored and only used while authoring content; they are not needed to run or test
+the app, and they are not shipped in the container image.
 
 Requirements: [uv](https://docs.astral.sh/uv/) (Python 3.12+), Node 20+ (Tailwind build only), and
 Docker/kubectl for deployment.
@@ -65,6 +72,7 @@ make setup     # uv sync + npm ci
 make dev       # build CSS, then run http://localhost:8000 with reload (downloads the embedding model once)
 make test      # pytest
 make check     # lint + tests + content validation + progress freshness (run before committing)
+make verify-asm  # (Docker) assemble and run the example programs used in the articles
 ```
 
 **NixOS:** if `uv run`/`make` fails with `ImportError: libstdc++.so.6: cannot open shared object file`,
@@ -80,6 +88,14 @@ Looking up an instruction in the SDM while writing content:
 ```bash
 uv run docx86 sdm find popcnt       # -> "1694-1696  POPCNT—Return the Count of Number of Bits Set to 1"
 uv run docx86 sdm show popcnt       # prints those PDF pages as text
+```
+
+Looking up a topic in the Wikibooks book (section titles, or text inside sections):
+
+```bash
+uv run docx86 wiki find nasm                    # section titles containing "nasm"
+uv run docx86 wiki show "Hello World (Linux)"   # print a section
+uv run docx86 wiki grep "System V"              # which sections mention a phrase
 ```
 
 ## Container and Kubernetes

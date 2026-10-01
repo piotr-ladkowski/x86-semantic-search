@@ -20,11 +20,12 @@ forms:
   - {syntax: "ADD RAX, imm32", opcode: "REX.W + 05 id", note: "Short encoding for the accumulator."}
 search_phrases:
   - add two numbers
-  - add a constant to a register
+  - add an immediate to a register
   - integer addition
   - sum two registers
   - add to a value in memory
   - detect carry or overflow when adding
+  - what the carry flag means after an addition
 related: [adc, sub, inc, lea, xadd, lock]
 ---
 

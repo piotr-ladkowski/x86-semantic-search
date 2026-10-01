@@ -18,10 +18,10 @@ forms:
 search_phrases:
   - calculate an address without loading from memory
   - get the address of a variable
-  - multiply a register by 3, 5 or 9
-  - add registers without changing flags
+  - get a pointer to a global or a label
+  - multiply by 3, 5 or 9 in one instruction
+  - add two registers without changing the flags
   - pointer arithmetic
-  - load the address of a label relative to rip
 related: [mov, add, shl, imul]
 ---
 

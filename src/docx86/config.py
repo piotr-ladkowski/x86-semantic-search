@@ -31,6 +31,8 @@ class Settings(BaseSettings):
 
     # Local copy of the Intel SDM, used only by `docx86 sdm ...` while authoring content.
     sdm_pdf: Path = PROJECT_ROOT / "docs" / "docs.x86.pdf"
+    # Local copy of the Wikibooks x86 Assembly print version, used only by `docx86 wiki ...`.
+    wikibooks_html: Path = PROJECT_ROOT / "docs" / "wikibooks_x86.html"
 
     # Tracing itself is configured with the standard OTEL_* variables (docs/ARCHITECTURE.md). By
     # default spans carry no search text and no client address; this opts in to both.

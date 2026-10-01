@@ -7,3 +7,52 @@
 @theme {
   --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
 }
+
+/*
+ * Syntax highlighting for fenced code blocks. The class names are Pygments' (see src/docx86/highlight.py).
+ * Code blocks are always dark (prose-pre:bg-zinc-900), so one palette serves the light and dark themes.
+ * Every colour has at least 5.5:1 contrast on zinc-900.
+ *   nf instruction   nb register   mi/mh number   s string   nl label   k* directive/size   c* comment
+ * Classes with no rule are deliberately plain: w (whitespace) and nv (symbol names).
+ * tests/test_highlight.py fails if content produces a class that is not styled here.
+ */
+.prose pre code .c,
+.prose pre code .c1,
+.prose pre code .cm,
+.prose pre code .cs,
+.prose pre code .ch,
+.prose pre code .cp,
+.prose pre code .cpf {
+  color: #8b949e;
+  font-style: italic;
+}
+.prose pre code .nf { color: #ff7b72; }
+.prose pre code .nb { color: #ffa657; }
+.prose pre code .m,
+.prose pre code .mi,
+.prose pre code .mh,
+.prose pre code .mb,
+.prose pre code .mo,
+.prose pre code .mf { color: #79c0ff; }
+.prose pre code .s,
+.prose pre code .s1,
+.prose pre code .s2,
+.prose pre code .sa,
+.prose pre code .sb,
+.prose pre code .sc,
+.prose pre code .sd,
+.prose pre code .se,
+.prose pre code .sh,
+.prose pre code .si,
+.prose pre code .sx { color: #a5d6ff; }
+.prose pre code .nl { color: #d2a8ff; }
+.prose pre code .k,
+.prose pre code .kc,
+.prose pre code .kd,
+.prose pre code .kn,
+.prose pre code .kp,
+.prose pre code .kr,
+.prose pre code .kt { color: #7ee787; }
+.prose pre code .o,
+.prose pre code .ow,
+.prose pre code .p { color: #a1a1aa; }

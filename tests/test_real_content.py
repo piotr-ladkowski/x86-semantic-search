@@ -35,7 +35,11 @@ def test_eval_queries_point_at_roster_slugs(real):
 
     data = yaml.safe_load((PROJECT_ROOT / "content" / "eval.yaml").read_text())
     planned = {e.slug for e in real.roster.instructions}
-    assert all(q["expect"] in planned for q in data["queries"])
+    for q in data["queries"]:
+        if q.get("kind", "instruction") == "article":
+            assert q["expect"] in real.articles, q
+        else:
+            assert q["expect"] in planned, q
 
 
 @pytest.mark.skipif(not get_settings().sdm_pdf.exists(), reason="SDM PDF not downloaded")
@@ -46,3 +50,21 @@ def test_roster_sdm_titles_exist_in_pdf(real):
     titles = {e.title for e in sdm.load_entries(s.sdm_pdf, Path(PROJECT_ROOT) / ".cache")}
     missing = [t for r in real.roster.instructions for t in r.sdm if t not in titles]
     assert not missing
+
+
+def test_internal_links_in_content_resolve(real):
+    """A link to /instructions/x or /articles/x must point at a page that exists.
+
+    Planned-but-unwritten instructions belong in `related:` (the UI skips those), not in links.
+    """
+    import re
+
+    broken = []
+    for owner, items in (("instruction", real.instructions), ("article", real.articles)):
+        for slug, item in items.items():
+            for m in re.finditer(r"\]\(/(instructions|articles)/([a-z0-9-]+)\)", item.body_md):
+                kind, target = m.groups()
+                pool = real.instructions if kind == "instructions" else real.articles
+                if target not in pool:
+                    broken.append(f"{owner} {slug}: /{kind}/{target}")
+    assert not broken, "broken internal links:\n" + "\n".join(broken)

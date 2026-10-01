@@ -35,6 +35,8 @@ brute-force cosine similarity over an in-memory `numpy` matrix is exact and take
 | `web.py` / `api.py` | HTML routes / JSON routes under `/api`. Handlers are sync `def`, so FastAPI runs them in its threadpool and embedding does not block the event loop. |
 | `progress.py` | Generates the README progress block and `content/README.md` from roster + pages. |
 | `sdm.py` | Authoring aid: maps instruction mnemonics to page ranges of the local SDM PDF using its bookmark outline. Not imported by the web app. |
+| `highlight.py` | Server-side syntax highlighting of fenced code blocks with Pygments (no JavaScript). Corrects the NASM lexer for prefixes (`rep movsb`) and directives (`equ`); the colours are CSS rules in `assets/app.css`, and `tests/test_highlight.py` fails if content produces a token class with no rule. |
+| `wikibooks.py` | Authoring aid like `sdm.py`: parses the Wikibooks book into sections so authors can look up assembler, OS and ABI topics (`docx86 wiki ...`). stdlib only; not imported by the web app. |
 | `telemetry.py` | OpenTelemetry tracing: builds the tracer provider from `OTEL_*` env, scrubs user data from spans, and returns the `telemetry=` config for FastAPI. See *Observability*. |
 | `cli.py` | `docx86 validate | build-index | progress | eval | sdm`. |
 | `templates/`, `static/` | Jinja2 templates; Tailwind output `static/app.css` (built, git-ignored). |
@@ -66,7 +68,7 @@ calibrating a threshold with `content/eval.yaml` plus negative examples.
   CPU-only, ~9 ms per query in a 1-CPU container. Model and `model_name` are configurable, but changing the
   model requires rebuilding the index (the index records the embedder id and the app refuses a mismatch).
 - **No vector database**: nothing to operate, nothing stateful on Kubernetes, results are exact.
-- **Server-rendered HTML, no JS**: simple, fast, indexable, trivially cacheable. Tailwind is a build-time tool only.
+- **Server-rendered HTML, no JS**: simple, fast, indexable, trivially cacheable. Tailwind is a build-time tool only, and code blocks are coloured on the server with Pygments rather than by a script in the browser.
 - **Index built at image build time**: the image is immutable and self-consistent; content, index and model
   can never drift apart in a running pod.
 
@@ -114,6 +116,7 @@ All settings are environment variables (`src/docx86/config.py`, prefix `DOCX86_`
 | `DOCX86_REBUILD_STALE_INDEX` | `false` | Dev convenience, see above. |
 | `DOCX86_SDM_PDF` | `docs/docs.x86.pdf` | Used only by `docx86 sdm`. |
 | `DOCX86_TRACE_USER_DATA` | `false` | Keep the user's search text in traces (`url.query`, `docx86.search.query`). Off by default; see *Observability*. |
+| `DOCX86_WIKIBOOKS_HTML` | `docs/wikibooks_x86.html` | Used only by `docx86 wiki`. |
 | `DOCX86_LOG_LEVEL` | `INFO` | Python log level. |
 
 Tracing is configured with the standard `OTEL_*` variables instead; see *Observability*.
@@ -241,6 +244,11 @@ The app is stateless, so scaling is just `replicas`. Content changes ship as a n
   (including that the generated progress files are current, and, if the PDF is present, that every roster
   SDM title exists in it).
 - `tests/test_telemetry.py` checks span structure and parentage, `traceparent` continuation, that probes are not traced, the privacy defaults (the query text appears in no span attribute), that only traces are exported, and the `OTEL_*` handling.
+- `make verify-asm`: builds the toolchain image in `tests/asm/Dockerfile` (NASM, binutils, GCC, MinGW-w64, Wine), then
+  assembles, links and runs every example program from the articles and compares the output with `expected_*.txt`
+  (Linux natively, Windows under Wine). Needs Docker and network on first build; not part of `make check`.
+  `tests/test_asm_examples.py` is its fast companion: it checks, without Docker, that long `nasm` listings in articles
+  exist in `tests/asm/`.
 - `make eval`: runs `content/eval.yaml` against the real model; fails if an expected page is outside the top 3.
   With few pages top-3 is a weak bar; tighten it as the corpus grows.
 - `make check` = lint + test + validate + progress freshness. Run it before committing.

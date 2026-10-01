@@ -120,7 +120,7 @@ def cmd_eval(_: argparse.Namespace, settings: Settings) -> int:
     queries = yaml.safe_load((settings.content_dir / "eval.yaml").read_text(encoding="utf-8"))
     top1 = top3 = 0
     for item in queries["queries"]:
-        hits = engine.search(item["query"], kind="instruction", limit=10)
+        hits = engine.search(item["query"], kind=item.get("kind", "instruction"), limit=10)
         slugs = [h.slug for h in hits]
         rank = slugs.index(item["expect"]) + 1 if item["expect"] in slugs else None
         top1 += rank == 1
@@ -130,6 +130,40 @@ def cmd_eval(_: argparse.Namespace, settings: Settings) -> int:
     n = len(queries["queries"])
     print(f"hit@1 {top1}/{n}   hit@3 {top3}/{n}   embedder={embedder.id}")
     return 0 if top3 == n else 1
+
+
+def cmd_wiki(args: argparse.Namespace, settings: Settings) -> int:
+    from . import wikibooks
+
+    sections = wikibooks.load_sections(settings.wikibooks_html, PROJECT_ROOT / ".cache")
+    if args.action == "grep":
+        hits = wikibooks.grep(sections, args.query)
+        for sec, snippet in hits[: args.limit]:
+            print(f"h{sec.level}  {sec.title}\n      ...{snippet}...")
+        if not hits:
+            print(f"No section contains {args.query!r}", file=sys.stderr)
+            return 1
+        print(
+            f"({len(hits)} section(s) match; showing {min(len(hits), args.limit)})", file=sys.stderr
+        )
+        return 0
+    matches = wikibooks.find(sections, args.query)
+    if not matches:
+        print(f"No section title matches {args.query!r} (try `wiki grep`)", file=sys.stderr)
+        return 1
+    if args.action == "find":
+        for sec in matches:
+            print(f"h{sec.level}  {sec.title}  ({len(sec.text)} chars)")
+        return 0
+    exact = [m for m in matches if m.title.lower() == args.query.lower()]
+    chosen = (exact or matches)[0]
+    if len(matches) > 1 and not exact:
+        print("(also matches: " + "; ".join(m.title for m in matches[1:6]) + ")", file=sys.stderr)
+    print(f"# {chosen.title}  (h{chosen.level}, {len(chosen.text)} chars)\n")
+    print(chosen.text[: args.max_chars])
+    if len(chosen.text) > args.max_chars:
+        print(f"\n[... truncated; use --max-chars {len(chosen.text)} for all]", file=sys.stderr)
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -155,6 +189,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("query", help="mnemonic (ADD, POPCNT, SHL) or part of an entry title")
     p.add_argument("--max-pages", type=int, default=6, help="`show`: pages to print (default 6)")
     p.set_defaults(func=cmd_sdm)
+
+    p = sub.add_parser("wiki", help="look up a section of the Wikibooks x86 Assembly print version")
+    p.add_argument("action", choices=["find", "show", "grep"])
+    p.add_argument(
+        "query", help="`find`/`show`: words in a section title; `grep`: text in the body"
+    )
+    p.add_argument("--max-chars", type=int, default=6000, help="`show`: characters to print")
+    p.add_argument("--limit", type=int, default=15, help="`grep`: matches to print")
+    p.set_defaults(func=cmd_wiki)
 
     args = parser.parse_args(argv)
     return args.func(args, get_settings())

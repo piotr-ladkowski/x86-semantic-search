@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge, status_badge, instruction_card %}
+{% block title %}{{ art.title }} &middot; doc/x86{% endblock %}
+{% block description %}{{ art.summary }}{% endblock %}
+{% block content %}
+<article class="mx-auto max-w-3xl">
+  <h1 class="text-3xl font-bold">{{ art.title }}</h1>
+  <div class="mt-2 flex flex-wrap items-center gap-2">
+    {{ status_badge(art) }}
+    {% for t in art.tags %}{{ badge(t) }}{% endfor %}
+  </div>
+  <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300">{{ art.summary }}</p>
+  {% if art.status.value == "draft" %}
+  <p class="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
+    Draft: written with AI assistance and checked against the Intel SDM, but not yet reviewed by a human.
+  </p>
+  {% endif %}
+
+  <div class="prose prose-zinc mt-8 max-w-none dark:prose-invert prose-pre:bg-zinc-900 prose-pre:text-zinc-100 prose-code:before:content-none prose-code:after:content-none">
+    {{ art.body_html | safe }}
+  </div>
+
+  {% if related %}
+  <h2 class="mt-10 text-sm font-semibold uppercase tracking-wide text-zinc-500">Related instructions</h2>
+  <ul class="mt-3 grid gap-3 sm:grid-cols-2">{% for r in related %}<li>{{ instruction_card(r) }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  <p class="mt-10 text-xs text-zinc-500">
+    Source: Intel SDM {{ sdm_revision }}{% if art.sdm_refs %}, {{ art.sdm_refs | join("; ") }}{% endif %}.
+    {% for s in art.extra_sources %}{{ s }} {% endfor %}
+  </p>
+</article>
+{% endblock %}

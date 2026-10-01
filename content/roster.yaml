@@ -1,0 +1,164 @@
+# Scope roster: every instruction page we intend to write for v1.
+# Scope = x86-64 long mode, user-space (ring 3), scalar integer / general-purpose. See docs/SCOPE.md.
+#
+# This file is the denominator for progress tracking and the work queue for authors:
+#   - `instructions`  in scope and counted. An instruction page may only exist for a slug listed here.
+#   - `deferred`      undecided; NOT counted. Needs an owner decision (see docs/SCOPE.md).
+#   - `excluded`      out of scope for v1, with the reason. Do not write pages for these.
+#
+# Entry fields:  slug (= page filename, lowercase), mnemonic (uppercase primary), category (SDM Vol. 1
+# 5.1.x group), sdm (EXACT Vol. 2 outline titles; verify with `uv run docx86 validate --sdm`).
+# One SDM entry may feed several pages when its operations behave differently (SHL/SHR/SAR);
+# condition-code and operand-width families share one page (JCC, SETCC, CMOVCC, MOVS*).
+
+sdm_revision: "325462-093"
+
+instructions:
+  # ---- data-transfer ----
+  - {slug: mov,       mnemonic: MOV,       category: data-transfer, sdm: ["MOV—Move"]}
+  - {slug: movzx,     mnemonic: MOVZX,     category: data-transfer, sdm: ["MOVZX—Move With Zero-Extend"]}
+  - {slug: movsx,     mnemonic: MOVSX,     category: data-transfer, sdm: ["MOVSX/MOVSXD—Move With Sign-Extension"], note: "alias MOVSXD (32->64 sign extension)"}
+  - {slug: cmovcc,    mnemonic: CMOVCC,    category: data-transfer, sdm: ["CMOVcc—Conditional Move"], note: "family page: CMOVE, CMOVNE, CMOVA, ... as aliases"}
+  - {slug: xchg,      mnemonic: XCHG,      category: data-transfer, sdm: ["XCHG—Exchange Register/Memory With Register"]}
+  - {slug: bswap,     mnemonic: BSWAP,     category: data-transfer, sdm: ["BSWAP—Byte Swap"]}
+  - {slug: xadd,      mnemonic: XADD,      category: data-transfer, sdm: ["XADD—Exchange and Add"]}
+  - {slug: cmpxchg,   mnemonic: CMPXCHG,   category: data-transfer, sdm: ["CMPXCHG—Compare and Exchange"]}
+  - {slug: cmpxchg16b, mnemonic: CMPXCHG16B, category: data-transfer, sdm: ["CMPXCHG8B/CMPXCHG16B—Compare and Exchange Bytes"], note: "alias CMPXCHG8B"}
+  - {slug: push,      mnemonic: PUSH,      category: data-transfer, sdm: ["PUSH—Push Word, Doubleword, or Quadword Onto the Stack"]}
+  - {slug: pop,       mnemonic: POP,       category: data-transfer, sdm: ["POP—Pop a Value From the Stack"]}
+  - {slug: cdqe,      mnemonic: CDQE,      category: data-transfer, sdm: ["CBW/CWDE/CDQE—Convert Byte to Word/Convert Word to Doubleword/Convert Doubleword to Quadword"], note: "aliases CBW, CWDE: sign-extend within the accumulator"}
+  - {slug: cqo,       mnemonic: CQO,       category: data-transfer, sdm: ["CWD/CDQ/CQO—Convert Word to Doubleword/Convert Doubleword to Quadword"], note: "aliases CWD, CDQ: sign-extend the accumulator into DX/EDX/RDX (used before IDIV)"}
+
+  # ---- binary-arithmetic ----
+  - {slug: add,  mnemonic: ADD,  category: binary-arithmetic, sdm: ["ADD—Add"]}
+  - {slug: adc,  mnemonic: ADC,  category: binary-arithmetic, sdm: ["ADC—Add With Carry"]}
+  - {slug: adcx, mnemonic: ADCX, category: binary-arithmetic, sdm: ["ADCX—Unsigned Integer Addition of Two Operands With Carry Flag"]}
+  - {slug: adox, mnemonic: ADOX, category: binary-arithmetic, sdm: ["ADOX — Unsigned Integer Addition of Two Operands With Overflow Flag"]}
+  - {slug: sub,  mnemonic: SUB,  category: binary-arithmetic, sdm: ["SUB—Subtract"]}
+  - {slug: sbb,  mnemonic: SBB,  category: binary-arithmetic, sdm: ["SBB—Integer Subtraction With Borrow"]}
+  - {slug: imul, mnemonic: IMUL, category: binary-arithmetic, sdm: ["IMUL—Signed Multiply"]}
+  - {slug: mul,  mnemonic: MUL,  category: binary-arithmetic, sdm: ["MUL—Unsigned Multiply"]}
+  - {slug: idiv, mnemonic: IDIV, category: binary-arithmetic, sdm: ["IDIV—Signed Divide"]}
+  - {slug: div,  mnemonic: DIV,  category: binary-arithmetic, sdm: ["DIV—Unsigned Divide"]}
+  - {slug: inc,  mnemonic: INC,  category: binary-arithmetic, sdm: ["INC—Increment by 1"]}
+  - {slug: dec,  mnemonic: DEC,  category: binary-arithmetic, sdm: ["DEC—Decrement by 1"]}
+  - {slug: neg,  mnemonic: NEG,  category: binary-arithmetic, sdm: ["NEG—Two's Complement Negation"]}
+  - {slug: cmp,  mnemonic: CMP,  category: binary-arithmetic, sdm: ["CMP—Compare Two Operands"]}
+
+  # ---- logical ----
+  - {slug: and, mnemonic: AND, category: logical, sdm: ["AND—Logical AND"]}
+  - {slug: or,  mnemonic: OR,  category: logical, sdm: ["OR—Logical Inclusive OR"]}
+  - {slug: xor, mnemonic: XOR, category: logical, sdm: ["XOR—Logical Exclusive OR"]}
+  - {slug: not, mnemonic: NOT, category: logical, sdm: ["NOT—One's Complement Negation"]}
+
+  # ---- shift-rotate ----
+  - {slug: shl,  mnemonic: SHL,  category: shift-rotate, sdm: ["SAL/SAR/SHL/SHR—Shift"], note: "alias SAL"}
+  - {slug: shr,  mnemonic: SHR,  category: shift-rotate, sdm: ["SAL/SAR/SHL/SHR—Shift"]}
+  - {slug: sar,  mnemonic: SAR,  category: shift-rotate, sdm: ["SAL/SAR/SHL/SHR—Shift"]}
+  - {slug: shld, mnemonic: SHLD, category: shift-rotate, sdm: ["SHLD—Double Precision Shift Left"]}
+  - {slug: shrd, mnemonic: SHRD, category: shift-rotate, sdm: ["SHRD—Double Precision Shift Right"]}
+  - {slug: rol,  mnemonic: ROL,  category: shift-rotate, sdm: ["RCL/RCR/ROL/ROR—Rotate"]}
+  - {slug: ror,  mnemonic: ROR,  category: shift-rotate, sdm: ["RCL/RCR/ROL/ROR—Rotate"]}
+  - {slug: rcl,  mnemonic: RCL,  category: shift-rotate, sdm: ["RCL/RCR/ROL/ROR—Rotate"]}
+  - {slug: rcr,  mnemonic: RCR,  category: shift-rotate, sdm: ["RCL/RCR/ROL/ROR—Rotate"]}
+
+  # ---- bit-byte ----
+  - {slug: bt,     mnemonic: BT,     category: bit-byte, sdm: ["BT—Bit Test"]}
+  - {slug: bts,    mnemonic: BTS,    category: bit-byte, sdm: ["BTS—Bit Test and Set"]}
+  - {slug: btr,    mnemonic: BTR,    category: bit-byte, sdm: ["BTR—Bit Test and Reset"]}
+  - {slug: btc,    mnemonic: BTC,    category: bit-byte, sdm: ["BTC—Bit Test and Complement"]}
+  - {slug: bsf,    mnemonic: BSF,    category: bit-byte, sdm: ["BSF—Bit Scan Forward"]}
+  - {slug: bsr,    mnemonic: BSR,    category: bit-byte, sdm: ["BSR—Bit Scan Reverse"]}
+  - {slug: setcc,  mnemonic: SETCC,  category: bit-byte, sdm: ["SETcc—Set Byte on Condition"], note: "family page: SETE, SETNE, SETA, ... as aliases"}
+  - {slug: test,   mnemonic: TEST,   category: bit-byte, sdm: ["TEST—Logical Compare"]}
+  - {slug: crc32,  mnemonic: CRC32,  category: bit-byte, sdm: ["CRC32—Accumulate CRC32 Value"]}
+  - {slug: popcnt, mnemonic: POPCNT, category: bit-byte, sdm: ["POPCNT—Return the Count of Number of Bits Set to 1"]}
+
+  # ---- bmi (BMI1 / BMI2 / LZCNT: scalar, GPR-only, VEX-encoded) ----
+  - {slug: andn,   mnemonic: ANDN,   category: bmi, sdm: ["ANDN—Logical AND NOT"]}
+  - {slug: bextr,  mnemonic: BEXTR,  category: bmi, sdm: ["BEXTR—Bit Field Extract"]}
+  - {slug: blsi,   mnemonic: BLSI,   category: bmi, sdm: ["BLSI—Extract Lowest Set Isolated Bit"]}
+  - {slug: blsmsk, mnemonic: BLSMSK, category: bmi, sdm: ["BLSMSK—Get Mask Up to Lowest Set Bit"]}
+  - {slug: blsr,   mnemonic: BLSR,   category: bmi, sdm: ["BLSR—Reset Lowest Set Bit"]}
+  - {slug: bzhi,   mnemonic: BZHI,   category: bmi, sdm: ["BZHI—Zero High Bits Starting with Specified Bit Position"]}
+  - {slug: lzcnt,  mnemonic: LZCNT,  category: bmi, sdm: ["LZCNT—Count the Number of Leading Zero Bits"]}
+  - {slug: tzcnt,  mnemonic: TZCNT,  category: bmi, sdm: ["TZCNT—Count the Number of Trailing Zero Bits"]}
+  - {slug: mulx,   mnemonic: MULX,   category: bmi, sdm: ["MULX—Unsigned Multiply Without Affecting Flags"]}
+  - {slug: pdep,   mnemonic: PDEP,   category: bmi, sdm: ["PDEP—Parallel Bits Deposit"]}
+  - {slug: pext,   mnemonic: PEXT,   category: bmi, sdm: ["PEXT—Parallel Bits Extract"]}
+  - {slug: rorx,   mnemonic: RORX,   category: bmi, sdm: ["RORX — Rotate Right Logical Without Affecting Flags"]}
+  - {slug: sarx,   mnemonic: SARX,   category: bmi, sdm: ["SARX/SHLX/SHRX—Shift Without Affecting Flags"]}
+  - {slug: shlx,   mnemonic: SHLX,   category: bmi, sdm: ["SARX/SHLX/SHRX—Shift Without Affecting Flags"]}
+  - {slug: shrx,   mnemonic: SHRX,   category: bmi, sdm: ["SARX/SHLX/SHRX—Shift Without Affecting Flags"]}
+
+  # ---- control-transfer ----
+  - {slug: jmp,   mnemonic: JMP,   category: control-transfer, sdm: ["JMP—Jump"]}
+  - {slug: jcc,   mnemonic: JCC,   category: control-transfer, sdm: ["Jcc—Jump if Condition Is Met"], note: "family page: JE, JNE, JA, ... and JRCXZ/JECXZ as aliases"}
+  - {slug: call,  mnemonic: CALL,  category: control-transfer, sdm: ["CALL—Call Procedure"]}
+  - {slug: ret,   mnemonic: RET,   category: control-transfer, sdm: ["RET—Return From Procedure"]}
+  - {slug: loop,  mnemonic: LOOP,  category: control-transfer, sdm: ["LOOP/LOOPcc—Loop According to ECX Counter"], note: "aliases LOOPE, LOOPNE, LOOPZ, LOOPNZ"}
+  - {slug: int,   mnemonic: INT,   category: control-transfer, sdm: ["INT n/INTO/INT3/INT1—Call to Interrupt Procedure"], note: "aliases INT3, INT1; note INTO is invalid in 64-bit mode"}
+  - {slug: enter, mnemonic: ENTER, category: control-transfer, sdm: ["ENTER—Make Stack Frame for Procedure Parameters"]}
+  - {slug: leave, mnemonic: LEAVE, category: control-transfer, sdm: ["LEAVE—High Level Procedure Exit"]}
+
+  # ---- string ----
+  - {slug: movs, mnemonic: MOVS, category: string, sdm: ["MOVS/MOVSB/MOVSW/MOVSD/MOVSQ—Move Data From String to String"], note: "aliases MOVSB/W/D/Q"}
+  - {slug: cmps, mnemonic: CMPS, category: string, sdm: ["CMPS/CMPSB/CMPSW/CMPSD/CMPSQ—Compare String Operands"], note: "aliases CMPSB/W/D/Q"}
+  - {slug: scas, mnemonic: SCAS, category: string, sdm: ["SCAS/SCASB/SCASW/SCASD—Scan String"], note: "aliases SCASB/W/D/Q"}
+  - {slug: lods, mnemonic: LODS, category: string, sdm: ["LODS/LODSB/LODSW/LODSD/LODSQ—Load String"], note: "aliases LODSB/W/D/Q"}
+  - {slug: stos, mnemonic: STOS, category: string, sdm: ["STOS/STOSB/STOSW/STOSD/STOSQ—Store String"], note: "aliases STOSB/W/D/Q"}
+  - {slug: rep,  mnemonic: REP,  category: string, sdm: ["REP—Repeat String Operation (Prefix)", "REPE/REPZ—Repeat String Operation While Zero (Prefix)", "REPNE/REPNZ—Repeat String Operation While Not Zero (Prefix)"], note: "aliases REPE, REPZ, REPNE, REPNZ"}
+
+  # ---- flag-control ----
+  - {slug: stc,   mnemonic: STC,   category: flag-control, sdm: ["STC—Set Carry Flag"]}
+  - {slug: clc,   mnemonic: CLC,   category: flag-control, sdm: ["CLC—Clear Carry Flag"]}
+  - {slug: cmc,   mnemonic: CMC,   category: flag-control, sdm: ["CMC—Complement Carry Flag"]}
+  - {slug: std,   mnemonic: STD,   category: flag-control, sdm: ["STD—Set Direction Flag"]}
+  - {slug: cld,   mnemonic: CLD,   category: flag-control, sdm: ["CLD—Clear Direction Flag"]}
+  - {slug: lahf,  mnemonic: LAHF,  category: flag-control, sdm: ["LAHF—Load Status Flags Into AH Register"], note: "64-bit mode needs CPUID LAHF-SAHF"}
+  - {slug: sahf,  mnemonic: SAHF,  category: flag-control, sdm: ["SAHF—Store AH Into Flags"], note: "64-bit mode needs CPUID LAHF-SAHF"}
+  - {slug: pushf, mnemonic: PUSHF, category: flag-control, sdm: ["PUSHF/PUSHFD/PUSHFQ—Push EFLAGS Register Onto the Stack"], note: "aliases PUSHFQ"}
+  - {slug: popf,  mnemonic: POPF,  category: flag-control, sdm: ["POPF/POPFD/POPFQ—Pop Stack Into EFLAGS Register"], note: "aliases POPFQ; privileged flags are silently ignored at ring 3"}
+
+  # ---- miscellaneous ----
+  - {slug: lea,     mnemonic: LEA,     category: miscellaneous, sdm: ["LEA—Load Effective Address"]}
+  - {slug: nop,     mnemonic: NOP,     category: miscellaneous, sdm: ["NOP—No Operation"]}
+  - {slug: ud2,     mnemonic: UD2,     category: miscellaneous, sdm: ["UD—Undefined Instruction"], note: "aliases UD0, UD1"}
+  - {slug: xlat,    mnemonic: XLAT,    category: miscellaneous, sdm: ["XLAT/XLATB—Table Look-up Translation"], note: "alias XLATB"}
+  - {slug: cpuid,   mnemonic: CPUID,   category: miscellaneous, sdm: ["CPUID—CPU Identification"]}
+  - {slug: movbe,   mnemonic: MOVBE,   category: miscellaneous, sdm: ["MOVBE—Move Data After Swapping Bytes"]}
+  - {slug: pause,   mnemonic: PAUSE,   category: miscellaneous, sdm: ["PAUSE—Spin Loop Hint"]}
+  - {slug: rdtsc,   mnemonic: RDTSC,   category: miscellaneous, sdm: ["RDTSC—Read Time-Stamp Counter"]}
+  - {slug: rdtscp,  mnemonic: RDTSCP,  category: miscellaneous, sdm: ["RDTSCP—Read Time-Stamp Counter and Processor ID"]}
+  - {slug: syscall, mnemonic: SYSCALL, category: miscellaneous, sdm: ["SYSCALL—Fast System Call"]}
+  - {slug: lock,    mnemonic: LOCK,    category: miscellaneous, sdm: ["LOCK—Assert LOCK# Signal Prefix"], note: "prefix; the atomicity story for ADD/XCHG/CMPXCHG..."}
+  - {slug: endbr64, mnemonic: ENDBR64, category: miscellaneous, sdm: ["ENDBR64—Terminate an Indirect Branch in 64-bit Mode"]}
+
+  # ---- random-number ----
+  - {slug: rdrand, mnemonic: RDRAND, category: random-number, sdm: ["RDRAND—Read Random Number"]}
+  - {slug: rdseed, mnemonic: RDSEED, category: random-number, sdm: ["RDSEED—Read Random SEED"]}
+
+# Undecided. Not counted in progress and no pages allowed until promoted into `instructions`.
+deferred:
+  - mnemonics: [LFENCE, MFENCE, SFENCE, PREFETCHh, PREFETCHW, CLFLUSH, CLFLUSHOPT, MOVNTI]
+    reason: "Memory-ordering and cache-control instructions. Usable at ring 3 and GPR/memory based, but not integer arithmetic. Owner decision: does 'general-purpose' scope include them?"
+  - mnemonics: [RDFSBASE, RDGSBASE, WRFSBASE, WRGSBASE]
+    reason: "GPR-only and ring-3 capable, but only if the OS sets CR4.FSGSBASE. Niche; decide with owner."
+  - mnemonics: [XGETBV, RDPID]
+    reason: "Ring-3 feature-detection helpers; borderline 'scalar integer'."
+
+# Out of scope for v1. Reasons are a closed set (see docs/SCOPE.md).
+excluded:
+  - reason: invalid-in-64-bit-mode
+    mnemonics: [AAA, AAS, AAM, AAD, DAA, DAS, PUSHA, PUSHAD, POPA, POPAD, BOUND, LDS, LES, SALC]
+    note: "INTO is also invalid in 64-bit mode; it is only mentioned on the INT page."
+  - reason: privileged
+    mnemonics: [IN, OUT, INS, OUTS, CLI, STI, HLT, IRET, IRETQ, SYSRET, SYSEXIT, RDMSR, WRMSR, LGDT, LIDT, LTR, INVD, WBINVD, CLTS]
+    note: "Representative list. Every system-programming instruction (SDM Vol. 3) is excluded."
+  - reason: segmentation
+    mnemonics: [LFS, LGS, LSS, "MOV Sreg"]
+    note: "Flat segmentation in long mode; revisit only if there is demand."
+  - reason: non-scalar-or-non-integer
+    mnemonics: ["x87 FPU (F*)", MMX, "SSE/SSE2/SSE3/SSSE3/SSE4", "AVX/AVX2/AVX-512", AMX, "vector AES/SHA/GFNI"]
+  - reason: extended-state
+    mnemonics: [XSAVE, XSAVEC, XSAVEOPT, XRSTOR, FXSAVE, FXRSTOR]

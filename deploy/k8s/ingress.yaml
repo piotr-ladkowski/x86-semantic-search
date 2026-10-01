@@ -1,0 +1,24 @@
+# TODO(owner): set your host (and ingressClassName / TLS / annotations for your controller).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: docx86
+  labels:
+    app.kubernetes.io/name: docx86
+    app.kubernetes.io/part-of: docx86
+spec:
+  # ingressClassName: nginx
+  rules:
+    - host: docx86.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: docx86
+                port:
+                  name: http
+  # tls:
+  #   - hosts: [docx86.example.com]
+  #     secretName: docx86-tls

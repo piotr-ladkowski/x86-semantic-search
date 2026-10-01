@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_macros.html" import instruction_card, article_card %}
+{% block title %}{{ q }} &middot; doc/x86{% endblock %}
+{% block content %}
+<h1 class="text-xl font-semibold">Results for &ldquo;{{ q }}&rdquo;</h1>
+
+{% if instructions %}
+<ol class="mt-5 space-y-3">
+  {% for hit, ins in instructions %}
+  <li>{{ instruction_card(ins) }}</li>
+  {% endfor %}
+</ol>
+{% else %}
+<p class="mt-5 text-zinc-600 dark:text-zinc-400">
+  No instruction pages yet. <a href="/instructions" class="underline">Browse what is documented</a>.
+</p>
+{% endif %}
+
+{% if articles %}
+<h2 class="mt-10 text-sm font-semibold uppercase tracking-wide text-zinc-500">Related articles</h2>
+<ul class="mt-3 space-y-3">
+  {% for hit, art in articles %}
+  <li>{{ article_card(art) }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<p class="mt-10 text-xs text-zinc-500">
+  Results are ranked by semantic similarity and can include weak matches &mdash; not every
+  x86-64 instruction is documented yet.
+</p>
+{% endblock %}

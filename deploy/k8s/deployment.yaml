@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docx86
+  labels: &labels
+    app.kubernetes.io/name: docx86
+    app.kubernetes.io/part-of: docx86
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0   # never drop below the desired replica count during a rollout
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: docx86
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      automountServiceAccountToken: false   # the app never talks to the Kubernetes API
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: docx86
+      containers:
+        - name: app
+          image: docx86   # tag/registry are set by `images:` in kustomization.yaml
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: docx86-config
+            # Optional secrets (for example OTEL_EXPORTER_OTLP_HEADERS with an auth token). The pod
+            # starts without it; create it, then `kubectl rollout restart`. See kustomization.yaml.
+            - secretRef:
+                name: docx86-otel
+                optional: true
+          env:
+            # Resource attributes attached to every trace. The Downward API fills the K8S_* variables;
+            # Kubernetes expands $(VAR) from entries listed above it. (`env` wins over `envFrom`, so
+            # keep OTEL_RESOURCE_ATTRIBUTES out of the ConfigMap.)
+            - name: K8S_POD_NAME
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
+            - name: K8S_NAMESPACE
+              valueFrom: {fieldRef: {fieldPath: metadata.namespace}}
+            - name: K8S_NODE_NAME
+              valueFrom: {fieldRef: {fieldPath: spec.nodeName}}
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              # One line, no spaces: not every SDK trims whitespace around the commas.
+              value: "service.namespace=docx86,service.instance.id=$(K8S_POD_NAME),k8s.pod.name=$(K8S_POD_NAME),k8s.namespace.name=$(K8S_NAMESPACE),k8s.node.name=$(K8S_NODE_NAME),k8s.deployment.name=docx86"
+          # Startup loads content, the index and the ONNX model. The pod only becomes Ready once
+          # that succeeds; a stale index crashes the process, which stalls the rollout (old pods
+          # keep serving) instead of shipping a broken version.
+          startupProbe:
+            httpGet: {path: /readyz, port: http}
+            periodSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            httpGet: {path: /readyz, port: http}
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 20
+            timeoutSeconds: 3
+          resources:
+            requests: {cpu: 100m, memory: 320Mi}
+            limits: {cpu: "1", memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "5"]   # let the Service/Ingress stop routing before SIGTERM
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 64Mi

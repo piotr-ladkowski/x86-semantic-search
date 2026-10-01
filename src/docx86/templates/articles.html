@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "_macros.html" import article_card %}
+{% block title %}Articles &middot; doc/x86{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold">Articles</h1>
+<p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Short explainers for ideas that span several instructions.</p>
+<ul class="mt-6 space-y-3">
+  {% for art in articles %}<li>{{ article_card(art) }}</li>
+  {% else %}<li class="text-zinc-600">No articles yet.</li>{% endfor %}
+</ul>
+{% endblock %}

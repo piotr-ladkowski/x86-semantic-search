@@ -1,0 +1,55 @@
+[project]
+name = "docx86"
+version = "0.1.0"
+description = "Semantic search over x86-64 instruction documentation, one small page per instruction."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.142",
+    "uvicorn[standard]>=0.30",
+    "jinja2>=3.1",
+    "pydantic>=2.8",
+    "pydantic-settings>=2.4",
+    "pyyaml>=6.0",
+    "markdown-it-py>=3.0",
+    "numpy>=2.0",
+    "fastembed>=0.7",
+    "opentelemetry-api>=1.45.0",
+    "opentelemetry-sdk>=1.45.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.0",
+]
+
+[project.scripts]
+docx86 = "docx86.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "httpx2",
+    "ruff>=0.6",
+]
+# Only needed to read the Intel SDM PDF while authoring content (`docx86 sdm ...`).
+# Not installed in the container image.
+sdm = [
+    "pymupdf>=1.24",
+]
+
+[tool.uv]
+default-groups = ["dev", "sdm"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/docx86"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

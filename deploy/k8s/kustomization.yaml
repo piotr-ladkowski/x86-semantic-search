@@ -1,0 +1,36 @@
+# Render: kubectl kustomize deploy/k8s      Apply: kubectl apply -k deploy/k8s
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: docx86
+
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - pdb.yaml
+
+# Generated with a content-hash suffix: editing a value here rolls the Deployment automatically.
+# All settings are DOCX86_* env vars (see src/docx86/config.py and docs/ARCHITECTURE.md).
+configMapGenerator:
+  - name: docx86-config
+    literals:
+      - DOCX86_LOG_LEVEL=INFO
+      # ---- Tracing (OpenTelemetry). OFF until an OTLP endpoint is set. ----
+      # TODO(owner): your collector's OTLP/HTTP endpoint (port 4318, not gRPC 4317), then uncomment:
+      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.observability.svc.cluster.local:4318
+      # Auth headers for a hosted backend do NOT belong here: put them in a Secret the Deployment already
+      # reads (optional), values percent-encoded (a space is %20, or the SDK silently drops the header):
+      #   kubectl -n docx86 create secret generic docx86-otel \
+      #     --from-literal=OTEL_EXPORTER_OTLP_HEADERS='authorization=Bearer%20<token>'
+      #   kubectl -n docx86 rollout restart deploy/docx86
+      - OTEL_TRACES_SAMPLER=parentbased_traceidratio   # follow the caller's decision, else ratio below
+      - OTEL_TRACES_SAMPLER_ARG=1.0                    # 1.0 = keep every trace; lower it under load
+      - OTEL_EXPORTER_OTLP_TIMEOUT=5000                # ms; caps how long a dead collector can delay shutdown
+
+# TODO(owner): point this at the registry you push to (`make image IMAGE=... TAG=...`).
+images:
+  - name: docx86
+    newName: docx86
+    newTag: 0.1.0

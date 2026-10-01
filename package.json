@@ -1,0 +1,14 @@
+{
+  "name": "docx86-ui",
+  "private": true,
+  "description": "Tailwind build for the server-rendered UI. The Python app has no runtime Node dependency.",
+  "scripts": {
+    "build:css": "tailwindcss -i assets/app.css -o src/docx86/static/app.css --minify",
+    "watch:css": "tailwindcss -i assets/app.css -o src/docx86/static/app.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "@tailwindcss/typography": "^0.5.16",
+    "tailwindcss": "^4.1.0"
+  }
+}

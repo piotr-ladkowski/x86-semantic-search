@@ -1,0 +1,14 @@
+# Keep the build context small and reproducible. The SDM PDF is for authoring only.
+.git
+.venv
+node_modules
+.cache
+index
+docs
+tests
+deploy
+**/__pycache__
+*.pdf
+.env
+# rebuilt in the css stage
+src/docx86/static/app.css

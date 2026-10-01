@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge %}
+{% block title %}How search works &middot; doc/x86{% endblock %}
+{% block description %}In plain words: how doc/x86 finds the right x86 instruction from a question written in your own words.{% endblock %}
+
+{% block content %}
+<article class="mx-auto max-w-3xl">
+  <h1 class="text-3xl font-bold">How search works</h1>
+  <p class="mt-3 text-lg text-zinc-700 dark:text-zinc-300">
+    You describe what you want in your own words. doc/x86 finds the pages whose <em>meaning</em> is
+    closest to your question, even when they do not use your exact words.
+  </p>
+
+  <div class="prose prose-zinc mt-8 max-w-none dark:prose-invert prose-h2:text-xl prose-h2:scroll-mt-20 prose-code:before:content-none prose-code:after:content-none">
+
+    <h2>The idea: a map of meanings</h2>
+    <p>
+      Imagine a huge map where every sentence gets a pin. Sentences that <strong>mean</strong> similar
+      things land close together, even if they use different words: &ldquo;count the set bits&rdquo;,
+      &ldquo;population count&rdquo; and &ldquo;hamming weight&rdquo; end up in the same
+      neighbourhood, while &ldquo;add two numbers&rdquo; lands somewhere else entirely.
+    </p>
+
+    <figure class="not-prose my-6">
+      <svg viewBox="0 0 640 320" class="h-auto w-full" role="img" aria-labelledby="map-title map-desc">
+        <title id="map-title">A map of meanings</title>
+        <desc id="map-desc">
+          Three neighbourhoods of pins: bit counting, addresses and zeroing a register. A question
+          pin, &ldquo;how many 1s are in this number&rdquo;, sits next to the bit-counting
+          neighbourhood, and a dashed line points to its nearest pin, &ldquo;hamming weight&rdquo;.
+        </desc>
+
+        <!-- neighbourhoods -->
+        <ellipse cx="170" cy="98" rx="135" ry="68" class="fill-indigo-500/10 stroke-indigo-500/30" />
+        <ellipse cx="490" cy="88" rx="110" ry="58" class="fill-indigo-500/10 stroke-indigo-500/30" />
+        <ellipse cx="400" cy="262" rx="115" ry="44" class="fill-indigo-500/10 stroke-indigo-500/30" />
+
+        <!-- bit counting -->
+        <g class="fill-indigo-500">
+          <circle cx="110" cy="80" r="5" /><circle cx="228" cy="92" r="5" /><circle cx="165" cy="124" r="5" />
+        </g>
+        <g class="fill-zinc-700 text-[12px] dark:fill-zinc-300" text-anchor="middle">
+          <text x="110" y="66">count the set bits</text>
+          <text x="228" y="78">population count</text>
+          <text x="152" y="128" text-anchor="end">hamming weight</text>
+        </g>
+
+        <!-- addresses -->
+        <g class="fill-indigo-500">
+          <circle cx="452" cy="72" r="5" /><circle cx="538" cy="106" r="5" />
+        </g>
+        <g class="fill-zinc-700 text-[12px] dark:fill-zinc-300" text-anchor="middle">
+          <text x="452" y="58">address of a variable</text>
+          <text x="538" y="126">pointer arithmetic</text>
+        </g>
+
+        <!-- zeroing -->
+        <g class="fill-indigo-500">
+          <circle cx="360" cy="256" r="5" /><circle cx="448" cy="276" r="5" />
+        </g>
+        <g class="fill-zinc-700 text-[12px] dark:fill-zinc-300" text-anchor="middle">
+          <text x="360" y="242">zero a register</text>
+          <text x="448" y="296">clear a register</text>
+        </g>
+
+        <!-- the question -->
+        <line x1="190" y1="182" x2="168" y2="130" class="stroke-amber-500" stroke-width="2" stroke-dasharray="5 4" />
+        <circle cx="190" cy="182" r="8" class="fill-amber-500" />
+        <g text-anchor="middle" class="text-[12px]">
+          <text x="190" y="206" class="fill-amber-600 font-semibold dark:fill-amber-400">your question</text>
+          <text x="190" y="222" class="fill-zinc-700 dark:fill-zinc-300">&ldquo;how many 1s are in this number&rdquo;</text>
+        </g>
+      </svg>
+      <figcaption class="mt-2 text-sm text-zinc-500">
+        An illustration, simplified to two dimensions. The dashed line points to the nearest pin; the page
+        it belongs to is the top result.
+      </figcaption>
+    </figure>
+
+    <p>
+      Nobody wrote a rule saying those phrases are related. A small AI language model (it is called
+      BGE-small, and it runs on this site&rsquo;s own server) learned it by reading a great deal of text.
+      To give a sentence its pin, the model reads it and answers with a list of <strong>384 numbers</strong>:
+      its coordinates. The real map has 384 directions instead of two, which is impossible to picture, but the
+      idea is identical: nearby coordinates mean similar meaning. Such a list of numbers is called an
+      <em>embedding</em>.
+    </p>
+
+    <h2>Step 1: pin every page, ahead of time</h2>
+    <p>Each page gets several pins, not just one:</p>
+    <ul>
+      <li>one for its summary and explanation, and</li>
+      <li>one for every <em>question people might ask</em> that the page&rsquo;s author wrote down. For example,
+        POPCNT carries &ldquo;count the number of set bits&rdquo; and &ldquo;hamming weight&rdquo;.</li>
+    </ul>
+    <p>
+      Why so many? A short question lands closer to another short question than to a whole paragraph. All of
+      this happens once, when the site is built, and the result is stored. Right now there are
+      <strong>{{ pins }} pins</strong> covering {{ documented }} instruction pages and {{ articles }}
+      article{{ "" if articles == 1 else "s" }}.
+    </p>
+
+    <h2>Step 2: pin your question, then find the neighbours</h2>
+    <p>
+      When you search, the same model turns your question into its own 384 numbers: a new pin. We measure how
+      close that pin is to every stored pin. We really do check all of them; there are few enough that the
+      comparison takes a fraction of a millisecond, and most of the time goes into reading your question.
+      Each page is scored by its <strong>single closest pin</strong>, and pages are listed from closest to
+      farthest.
+    </p>
+    <p>
+      &ldquo;Closeness&rdquo; is the angle between the two lists of numbers (the maths name is <em>cosine
+      similarity</em>): do they point the same way?
+    </p>
+
+    <h2>Two small nudges for exact names</h2>
+    <p>
+      Meaning-based search is good at ideas and surprisingly bad at exact names, so there is a little plain
+      keyword help on top:
+    </p>
+    <ul>
+      <li>If you type a name exactly (<code>popcnt</code>, <code>LEA</code>, <code>xor</code>), that page goes
+        straight to the top. Alternative spellings of the same instruction (such as <code>SAL</code> for
+        <code>SHL</code>) lead to the same page once it is written.</li>
+      <li>If a name appears inside a longer sentence (&ldquo;what does lea do&rdquo;), that page gets a small
+        bonus. It is kept small on purpose, because names like AND, OR and CALL are also ordinary English words.</li>
+    </ul>
+  </div>
+
+  {% if example %}
+  <section class="mt-10">
+    <h2 class="text-xl font-bold">A real search, run just now</h2>
+    <p class="mt-2 text-zinc-700 dark:text-zinc-300">
+      Question: <strong>&ldquo;{{ example_query }}&rdquo;</strong>. Each result shows the pin that was
+      closest to the question, and a closeness score (only used to put results in order; it is not a
+      percentage of &ldquo;correct&rdquo;).
+    </p>
+    <ol class="mt-4 space-y-3">
+      {% for hit, ins in example %}
+      <li class="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+        <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <a href="/instructions/{{ ins.slug }}" class="font-mono text-lg font-bold text-indigo-600 hover:underline dark:text-indigo-400">{{ ins.mnemonic }}</a>
+          <span class="font-medium">{{ ins.title }}</span>
+          <span class="ml-auto font-mono text-sm text-zinc-500">closeness {{ "%.2f" | format(hit.score) }}</span>
+        </div>
+        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+          Closest pin: <span class="italic">&ldquo;{{ (hit.via or "") | replace("\n", " ") | truncate(110) }}&rdquo;</span>
+          {% if hit.match == "mnemonic" %}{{ badge("name match", "indigo") }}{% endif %}
+        </p>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+
+  <div class="prose prose-zinc mt-10 max-w-none dark:prose-invert prose-h2:text-xl prose-code:before:content-none prose-code:after:content-none">
+    <h2>Where it can go wrong</h2>
+    <ul>
+      <li><strong>It always shows its best guess.</strong> There is no &ldquo;nothing found&rdquo; cut-off yet, so a
+        weak match can still appear. If the top result looks unrelated, the instruction you want probably is not
+        written yet ({{ documented }} of {{ total }} planned instruction pages exist) or is out of scope: this site
+        covers x86-64 user-space integer instructions, not SIMD/AVX, floating point or operating-system
+        instructions.</li>
+      <li><strong>The model is small and reads English only.</strong> It captures meaning roughly, and unusual
+        wording can confuse it. Rephrase your question, or try a mnemonic.</li>
+      <li><strong>Finding a page is not the same as the page being right.</strong> Pages are written with AI
+        assistance and checked against the Intel manual (the SDM); those marked <em>draft</em> have not been
+        reviewed by a human yet. For anything that matters, confirm in the SDM.</li>
+      <li><strong>No outside AI service is involved.</strong> The language model runs on this site&rsquo;s own server.</li>
+    </ul>
+    <p>
+      <a href="/">Try a search</a> &middot; <a href="/instructions">Browse all instructions</a>
+    </p>
+  </div>
+</article>
+{% endblock %}

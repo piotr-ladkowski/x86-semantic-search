@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge, status_badge, instruction_card %}
+{% block title %}{{ ins.mnemonic }} &mdash; {{ ins.title }} &middot; doc/x86{% endblock %}
+{% block description %}{{ ins.summary }}{% endblock %}
+
+{% macro flag_row(label, flags, style) %}
+{% if flags %}
+<div class="flex items-center gap-2">
+  <dt class="w-20 shrink-0 text-xs text-zinc-500">{{ label }}</dt>
+  <dd class="flex flex-wrap gap-1">
+    {% for f in flags %}<span class="rounded px-1.5 font-mono text-xs {{ style }}">{{ f }}</span>{% endfor %}
+  </dd>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% block content %}
+<article>
+  <header>
+    <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+      <h1 class="font-mono text-4xl font-bold text-indigo-600 dark:text-indigo-400">{{ ins.mnemonic }}</h1>
+      <span class="text-xl text-zinc-700 dark:text-zinc-300">{{ ins.title }}</span>
+    </div>
+    <div class="mt-2 flex flex-wrap items-center gap-2">
+      {{ badge(ins.category.label) }}
+      {% if ins.cpuid_feature %}{{ badge("CPUID: " ~ ins.cpuid_feature, "indigo") }}{% else %}{{ badge("baseline x86-64") }}{% endif %}
+      {{ status_badge(ins) }}
+      {% if ins.aliases %}<span class="text-sm text-zinc-500">Also: <span class="font-mono">{{ ins.aliases | join(", ") }}</span></span>{% endif %}
+    </div>
+    <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300">{{ ins.summary }}</p>
+    {% if ins.status.value == "draft" %}
+    <p class="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
+      Draft: written with AI assistance and checked against the Intel SDM, but not yet reviewed by a human.
+    </p>
+    {% endif %}
+  </header>
+
+  <div class="mt-8 grid gap-8 lg:grid-cols-3">
+    <div class="prose prose-zinc max-w-none dark:prose-invert lg:col-span-2 prose-headings:scroll-mt-20 prose-h2:text-xl prose-pre:bg-zinc-900 prose-pre:text-zinc-100 prose-code:before:content-none prose-code:after:content-none">
+      {{ ins.body_html | safe }}
+    </div>
+
+    <aside class="space-y-6 lg:col-span-1">
+      <section>
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">Forms (64-bit mode)</h2>
+        <ul class="mt-2 divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white text-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
+          {% for f in ins.forms %}
+          <li class="px-3 py-2">
+            <div class="font-mono font-semibold">{{ f.syntax }}</div>
+            <div class="font-mono text-xs text-zinc-500">{{ f.opcode }}</div>
+            {% if f.note %}<div class="mt-1 text-xs text-zinc-600 dark:text-zinc-400">{{ f.note }}</div>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">Flags</h2>
+        {% if ins.flags.is_empty %}
+        <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">No flags are affected.</p>
+        {% else %}
+        <dl class="mt-2 space-y-1.5">
+          {{ flag_row("Modified", ins.flags.modified, "bg-indigo-600 text-white") }}
+          {{ flag_row("Undefined", ins.flags.undefined, "border border-dashed border-zinc-400 text-zinc-600 dark:text-zinc-400") }}
+          {{ flag_row("Reads", ins.flags.read, "border border-indigo-400 text-indigo-700 dark:text-indigo-300") }}
+        </dl>
+        {% endif %}
+        {% if ins.flags.note %}<p class="mt-2 text-xs text-zinc-600 dark:text-zinc-400">{{ ins.flags.note }}</p>{% endif %}
+      </section>
+
+      {% if related %}
+      <section>
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">See also</h2>
+        <ul class="mt-2 space-y-2">{% for r in related %}<li>{{ instruction_card(r) }}</li>{% endfor %}</ul>
+      </section>
+      {% endif %}
+
+      <section class="text-xs text-zinc-500">
+        <h2 class="font-semibold uppercase tracking-wide">Source</h2>
+        <p class="mt-1">Intel SDM {{ sdm_revision }}, Vol. 2: {{ ins.sdm_entries | join("; ") }}</p>
+        {% for s in ins.extra_sources %}<p class="mt-1">{{ s }}</p>{% endfor %}
+      </section>
+    </aside>
+  </div>
+</article>
+{% endblock %}

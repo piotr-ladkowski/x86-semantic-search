@@ -1,0 +1,16 @@
+# Search-quality regression queries: `make eval` (uses the real embedding model).
+#
+# Each entry says "a person typing `query` should be shown instruction `expect` near the top".
+# Rules for adding entries (see docs/CONTENT_GUIDE.md):
+#   * Write 2-3 per new page, phrased the way a *user* would ask.
+#   * Do NOT copy a page's `search_phrases`; a verbatim copy always scores ~1.0 and tests nothing.
+#   * `expect` must be a slug in roster.yaml. The check passes if it is in the top 3 instruction results.
+queries:
+  - {query: "how many 1s are in this number", expect: popcnt}
+  - {query: "which bits differ between two values", expect: xor}
+  - {query: "reset rax to 0", expect: xor}
+  - {query: "load the address of a variable into a register", expect: lea}
+  - {query: "compute rax times 5 in a single instruction", expect: lea}
+  - {query: "get pointer to a global without a memory access", expect: lea}
+  - {query: "sum of two integers", expect: add}
+  - {query: "carry flag after addition", expect: add}

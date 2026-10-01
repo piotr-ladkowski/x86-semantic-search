@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: docx86
+  labels:
+    app.kubernetes.io/name: docx86
+    app.kubernetes.io/part-of: docx86
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: docx86

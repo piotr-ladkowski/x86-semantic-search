@@ -411,9 +411,9 @@ def _closest(page: PageEvidence, entry: Entry) -> str:
 
 
 def check_page(
-    page: PageEvidence, rep: Report, registry: SourceRegistry | None, root: Path
+    page: PageEvidence, rep: Report, registry: SourceRegistry | None, root: Path | None
 ) -> None:
-    where = page.path.relative_to(root) if page.path.is_relative_to(root) else page.path
+    where = page.path.relative_to(root) if root and page.path.is_relative_to(root) else page.path
     rep.problems += page.load_problems
     if page.load_problems:
         return
@@ -440,7 +440,7 @@ def check_page(
         if e.how == "run":
             if not e.ref:
                 rep.problems.append(f"{label}: how=run needs `ref` (the program that checks it)")
-            elif not (root / e.ref).exists():
+            elif root is not None and not (root / e.ref).exists():
                 rep.problems.append(f"{label}: ref {e.ref!r} does not exist")
         if e.how in ("derived", "external") and not e.note:
             what = "how it follows" if e.how == "derived" else "which source it comes from"
@@ -480,7 +480,9 @@ def _check_support(s: Support, label: str, rep: Report, registry: SourceRegistry
             )
 
 
-def check(store: EvidenceStore, registry: SourceRegistry | None, root: Path) -> Report:
+def check(store: EvidenceStore, registry: SourceRegistry | None, root: Path | None) -> Report:
+    """Check every ledger. `root` is the repository checkout that `run` refs are relative to;
+    None means there is none (the container image build), so refs are not looked up."""
     rep = Report()
     for page in store.pages():
         check_page(page, rep, registry, root)

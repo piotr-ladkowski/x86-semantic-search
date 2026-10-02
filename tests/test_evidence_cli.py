@@ -210,3 +210,11 @@ def test_prune_drops_only_stale_entries(env, capsys):
     assert [e["how"] for e in ledger(env)["claims"]] == ["editorial"]
     assert run(capsys, "check")[0] == 0
     assert "nothing stale" in run(capsys, "prune")[1]
+
+
+def test_check_no_sources_does_not_need_the_files_run_evidence_names(env, capsys):
+    run(capsys, "mark", "popcnt", "1", "--as", "run", "--ref", "tests/asm/missing.asm")
+    code, _, err = run(capsys, "check")
+    assert code == 1 and "tests/asm/missing.asm" in err
+    code, out, _ = run(capsys, "check", "--no-sources")
+    assert code == 0 and out.startswith("OK:")

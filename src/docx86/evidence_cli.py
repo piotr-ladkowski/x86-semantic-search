@@ -315,7 +315,9 @@ def cmd_suggest(args: argparse.Namespace, settings: Settings) -> int:
 
 def cmd_check(args: argparse.Namespace, settings: Settings) -> int:
     _content, store, registry = _setup(settings)
-    rep = ev.check(store, None if args.no_sources else registry, PROJECT_ROOT)
+    rep = ev.check(
+        store, None if args.no_sources else registry, None if args.no_sources else PROJECT_ROOT
+    )
     for line in rep.problems:
         print(line, file=sys.stderr)
     for line in rep.notices:
@@ -412,5 +414,10 @@ def register(sub: argparse._SubParsersAction) -> None:
     a.set_defaults(func=cmd_suggest)
 
     a = actions.add_parser("check", help="validate every ledger (stale claims, bad pointers)")
-    a.add_argument("--no-sources", action="store_true", help="do not look pointers up")
+    a.add_argument(
+        "--no-sources",
+        action="store_true",
+        help="content-only check: do not look pointers up or test that `run` files exist "
+        "(what the image build, which has no documents and no tests/, can do)",
+    )
     a.set_defaults(func=cmd_check)

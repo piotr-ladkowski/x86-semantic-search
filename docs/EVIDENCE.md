@@ -175,7 +175,8 @@ docx86 evidence retarget <slug> <stale-id> <claim>     carry a reworded claim's 
 docx86 evidence prune [slug]           drop the evidence of claims that no longer exist
 docx86 evidence suggest <slug> [--scope doc:pages ...] [--also ...] [--top N] [--write [--min 0.6]]
 docx86 evidence suggest --all --write  every instruction page, SDM pages taken from its sdm_entries
-docx86 evidence check [--no-sources]   validate every ledger; part of `make check`
+docx86 evidence check [--no-sources]   validate every ledger; part of `make check`. --no-sources is the content-only check
+                                       the image build runs: it neither opens documents nor tests that `run` files exist
 ```
 
 `<claim>` is the number shown by `status`/`show`, a claim id, or an id prefix. `--scope` takes

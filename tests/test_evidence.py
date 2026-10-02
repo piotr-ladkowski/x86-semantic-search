@@ -450,3 +450,21 @@ def test_json_form_hides_source_text_unless_the_document_is_present(store, regis
     local = ev.page_to_dict(page, registry)
     passage = local["claims"][0]["support"][0]["passage"]
     assert passage[0] == {"text": "The instruction counts the bits set to 1.", "cited": True}
+
+
+def test_without_a_checkout_run_refs_are_not_looked_up(store, content_dir, root):
+    """The image build has content/ but no tests/: `root=None` must not turn that into problems."""
+    page = popcnt(store)
+    ev.save(
+        page,
+        ev.record(page, [ev.Entry(id=page.claims[0].claim.id, how="run", ref="tests/asm/x.asm")]),
+    )
+    fresh = reload(store, content_dir)
+    assert any("does not exist" in p for p in run_check(fresh, root=root).problems)
+    assert ev.check(fresh, None, None).problems == []  # helper would default a None root
+    (run,) = [v for v in popcnt(fresh).claims if v.state == "run"]
+    assert run.entry.ref == "tests/asm/x.asm"  # still has to name a file
+    page.path.write_text(page.path.read_text().replace("ref: tests/asm/x.asm\n", ""))
+    assert any(
+        "needs `ref`" in p for p in run_check(reload(store, content_dir), root=None).problems
+    )

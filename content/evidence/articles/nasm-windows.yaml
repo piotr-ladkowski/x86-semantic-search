@@ -1,0 +1,177 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 41cf63eac7
+  gist: Assemble with nasm -f win64, link with MinGW-w64 (tested) or Mi…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: aa258306e6
+  gist: Check it with nasm -v.
+  how: run
+  ref: tests/asm/run.sh
+  note: '`nasm -v` is run in the Linux toolchain image; the command is the same on Windows.'
+- id: 7a1ef75451
+  gist: A linker.
+  how: editorial
+  note: Heading for the next statement.
+- id: ae56ba02e6
+  gist: 'Pick one:'
+  how: editorial
+  note: Heading for the next statement.
+- id: 6e161881af
+  gist: MinGW-w64 / MSYS2 gcc (the route tested for this article).
+  how: run
+  ref: tests/asm/run.sh
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+    The cross-compiler is used, not MSYS2 gcc on Windows.
+- id: 08e7bb4281
+  gist: It also supplies the C runtime start-up code.
+  how: run
+  ref: tests/asm/hello_win.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 3d98aa09a3
+  gist: Remember that Windows uses a different calling convention from…
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [f0eb39dfdd, 7dbddec935], part: Calling convention
+      defaults}
+- id: c49d3d6735
+  gist: 'Assemble: nasm -f win64 hello_win.asm -o hello_win.obj.'
+  how: run
+  ref: tests/asm/run.sh
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 485966a7b1
+  gist: -f win64 selects the 64-bit Windows (COFF) object format.
+  how: run
+  ref: tests/asm/run.sh
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+  support:
+  - {doc: wikibooks, at: NASM Syntax, units: [69cbd67295, 11673176f2], part: NASM Syntax}
+- id: a5a27d1d28
+  gist: 'Link: see the two programs below.'
+  how: editorial
+  note: Heading for the next statement.
+- id: 568de20c41
+  gist: Linking through gcc provides the start-up code that calls your…
+  how: run
+  ref: tests/asm/hello_win.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 1cd4664633
+  gist: ; hello_win.asm - Windows x64, uses the C runtime (the CRT star…
+  how: run
+  ref: tests/asm/hello_win.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 1124483aa8
+  gist: nasm -f win64 hello_win.asm -o hello_win.obj gcc hello_win.obj…
+  how: run
+  ref: tests/asm/run.sh
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+    The tested compiler is the cross-compiler spelling.
+- id: 94d88c43a8
+  gist: (The tested build used the cross-compiler spelled x86_64-w64-mi…
+  how: run
+  ref: tests/asm/run.sh
+  note: The cross-compiler spelling is the tested one; that the same command is `gcc` under MinGW-w64
+    or MSYS2 on Windows was not run.
+- id: 34b530f52d
+  gist: 'sub rsp, 40 is the standard pattern: 32 bytes of shadow space t…'
+  how: derived
+  note: The shadow space is 4 x 8 = 32 bytes owned by the callee; the extra 8 realigns rsp to a multiple
+    of 16 before the call.
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [7dbddec935], part: Calling convention defaults}
+  - {doc: msstack, at: Stack allocation, units: [fa4bffc063, bb6e937918], part: Stack allocation}
+- id: f79c7c4c79
+  gist: This version calls three functions from kernel32.dll directly.
+  how: run
+  ref: tests/asm/hello_win32.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 774012d140
+  gist: There is no main; the entry point is start, and the program mus…
+  how: run
+  ref: tests/asm/hello_win32.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 9de06e4532
+  gist: '; hello_win32.asm - Windows x64, no C runtime: only Win32 API c…'
+  how: run
+  ref: tests/asm/hello_win32.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 1f4d9d961a
+  gist: 'Link with the tested MinGW-w64 command:'
+  how: run
+  ref: tests/asm/run.sh
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: a71d7f7ad1
+  gist: nasm -f win64 hello_win32.asm -o hello_win32.obj gcc -nostdlib…
+  how: run
+  ref: tests/asm/run.sh
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 8480eb43f9
+  gist: -nostdlib leaves out the C runtime, -lkernel32 supplies the thr…
+  how: run
+  ref: tests/asm/run.sh
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: 12d22161aa
+  gist: The equivalent lines for the other linkers are the usual ones b…
+  how: editorial
+  note: A disclosure of what was not run (the Microsoft linker and GoLink).
+- id: 4e4086ac9b
+  gist: GetStdHandle(-11) returns the handle for standard output in rax.
+  how: run
+  ref: tests/asm/hello_win32.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+- id: bcd67e3df3
+  gist: 'WriteFile takes five arguments: four in rcx, rdx, r8, r9 and th…'
+  how: derived
+  note: WriteFile takes five arguments (Windows API documentation, not indexed); the ABI puts the first
+    four in registers and the rest after the shadow store. The program runs under Wine.
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
+  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+- id: ff94a9510e
+  gist: 'That is why the program reserves 40 bytes: 32 + 8, which also k…'
+  how: derived
+  note: 32 bytes of shadow space plus 8 for the fifth argument keeps rsp a multiple of 16 at the call.
+  support:
+  - {doc: msstack, at: Stack allocation, units: [146e48eea7, fa4bffc063], part: Stack allocation}
+- id: 4e45926dfa
+  gist: Names carry no decoration on x64.
+  how: run
+  ref: tests/asm/hello_win32.asm
+  note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
+    The program imports GetStdHandle without a suffix.
+- id: fd2a7e5443
+  gist: Older 32-bit examples import _GetStdHandle@4; here it is just G…
+  support:
+  - {doc: wikibooks, at: Hello World (Using only Win32 system calls), units: [51d9203e87], part: Hello
+      World (Using only Win32 system calls)}
+- id: 9dc749ff51
+  gist: 13, 10 is the Windows line ending (carriage return, line feed).
+  how: external
+  note: Windows text convention (CR LF); the harness strips the CR it sees on output.
+- id: 2dfffb10bf
+  gist: Copying a 32-bit tutorial.
+  how: editorial
+  note: Heading for the next statement.
+- id: a0807cbc3d
+  gist: -f win32, arguments pushed with push, and @N suffixes belong to…
+  how: derived
+  note: The Wikibooks example is the 32-bit form (-f win32, @N names, push); that it fails in a win64
+    object follows from the x64 ABI above.
+  support:
+  - {doc: wikibooks, at: Hello World (Using only Win32 system calls), units: [dca7bc73aa, 51d9203e87,
+      2df9762fec], part: Hello World (Using only Win32 system calls)}
+- id: 6fbcb835fe
+  gist: 'No shadow space: callees may write to those 32 bytes and overwr…'
+  support:
+  - {doc: msstack, at: Stack allocation, units: [bb6e937918, 05a680551a], part: Stack allocation}
+- id: 579c0b65e3
+  gist: 'Misaligned stack at a call: it must be a multiple of 16.'
+  support:
+  - {doc: msstack, at: Stack allocation, units: [fa4bffc063], part: Stack allocation}
+  - {doc: msx64, at: Unwindability, units: [5a04ae41cd], part: Unwindability}
+- id: 2e275f3ede
+  gist: 'Related: the same on Linux.'
+  how: editorial
+  note: Link to the sibling article.

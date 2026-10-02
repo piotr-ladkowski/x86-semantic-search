@@ -1,0 +1,144 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 6dd10acda0
+  gist: Counts the bits set to 1 in the source and stores the count in…
+  support:
+  - {doc: sdm, at: 1694, units: [568ba8b630], part: Description}
+- id: 62dabf0041
+  gist: Needs the POPCNT CPU feature (reported by CPUID).
+  support:
+  - doc: sdm
+    at: 1695
+    units: [3054813a7d]
+    part: 64-Bit Mode Exceptions
+    note: 'The #UD condition names the CPUID bit.'
+- id: 92dcfb064c
+  gist: POPCNT r64, r/m64 is encoded as F3 REX.W 0F B8 /r.
+  support:
+  - {doc: sdm, at: 1694, units: [647ce3dc65], part: Opcode table, by: match}
+- id: d7f2a46b77
+  gist: POPCNT r32, r/m32 is encoded as F3 0F B8 /r.
+  support:
+  - {doc: sdm, at: 1694, units: [4913c0c04a], part: Opcode table, by: match}
+- id: 674272e6ba
+  gist: The upper 32 bits of the destination are zeroed.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1); the POPCNT entry does not
+      repeat it.
+- id: 65fc9e8712
+  gist: A 16-bit form also exists.
+  support:
+  - {doc: sdm, at: 1694, units: [b0424059ab], part: Opcode table}
+- id: 2e16fbec7c
+  gist: 'Flags modified: OF, SF, ZF, AF, CF, PF.'
+  support:
+  - {doc: sdm, at: 1694, units: [91e18d5a18, 20d2c743b9], part: Flags Affected}
+- id: 34e43cd655
+  gist: OF, SF, AF, CF and PF are cleared.
+  support:
+  - doc: sdm
+    at: 1694
+    units: [91e18d5a18]
+    part: Flags Affected
+    note: The SDM says all six are cleared and then gives ZF its own rule.
+- id: 8eee130f4f
+  gist: ZF is set if the source is 0, otherwise cleared.
+  support:
+  - {doc: sdm, at: 1694, units: [20d2c743b9], part: Flags Affected}
+- id: dd2a389b52
+  gist: popcnt dst, src counts how many bits of src are 1 and writes th…
+  how: derived
+  note: The count is built by a loop over the operand's bits, and the operand has at most 64, so the range
+    is 0 to 64.
+  support:
+  - {doc: sdm, at: 1694, units: [568ba8b630, aec40bb670], part: Description}
+- id: 43d1217a96
+  gist: This is also called the population count or Hamming weight.
+  how: editorial
+  note: Other names for the operation. The SDM calls the entry 'Return the Count of Number of Bits Set
+    to 1' and uses neither name.
+- id: c599caace4
+  gist: Counting the elements in a bitset or bitmask.
+  how: editorial
+  note: A typical use; not something a reference states.
+- id: 8056785a79
+  gist: 'Hamming distance: xor two values, then popcnt the result.'
+  how: editorial
+  note: A technique, not a property of the instruction.
+- id: 4568343d30
+  gist: 'Testing whether a value is a power of two: exactly one bit is s…'
+  how: derived
+  note: A nonzero value with exactly one bit set is a power of two; the count is 1 exactly then.
+  support:
+  - {doc: sdm, at: 1694, units: [568ba8b630], part: Description}
+- id: 9ce30621ef
+  gist: Not part of baseline x86-64.
+  how: derived
+  note: A CPUID bit that must be checked, because the instruction faults without it, means it is not guaranteed
+    by baseline x86-64.
+  support:
+  - {doc: sdm, at: 1695, units: [3054813a7d], part: 64-Bit Mode Exceptions}
+- id: 6cb864fe8d
+  gist: It requires the POPCNT CPU feature (CPUID leaf 01H, ECX bit 23)…
+  support:
+  - {doc: sdm, at: 1695, units: [3054813a7d], part: 64-Bit Mode Exceptions}
+- id: 6cd5f46a02
+  gist: Check CPUID before use when you cannot assume a recent CPU.
+  how: editorial
+  note: Advice.
+- id: 4dd6830cd1
+  gist: The destination must be a register, the source a register or me…
+  support:
+  - doc: sdm
+    at: 1694
+    units: [d31eea6db8]
+    part: Operand encoding
+    note: Operand 1 is ModRM:reg (a register, written); operand 2 is ModRM:r/m (register or memory, read).
+- id: 9011cd3374
+  gist: There is no immediate form and no 8-bit form.
+  how: derived
+  note: The opcode table lists only 16-, 32- and 64-bit register forms with an r/m source; no imm and
+    no r8 form is listed.
+  support:
+  - {doc: sdm, at: 1694, units: [b0424059ab, 4913c0c04a, 647ce3dc65], part: Opcode table}
+- id: 0079f2fffc
+  gist: Flags are simplified.
+  how: editorial
+  note: Lead-in to the two following statements.
+- id: 27acb28a94
+  gist: 'Only ZF carries information: it is set exactly when the source…'
+  support:
+  - {doc: sdm, at: 1694, units: [91e18d5a18, 20d2c743b9], part: Flags Affected}
+- id: 94bf7b644c
+  gist: So popcnt rax, rbx followed by jz tests "no bits set".
+  how: derived
+  note: ZF is set exactly when the source is zero, so JZ after POPCNT branches when no bit was set.
+  support:
+  - {doc: sdm, at: 1694, units: [20d2c743b9], part: Flags Affected}
+- id: 1eef235564
+  gist: Compilers don't always emit it.
+  how: external
+  note: GCC and Clang documentation for __builtin_popcount and -mpopcnt, as listed in this page's extra_sources.
+- id: 9c20940912
+  gist: __builtin_popcount / std::popcount compile to the instruction o…
+  how: external
+  note: GCC and Clang documentation for __builtin_popcount and -mpopcnt, as listed in this page's extra_sources.
+- id: cb09df1091
+  gist: 'A lock prefix raises #UD.'
+  support:
+  - doc: sdm
+    at: 1695
+    units: [57454b9f72]
+    part: 64-Bit Mode Exceptions
+    note: 'The SDM lists #UD for ''If LOCK prefix is used.'''
+- id: 0a5ce6bf99
+  gist: popcnt rax, rdi ; rax = number of 1 bits in rdi popcnt ecx, [rs…
+  how: illustrative
+  note: A short snippet using the forms listed above; not run.

@@ -26,7 +26,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-default-groups
 ENV DOCX86_MODEL_CACHE_DIR=/opt/models DOCX86_INDEX_DIR=/app/index
 # The runtime user is not root: make the baked-in model cache world-readable (HF files are 0600).
-RUN .venv/bin/docx86 build-index && .venv/bin/docx86 validate && chmod -R a+rX /opt/models
+RUN .venv/bin/docx86 build-index && .venv/bin/docx86 validate \
+    && .venv/bin/docx86 evidence check --no-sources && chmod -R a+rX /opt/models
 
 # ---- 3. Runtime ---------------------------------------------------------------------------------
 FROM python:3.13-slim

@@ -199,6 +199,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--limit", type=int, default=15, help="`grep`: matches to print")
     p.set_defaults(func=cmd_wiki)
 
+    from . import evidence_cli
+
+    evidence_cli.register(sub)
+
     args = parser.parse_args(argv)
     return args.func(args, get_settings())
 

@@ -1,0 +1,177 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: ef213ac1af
+  gist: Bitwise exclusive OR of destination and source, stored in the d…
+  how: derived
+  note: 'Zeroing follows from ''each bit is 0 if the corresponding bits are the same'': a register XOR
+    itself.'
+  support:
+  - {doc: sdm, at: 2873, units: [3e5bad63f7, fb90f81bc7], part: Description}
+- id: 6e23680044
+  gist: XOR r/m64, r64 is encoded as REX.W + 31 /r.
+  support:
+  - {doc: sdm, at: 2873, units: [6879594e55], part: Opcode table, by: match}
+- id: ec48b7e1b3
+  gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W; t…
+  support:
+  - {doc: sdm, at: 2873, units: [3ae2ece8d1, 0a6c9253dd, 1ed6aae612, 6879594e55], part: Opcode table}
+- id: 822057bbc5
+  gist: XOR r64, r/m64 is encoded as REX.W + 33 /r.
+  support:
+  - {doc: sdm, at: 2873, units: [db1bb31eb3], part: Opcode table, by: match}
+- id: c8880c8e33
+  gist: XOR r/m64, imm8 is encoded as REX.W + 83 /6 ib.
+  support:
+  - {doc: sdm, at: 2873, units: [9fa34ca09b], part: Opcode table, by: match}
+- id: 51e483d20e
+  gist: imm8 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 2873, units: [9fa34ca09b], part: Opcode table}
+- id: d611ca1f41
+  gist: XOR r/m64, imm32 is encoded as REX.W + 81 /6 id.
+  support:
+  - {doc: sdm, at: 2873, units: [87f7b62604], part: Opcode table, by: match}
+- id: 735d1e8ccd
+  gist: imm32 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 2873, units: [87f7b62604], part: Opcode table}
+- id: a1e796cb33
+  gist: XOR RAX, imm32 is encoded as REX.W + 35 id.
+  support:
+  - {doc: sdm, at: 2873, units: [48ef75473e], part: Opcode table, by: match}
+- id: b2e4c9a167
+  gist: 'Flags modified: OF, CF, SF, ZF, PF; undefined: AF.'
+  support:
+  - {doc: sdm, at: 2874, units: [b819ee05d2, 1345083ae6], part: Flags Affected}
+- id: 43089e0923
+  gist: OF and CF are cleared; SF, ZF and PF are set from the result.
+  support:
+  - {doc: sdm, at: 2874, units: [b819ee05d2], part: Flags Affected}
+- id: ff8371385c
+  gist: xor dst, src sets each bit of dst to 1 where the corresponding…
+  support:
+  - {doc: sdm, at: 2873, units: [fb90f81bc7, 3e5bad63f7], part: Description}
+- id: b1d1429d84
+  gist: XOR-ing a value with itself therefore always gives 0.
+  how: derived
+  note: A value's bits are always equal to themselves, so every result bit is 0.
+  support:
+  - {doc: sdm, at: 2873, units: [fb90f81bc7], part: Description}
+- id: f874146b18
+  gist: 'Zeroing a register: xor eax, eax.'
+  how: derived
+  note: 'Same reasoning: both operands are the same register.'
+  support:
+  - {doc: sdm, at: 2873, units: [fb90f81bc7], part: Description}
+- id: fc78ba21ff
+  gist: This is what compilers emit instead of mov eax, 0.
+  how: external
+  note: Intel 64 and IA-32 Architectures Optimization Reference Manual, as listed in this page's extra_sources;
+    not part of the indexed documents.
+- id: 870054c6f9
+  gist: Flipping chosen bits (XOR with a mask), or comparing two values…
+  how: derived
+  note: Each result bit is 1 exactly where the operands differ.
+  support:
+  - {doc: sdm, at: 2873, units: [fb90f81bc7], part: Description}
+- id: 3394b46f6a
+  gist: Simple reversible mixing in checksums and ciphers (applying the…
+  how: editorial
+  note: A typical use; that XOR with a key twice restores the value follows from the bit rule but is not
+    stated.
+- id: 278b90d815
+  gist: Zeroing idiom.
+  how: editorial
+  note: Heading for the next statements.
+- id: 367170794b
+  gist: xor eax, eax is 2 bytes (31 C0); mov eax, 0 is 5 (B8 00 00 00 0…
+  how: derived
+  note: '31 /r is an opcode byte plus a ModRM byte (C0 when both operands are EAX): 2 bytes. B8+ rd id
+    is an opcode byte plus a 4-byte immediate: 5 bytes. The ModRM value itself is not cited.'
+  support:
+  - doc: sdm
+    at: 2873
+    units: [1ed6aae612]
+    part: Opcode table
+    note: '31 /r: XOR r/m32, r32.'
+  - doc: sdm
+    at: 1317
+    units: [eb0ffa6710]
+    part: Opcode table
+    note: 'B8+ rd id: MOV r32, imm32.'
+- id: c867e8bee0
+  gist: Because 32-bit results are zero-extended, it clears all of rax…
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 51068c26a1
+  gist: xor rax, rax works but needs a REX.W prefix and is longer for n…
+  how: derived
+  note: REX.W + 31 /r has the REX prefix byte that 31 /r lacks.
+  support:
+  - {doc: sdm, at: 2873, units: [6879594e55, 1ed6aae612], part: Opcode table}
+- id: 9c071c244d
+  gist: Modern CPUs also recognise the idiom and treat it specially.
+  how: external
+  note: Intel 64 and IA-32 Architectures Optimization Reference Manual, as listed in this page's extra_sources;
+    not part of the indexed documents.
+- id: c0ade3eafa
+  gist: It clobbers the flags.
+  support:
+  - {doc: sdm, at: 2874, units: [b819ee05d2], part: Flags Affected}
+- id: 6e897eab4f
+  gist: XOR sets ZF/PF, clears CF/OF and leaves AF undefined.
+  support:
+  - {doc: sdm, at: 2874, units: [b819ee05d2, 1345083ae6], part: Flags Affected}
+- id: 708eb3c3d4
+  gist: Do not place xor reg, reg between a cmp and the conditional jum…
+  how: derived
+  note: XOR rewrites the flags; MOV does not.
+  support:
+  - {doc: sdm, at: 2874, units: [b819ee05d2], part: Flags Affected}
+  - doc: sdm
+    at: 1319
+    units: [71f8e7976e]
+    part: Flags Affected
+    note: 'MOV: Flags Affected is None.'
+- id: c5afe2a284
+  gist: Use not to invert every bit.
+  how: derived
+  note: NOT inverts every bit; recommending it over XOR with -1 is advice.
+  support:
+  - doc: sdm
+    at: 1450
+    units: [9758a513bd]
+    part: Description
+    note: From the NOT entry.
+- id: 4e79f3ba8e
+  gist: xor rax, -1 gives the same value but also changes the flags.
+  how: derived
+  note: XOR with all ones inverts each bit, like NOT, but XOR changes flags and NOT does not.
+  support:
+  - {doc: sdm, at: 1450, units: [9758a513bd], part: Description}
+  - doc: sdm
+    at: 1450
+    units: [71f8e7976e]
+    part: Flags Affected
+    note: 'NOT: Flags Affected is None.'
+  - {doc: sdm, at: 2874, units: [b819ee05d2], part: Flags Affected}
+- id: 9022b791fc
+  gist: At most one memory operand, and lock xor needs a memory destina…
+  support:
+  - {doc: sdm, at: 2873, units: [afd25ca2b2], part: Description}
+  - doc: sdm
+    at: 2874
+    units: [47552c0032]
+    part: 64-Bit Mode Exceptions
+    note: '#UD for a LOCK prefix with a destination that is not memory.'
+- id: f68a10ba00
+  gist: 'xor eax, eax ; rax = 0 (upper half cleared too); flags: ZF=1, C…'
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

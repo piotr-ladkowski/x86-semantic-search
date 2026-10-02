@@ -42,21 +42,36 @@ done. Never hand-edit generated files (`content/README.md`, the progress block i
 6. **Verify every factual claim against the SDM text you just read** (flags, operand sizes, which forms are
    valid in 64-bit mode, CPUID requirement, faults). Do not write from memory. If a claim is not in the SDM,
    either cut it or cite where it comes from in `extra_sources`.
-7. **Add 2-3 lines to `content/eval.yaml`** with queries phrased as a user would, not copied from your
+7. **Record the evidence** (details: [EVIDENCE.md](EVIDENCE.md)). Every sentence, table row and structured fact
+   of the page is a claim; the ledger `content/evidence/instructions/<slug>.yaml` says which sentence of the SDM
+   (or another document) supports it. This is what lets a reviewer check the page in minutes.
+   ```bash
+   uv run docx86 evidence suggest <slug> --write      # exact opcode matches + similarity guesses (labelled auto)
+   uv run docx86 evidence show <slug> --only suggested unverified
+   uv run docx86 evidence find sdm <pdf-page>         # the citable sentences of a page, with fingerprints
+   uv run docx86 evidence cite <slug> <n> --doc sdm --at <pdf-page> --unit <id>[,<id>]
+   uv run docx86 evidence mark <slug> <n> --as derived --note "how it follows"   # or editorial / illustrative
+   ```
+   Read each cited sentence against the claim before citing it. Reword the page rather than cite a sentence
+   that says something different. Leave a claim open rather than guess; report how many are open.
+8. **Add 2-3 lines to `content/eval.yaml`** with queries phrased as a user would, not copied from your
    `search_phrases`. For an article add `kind: article` to the line and `expect` the article's slug.
-8. **Run the gate:**
+9. **Run the gate:**
    ```bash
    make validate    # schema, cross-references, roster consistency
+   make evidence    # evidence ledgers: no stale claims, every pointer resolves
    make progress    # regenerate the checklist/progress files (commit them with the page)
    make test        # includes "progress files are current"
    make eval        # optional but recommended: real-model search check (downloads the model once)
    ```
-9. **Report** what you added and anything you were unsure about. Set `status: draft`. Never set
+10. **Report** what you added, how many claims are traced / derived / open, and anything you were unsure about. Set `status: draft`. Never set
    `status: reviewed`; that means a human compared the page to the SDM.
 
 ### Definition of done
 
-- [ ] `make validate` and `make test` pass; `make progress` was run.
+- [ ] `make validate`, `make evidence` and `make test` pass; `make progress` was run.
+- [ ] Every claim is accounted for in the evidence ledger (`docx86 evidence status <slug>`): nothing `unverified`,
+      and no `suggested` link left unread. Say how many are `derived`, `editorial`, `external`.
 - [ ] Every `forms` entry is valid in 64-bit mode in the SDM table, with the opcode copied from the SDM.
 - [ ] `flags` matches *Flags Affected* (including conditions, e.g. "unchanged when count is 0", in `note`).
 - [ ] `cpuid_feature` is set iff the instruction is not baseline x86-64.

@@ -1,0 +1,190 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 6bb3c3b084
+  gist: Which registers carry arguments, why the caller must reserve 32…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: 2d89dc011e
+  gist: 64-bit Windows has one default calling convention (no cdecl/std…
+  how: derived
+  note: The page names one default convention (four-register fast-call) and mentions __vectorcall and
+    __preserve_none as variants, which is why the article says 'one default'. That x64 has no cdecl/stdcall
+    split is not stated in the indexed pages.
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [21cb785bf5], part: Calling convention defaults}
+  - {doc: msx64, at: In this article, units: [0adea46e72, 25754db2d6], part: In this article}
+- id: 4bbe19f5b1
+  gist: It is a software agreement, not part of the CPU.
+  how: derived
+  note: The page calls it 'standard processes and conventions' between caller and callee; 'not part of
+    the CPU' is the inference.
+  support:
+  - {doc: msx64, at: In this article, units: [53fa0b027e], part: In this article}
+- id: 0d3ec3ab6f
+  gist: For Linux see the System V convention.
+  how: editorial
+  note: Link to the sibling article.
+- id: 86084ec637
+  gist: Integer and pointer arguments 1 to 4 | rcx, rdx, r8, r9
+  support:
+  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+  - {doc: msx64, at: Calling convention defaults, units: [f0eb39dfdd], part: Calling convention defaults}
+- id: 5946a7bc49
+  gist: Floating-point arguments 1 to 4 | xmm0 ... xmm3
+  support:
+  - {doc: msx64, at: Parameter passing, units: [f81d760d4d], part: Parameter passing}
+- id: cdb2b5b8b9
+  gist: Argument 5 and later | On the stack, right to left, 8-byte alig…
+  support:
+  - {doc: msx64, at: Parameter passing, units: [6426d4e0a2, f16ffc37db], part: Parameter passing}
+- id: 21f1a9bdfd
+  gist: 'Registers are assigned by position, not by type: the 2nd argume…'
+  support:
+  - {doc: msx64, at: Parameter passing, units: [f734695aa9, 95a2e2971b, eac0ce96c3, 767a622322], part: Parameter
+      passing}
+- id: b85403afa9
+  gist: Anything that is not 1, 2, 4 or 8 bytes wide is passed by point…
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [f7c414172e], part: Calling convention defaults}
+  - {doc: msx64, at: Parameter passing, units: [10c0933f2e], part: Parameter passing}
+- id: 4a1a6f392d
+  gist: The caller always reserves 32 bytes (room for four 8-byte value…
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [7dbddec935, 3891038b3c], part: Calling convention
+      defaults}
+  - {doc: msstack, at: Stack allocation, units: [146e48eea7, bb6e937918], part: Stack allocation}
+- id: 080efa8fa1
+  gist: The callee owns that space and may spill its register arguments…
+  support:
+  - {doc: msstack, at: Stack allocation, units: [bb6e937918], part: Stack allocation}
+  - {doc: msx64, at: Parameter passing, units: [2200b628d3], part: Parameter passing}
+- id: 1894dfa1b6
+  gist: It follows that the first stack argument sits at [rsp + 40] on…
+  how: derived
+  note: 'Stack arguments follow the shadow store, which sits next to the return address: 8 + 32 = 40.'
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
+  - {doc: msstack, at: Stack allocation, units: [146e48eea7], part: Stack allocation}
+- id: de01485f3d
+  gist: 'add3: ; long long add3(long long a, long long b, long long c):…'
+  how: run
+  ref: tests/asm/win64.asm
+  note: Assembled and run under Wine in `make verify-asm` (add3, sum5).
+  support:
+  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
+- id: ea7c4a2c82
+  gist: An integer or pointer that fits in 64 bits is returned in rax;…
+  support:
+  - {doc: msx64, at: Return values, units: [1db94555cc, 75540e0945], part: Return values}
+- id: c0464330bb
+  gist: A structure that is not 1, 2, 4 or 8 bytes wide is returned thr…
+  support:
+  - {doc: msx64, at: Return values, units: [4cd37afae0, 405293962d, 4910c054e8, b07caee600], part: Return
+      values}
+- id: 56dcfc105b
+  gist: rbx, rbp, rdi, rsi, rsp, r12 ... r15, xmm6 ... xmm15 | rax, rcx…
+  support:
+  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, befd0ad03e], part: Caller/callee
+      saved registers}
+- id: b271c3057a
+  gist: 'The bold entries are what differs from Linux: rdi, rsi and xmm6…'
+  support:
+  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1], part: Caller/callee saved registers}
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5, 0202d90800, 9592e208d5]
+    part: 3.2.1 Registers and the Stack Frame
+    note: 'System V: only rbp, rbx and r12-r15 are preserved; rdi and rsi belong to the called function.'
+- id: 856a64c80b
+  gist: 'keep_rsi: ; rsi and rdi are callee-saved on Windows (not on Lin…'
+  how: run
+  ref: tests/asm/win64.asm
+  note: keep_rsi is assembled and run under Wine in `make verify-asm`.
+  support:
+  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, a0664dcfae], part: Caller/callee
+      saved registers}
+- id: 4ec72d6bda
+  gist: 'Alignment: rsp must be 16-byte aligned except inside a prologue…'
+  how: derived
+  note: 16-byte alignment between prologue and epilogue is stated; 8 modulo 16 on entry follows because
+    the call pushed an 8-byte return address.
+  support:
+  - {doc: msx64, at: Unwindability, units: [5a04ae41cd], part: Unwindability}
+  - {doc: msstack, at: Stack allocation, units: [fa4bffc063], part: Stack allocation}
+- id: 5bd4367065
+  gist: A function that calls others therefore subtracts 32 bytes of sh…
+  how: derived
+  note: Shadow space (32) plus stack arguments (8 each), padded to keep rsp 16-byte aligned after the
+    call pushes the return address.
+  support:
+  - {doc: msstack, at: Stack allocation, units: [146e48eea7, '5185225641', fa4bffc063], part: Stack allocation}
+- id: 652b7d01e2
+  gist: With no or one stack argument that is sub rsp, 40; with two it…
+  how: derived
+  note: 'Arithmetic: 32 + 8k for k stack arguments, rounded up to 8 modulo 16 (k = 0 or 1: 40; k = 2:
+    56).'
+  support:
+  - {doc: msstack, at: Stack allocation, units: [146e48eea7, fa4bffc063], part: Stack allocation}
+- id: 5d768e470f
+  gist: It ends with the matching add.
+  how: editorial
+  note: Procedure, not a property of the convention.
+- id: ab7f32e9a9
+  gist: 'No red zone: memory below rsp may be overwritten at any time, s…'
+  support:
+  - {doc: msstack, at: In this article, units: [88224d0aec, 28e4ac6eec], part: In this article}
+- id: 2d92abd21e
+  gist: 'say_answer: ; void say_answer(void): printf("answer = %d\n", 42…'
+  how: run
+  ref: tests/asm/win64.asm
+  note: say_answer is assembled and run under Wine in `make verify-asm`.
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [7dbddec935], part: Calling convention defaults}
+- id: 66bb6114a1
+  gist: For WriteFile(hFile, buf, len, &written, NULL) the fifth argume…
+  how: derived
+  note: WriteFile takes five arguments (Windows API documentation, not indexed); the fifth is the first
+    stack argument, which goes right after the shadow store.
+  support:
+  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
+  - {doc: msstack, at: Stack allocation, units: [fa4bffc063], part: Stack allocation}
+- id: 7f9d3151fd
+  gist: For variadic functions, floating-point arguments must be copied…
+  support:
+  - {doc: msx64, at: Varargs, units: [b6d77b92d4], part: Varargs}
+  - {doc: msx64, at: Calling convention defaults, units: [154aa878d4], part: Calling convention defaults}
+- id: 4e9bf28ddf
+  gist: On Linux long is 64 bits.
+  support:
+  - doc: sysv
+    at: 13
+    units: [4225a02d8b]
+    part: 3.1.2 Data Representation
+    note: Figure 3.1 lists long as 8 bytes (the passage is the whole table).
+- id: eed1cbd672
+  gist: (The compiler output used ecx and edx for long arguments.)
+  how: external
+  note: Observed in MinGW-w64 GCC 12 output (-O1 -S), recorded in this article's extra_sources; not reproduced
+    by a program in tests/asm.
+- id: d92a09a603
+  gist: 'Forgetting the shadow space: the callee may write into those 32…'
+  support:
+  - {doc: msstack, at: Stack allocation, units: [bb6e937918, 05a680551a], part: Stack allocation}
+- id: 4b25db6176
+  gist: 'Using rdi/rsi freely: harmless on Linux, but corrupts the calle…'
+  how: derived
+  note: rdi and rsi are nonvolatile on Windows but belong to the called function on Linux, so code that
+    clobbers them is correct there and wrong here.
+  support:
+  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, a0664dcfae], part: Caller/callee
+      saved registers}
+  - {doc: sysv, at: 16, units: [9592e208d5, 0202d90800], part: 3.2.1 Registers and the Stack Frame}
+- id: 6e13af4e6b
+  gist: '32-bit examples: the stack-passed arguments, stdcall names such…'
+  how: external
+  note: Wikibooks 'Hello World (Using only Win32 system calls)', cited in extra_sources; that it does
+    not apply to x64 is the article's own statement.

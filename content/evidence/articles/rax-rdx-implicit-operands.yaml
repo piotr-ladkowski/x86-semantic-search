@@ -1,0 +1,192 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: ad1911a566
+  gist: Why mul and div take no register choice, how rdx:rax forms a 12…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: abd34e300c
+  gist: Multiplying two 64-bit numbers can produce a 128-bit result, an…
+  how: derived
+  note: The quadword MUL row has a 128-bit destination; the quadword DIV row a 128-bit dividend.
+  support:
+  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
+  - {doc: sdm, at: 968, units: [8af6e4fb9c], part: Table}
+- id: 936168b7d1
+  gist: 'The classic instructions solve both by fixing the registers: ra…'
+  support:
+  - {doc: sdm, at: 1429, units: [92e9ec2799, 0f3291adb3], part: Description}
+  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+- id: 39329f838d
+  gist: 'That is why mul rbx takes a single operand: the other multiplic…'
+  support:
+  - {doc: sdm, at: 1429, units: [92e9ec2799, 4850ff1b96, 15c63c03d3], part: Description}
+- id: 60ba9af3f3
+  gist: mul src64 (also one-operand imul) | rax and src | rdx:rax (high…
+  support:
+  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table}
+  - {doc: sdm, at: 1155, units: [97b151ad0a, 07730dc140], part: Opcode table}
+- id: 6971e7e09b
+  gist: mul src32 | eax and src | edx:eax (both zero-extended into rdx,…
+  support:
+  - {doc: sdm, at: 1429, units: [ae4bf5a29c, ae1030617f], part: Opcode table}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: d5b46a6a95
+  gist: mul src8 | al and src | ax
+  support:
+  - {doc: sdm, at: 1429, units: [89394ebe87, b624b485ad], part: Opcode table}
+- id: 0eca5209a7
+  gist: 'mulhi: ; unsigned long mulhi(unsigned long a, unsigned long b)…'
+  how: run
+  ref: tests/asm/regs.asm
+  note: 'mulhi is assembled and run by `make verify-asm`: mulhi(0xFFFFFFFFFFFFFFFF, 2) = 1.'
+  support:
+  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table}
+- id: b4eeb91c33
+  gist: mul always overwrites rdx, even if you only want the low half.
+  support:
+  - {doc: sdm, at: 1429, units: [e91bbaa475, 0f3291adb3], part: Description}
+- id: c3aac0c234
+  gist: If you do only want the low half, the two- and three-operand fo…
+  support:
+  - {doc: sdm, at: 1155, units: [1c427b5098, 0527f7241f, 75fc930d10], part: Description}
+- id: 7ece88e78e
+  gist: mulx (BMI2) avoids rax and the flags, but it still takes rdx as…
+  support:
+  - {doc: sdm, at: 1441, units: [732fc2309f, 05061e6bf2], part: Description}
+- id: 65da7c26cd
+  gist: div src and idiv src divide the 128-bit value in rdx:rax by src…
+  support:
+  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+  - {doc: sdm, at: 1152, units: [c21055875c, a8bc623d9d], part: Description}
+- id: 1d0ffc15c5
+  gist: 'Two preparation rules:'
+  how: editorial
+  note: Lead-in to the next statements.
+- id: b53695ae39
+  gist: 'Unsigned: zero the top half first, xor edx, edx.'
+  how: derived
+  note: The unsigned dividend is RDX:RAX, so RDX must be zero; xor edx, edx zero-extends into rdx.
+  support:
+  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: c2b6001c33
+  gist: 'Signed: copy the sign of rax into every bit of rdx with cqo.'
+  support:
+  - {doc: sdm, at: 961, units: [e69cbbabf3, 4e45cbb2ec], part: Description}
+- id: 76891bb69a
+  gist: Zeroing rdx instead would turn a negative dividend into a huge…
+  how: derived
+  note: A zero upper half makes the 128-bit signed dividend positive.
+  support:
+  - {doc: sdm, at: 1152, units: [c21055875c], part: Description}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: c9c6e3429e
+  gist: 'divmod: ; void divmod(long a, long b, long quot, long rem) mov…'
+  how: run
+  ref: tests/asm/regs.asm
+  note: divmod(-7, 2) = -3 remainder -1 is checked by `make verify-asm`.
+  support:
+  - {doc: sdm, at: 1152, units: [c21055875c], part: Description}
+- id: d3f06c4bdd
+  gist: 'Division raises #DE (a fault, not a flag) when the divisor is z…'
+  support:
+  - {doc: sdm, at: 970, units: [899e87f561, 602f8497c6], part: 64-Bit Mode Exceptions}
+  - {doc: sdm, at: 968, units: [52f0f81ad4], part: Description}
+- id: 4e59567718
+  gist: The classic overflow is the most negative 64-bit number divided…
+  how: derived
+  note: The range check rejects results above 7FFF...F; -2^63 / -1 = +2^63.
+  support:
+  - {doc: sdm, at: 1153, units: [78258978bd], part: Operation}
+- id: 556fc4a808
+  gist: cdqe sign-extends eax into rax.
+  support:
+  - {doc: sdm, at: 842, units: [ca770370ab], part: Description}
+- id: 888a711b2b
+  gist: It exists because a plain 32-bit write zero-extends.
+  how: derived
+  note: A 32-bit write zero-extends, so a signed 32-bit value needs its own extension.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 67b11557ae
+  gist: cqo copies the sign bit of rax into all of rdx, making the 128-…
+  support:
+  - {doc: sdm, at: 961, units: [e69cbbabf3, 4e45cbb2ec], part: Description}
+- id: b3317587fb
+  gist: The smaller forms are cbw/cwde and cwd/cdq.
+  support:
+  - {doc: sdm, at: 842, units: [7b218921fe, fd2d735dfc], part: Description}
+  - {doc: sdm, at: 961, units: [36f8c58bcb, 03f08a1acd], part: Description}
+- id: 38a71ffee5
+  gist: cmpxchg | The comparand; on failure the memory value is loaded…
+  support:
+  - {doc: sdm, at: 898, units: [294ba4653d, b0891d676a], part: Description}
+  - {doc: sdm, at: 900, units: [c43fbaf713, 2b7e80e9f4], part: Description}
+- id: f80b46c1b8
+  gist: 'stos, scas, lods | The data register: stored, compared with mem…'
+  support:
+  - {doc: sdm, at: 1966, units: [01b4684e50], part: Description}
+  - {doc: sdm, at: 1905, units: [bd6969fe6d], part: Description}
+  - {doc: sdm, at: 1271, units: [d984683726], part: Description}
+- id: beeff8cdac
+  gist: xlat | al is the index, and the looked-up byte replaces it.
+  support:
+  - {doc: sdm, at: 2871, units: [43b4a27416], part: Description}
+- id: c392598a91
+  gist: cpuid | eax selects the leaf; results come back in eax, ebx, ec…
+  support:
+  - {doc: sdm, at: 907, units: [71cb545f05], part: Description}
+- id: 9766037b38
+  gist: rdtsc | The time-stamp counter returns in edx:eax.
+  support:
+  - {doc: sdm, at: 1850, units: [0dadc75f63, 8e0dcd744a], part: Description}
+- id: 630b354602
+  gist: Several arithmetic instructions also have a dedicated accumulat…
+  how: derived
+  note: The accumulator rows (05 id, 2D id, 3D id; operand encoding I) have no ModRM byte, which the 81
+    /n id rows need.
+  support:
+  - {doc: sdm, at: 718, units: [4f0b9483da, 5f900f4185, 4a4d92ec2a], part: Opcode table}
+  - {doc: sdm, at: 1974, units: [27cb7dbe81, bc695e78e0], part: Opcode table}
+  - {doc: sdm, at: 865, units: [663f9cbda6, b6e6f8a896], part: Opcode table}
+- id: b56840f69f
+  gist: Both Linux and Windows return a function's integer result in ra…
+  support:
+  - {doc: sysv, at: 23, units: [0f7d542149], part: 3.2.3 Parameter Passing}
+  - {doc: msx64, at: Return values, units: [1db94555cc], part: Return values}
+- id: 4171c7c25f
+  gist: System V also uses rdx as the second integer return register (a…
+  support:
+  - {doc: sysv, at: 22, units: [cc1bb4de50], part: 3.2.3 Parameter Passing}
+  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+- id: 796108500e
+  gist: On Linux rax additionally holds the system call number before s…
+  support:
+  - {doc: sysv, at: 125, units: [0fd82f5895], part: Miscellaneous Remarks}
+- id: 356e03cf0d
+  gist: 'Details in the calling-convention articles: Linux, Windows.'
+  how: editorial
+  note: Links to sibling articles.
+- id: 53ee8500c3
+  gist: 'Instruction pages: MUL, IMUL, DIV, IDIV.'
+  how: editorial
+  note: Links to instruction pages.

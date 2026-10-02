@@ -1,0 +1,148 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: df0daac989
+  gist: Decrements RSP and stores the operand on the stack; in 64-bit m…
+  support:
+  - {doc: sdm, at: 1811, units: [fcafc8633c], part: Description}
+  - {doc: sdm, at: 1812, units: [5d5aafdf3e], part: Operation}
+- id: d18af1b72f
+  gist: PUSH r64 is encoded as 50+ rd.
+  support:
+  - {doc: sdm, at: 1811, units: [87f7263c2f], part: Opcode table, by: match}
+- id: 2c6aca3f3f
+  gist: A 16-bit form exists with the 66h prefix; a 32-bit push cannot…
+  support:
+  - {doc: sdm, at: 1811, units: [c459558ab0, 83acb0e5df, 02b7a17369, 2dad3f2bd4], part: Opcode table}
+  - doc: sdm
+    at: 189
+    units: [3fe146fadc, 18b8f59c67]
+    part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
+    note: 'Vol. 1, 7.3.1.5: stack manipulation in 64-bit mode.'
+- id: b006c0da68
+  gist: PUSH r/m64 is encoded as FF /6.
+  support:
+  - {doc: sdm, at: 1811, units: [29d77331b1], part: Opcode table, by: match}
+- id: 532539d2ca
+  gist: PUSH imm32 is encoded as 68 id.
+  support:
+  - {doc: sdm, at: 1811, units: [ae87b9fb06], part: Opcode table, by: match}
+- id: b349335e19
+  gist: Sign-extended to 64 bits; still pushes 8 bytes.
+  support:
+  - {doc: sdm, at: 1811, units: [39a1d7b50b], part: Description}
+  - {doc: sdm, at: 1812, units: [5d5aafdf3e], part: Operation}
+- id: d45a6d4a6e
+  gist: PUSH imm8 is encoded as 6A ib.
+  support:
+  - {doc: sdm, at: 1811, units: [f8d9028c33], part: Opcode table, by: match}
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - {doc: sdm, at: 1813, units: [71f8e7976e], part: Flags Affected}
+- id: 104920edfa
+  gist: push src subtracts 8 from rsp and then stores src at the new [r…
+  support:
+  - {doc: sdm, at: 1811, units: [fcafc8633c], part: Description}
+  - {doc: sdm, at: 1812, units: [5d5aafdf3e], part: Operation}
+- id: 7f44b621b7
+  gist: In 64-bit mode the default operand size is 64 bits, which is wh…
+  how: derived
+  note: 32-bit pushes are not possible and 16-bit ones need the 66H prefix, so 64 bits is the default;
+    the slot size follows the operand size.
+  support:
+  - doc: sdm
+    at: 189
+    units: [551ddb799d, 3fe146fadc, 18b8f59c67]
+    part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
+    note: 'Vol. 1, 7.3.1.5: stack manipulation in 64-bit mode.'
+  - {doc: sdm, at: 1811, units: [29d77331b1], part: Opcode table}
+- id: afda4f4c47
+  gist: Saving a register you must preserve and restoring it later with…
+  how: editorial
+  note: A typical use.
+- id: de2ae435c5
+  gist: Passing arguments or building a stack frame by hand.
+  how: editorial
+  note: A typical use.
+- id: 2bd0e043f1
+  gist: call pushes its own return address, so you do not push that you…
+  support:
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    note: From the CALL entry.
+- id: 92d2d6e2e7
+  gist: Operand size.
+  how: editorial
+  note: Heading for the next statement.
+- id: c524e9e256
+  gist: A 32-bit push cannot be encoded in 64-bit mode.
+  support:
+  - {doc: sdm, at: 1811, units: [83acb0e5df, 02b7a17369], part: Opcode table}
+  - doc: sdm
+    at: 189
+    units: [3fe146fadc]
+    part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
+    note: 'Vol. 1, 7.3.1.5: stack manipulation in 64-bit mode.'
+- id: 87e5896c61
+  gist: Push a 64-bit register, or use the 66h prefix for a 16-bit push…
+  support:
+  - {doc: sdm, at: 1811, units: [ff40c71838, 87f7263c2f], part: Opcode table}
+  - {doc: sdm, at: 1812, units: [e6acd64b6f], part: Description}
+  - {doc: sdm, at: 1811, units: [755c5d7838], part: Description}
+- id: e71791be0d
+  gist: Immediates are sign-extended.
+  support:
+  - {doc: sdm, at: 1811, units: [39a1d7b50b], part: Description}
+- id: f111695761
+  gist: push imm32 pushes the 32-bit value sign-extended to 8 bytes, so…
+  how: derived
+  note: The immediate rows list imm8, imm16 and imm32 only, and a smaller immediate is sign-extended to
+    the operand size.
+  support:
+  - {doc: sdm, at: 1811, units: [39a1d7b50b, ae87b9fb06], part: Description}
+- id: 1c82fc3e11
+  gist: push rsp pushes the value rsp had before the instruction.
+  support:
+  - doc: sdm
+    at: 1812
+    units: [77679c2641, eb86a8cf27]
+    part: Description
+    note: Stated for ESP; the entry says it also holds on Intel 64.
+- id: b90fdf0d7e
+  gist: If a memory operand's address uses rsp, that address is compute…
+  support:
+  - {doc: sdm, at: 1812, units: [ed596f1c53], part: Description}
+- id: fd4a019142
+  gist: Faults.
+  how: editorial
+  note: Heading for the next statement.
+- id: d26cc94cf0
+  gist: 'A non-canonical stack address raises #SS(0), a non-canonical me…'
+  support:
+  - {doc: sdm, at: 1813, units: ['8129235435', 33920ea836, 9bf63f56fc], part: 64-Bit Mode Exceptions}
+- id: 6d53df94d4
+  gist: A lock prefix is invalid (#UD).
+  support:
+  - doc: sdm
+    at: 1813
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: 3bc16483a5
+  gist: Pushing CS, SS, DS or ES is not valid in 64-bit mode.
+  support:
+  - {doc: sdm, at: 1811, units: [e94fe9994a, 7c7e9cec3f, 2d5c4f181d, 01a0c881b6], part: Opcode table}
+  - {doc: sdm, at: 1813, units: [f3e126ef65], part: 64-Bit Mode Exceptions}
+- id: 74bae8f1f2
+  gist: It leaves all flags alone.
+  support:
+  - {doc: sdm, at: 1813, units: [71f8e7976e], part: Flags Affected}
+- id: 249097b8fa
+  gist: push rbx ; rsp -= 8, then [rsp] = rbx push 42 ; imm8 sign-exten…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

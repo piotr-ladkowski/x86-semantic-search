@@ -14,7 +14,7 @@ flags:
 forms:
   - {syntax: "MOVSX r64, r/m8", opcode: "REX.W + 0F BE /r"}
   - {syntax: "MOVSX r64, r/m16", opcode: "REX.W + 0F BF /r"}
-  - {syntax: "MOVSXD r64, r/m32", opcode: "REX.W + 63 /r", note: "The only way to sign-extend a doubleword into a quadword."}
+  - {syntax: "MOVSXD r64, r/m32", opcode: "REX.W + 63 /r", note: "The form that sign-extends a doubleword into a quadword; `cdqe` does the same for `eax` into `rax` only."}
   - {syntax: "MOVSX r32, r/m8", opcode: "0F BE /r", note: "Also zeroes bits 63:32 of the 64-bit register."}
   - {syntax: "MOVSX r32, r/m16", opcode: "0F BF /r", note: "Also zeroes bits 63:32 of the 64-bit register."}
 search_phrases:

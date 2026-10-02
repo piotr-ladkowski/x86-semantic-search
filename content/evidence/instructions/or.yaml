@@ -1,0 +1,148 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 2fa0354afd
+  gist: Bitwise OR of destination and source, stored in the destination…
+  how: derived
+  note: Setting bits follows from the rule that a result bit is 1 unless both operand bits are 0.
+  support:
+  - {doc: sdm, at: 1452, units: [300a5f0439, 05c3190835], part: Description}
+- id: f846b3c409
+  gist: OR r/m64, r64 is encoded as REX.W + 09 /r.
+  support:
+  - {doc: sdm, at: 1452, units: [ecf644796d], part: Opcode table, by: match}
+- id: 97b845e0fe
+  gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
+  support:
+  - {doc: sdm, at: 1452, units: [71cc354883, 944c584e7b, 96df46c1fa, ecf644796d], part: Opcode table}
+- id: d535eaf053
+  gist: OR r64, r/m64 is encoded as REX.W + 0B /r.
+  support:
+  - {doc: sdm, at: 1452, units: [928b107794], part: Opcode table, by: match}
+- id: 655ed14b65
+  gist: OR r/m64, imm8 is encoded as REX.W + 83 /1 ib.
+  support:
+  - {doc: sdm, at: 1452, units: [4b58dbf182], part: Opcode table, by: match}
+- id: 51e483d20e
+  gist: imm8 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 1452, units: [4b58dbf182], part: Opcode table}
+- id: 9cb6c23128
+  gist: OR r/m64, imm32 is encoded as REX.W + 81 /1 id.
+  support:
+  - {doc: sdm, at: 1452, units: [44fa6f33c9], part: Opcode table, by: match}
+- id: 735d1e8ccd
+  gist: imm32 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 1452, units: [44fa6f33c9], part: Opcode table}
+- id: 05027343b5
+  gist: OR RAX, imm32 is encoded as REX.W + 0D id.
+  support:
+  - {doc: sdm, at: 1452, units: [ec6649afbf], part: Opcode table, by: match}
+- id: b2e4c9a167
+  gist: 'Flags modified: OF, CF, SF, ZF, PF; undefined: AF.'
+  support:
+  - {doc: sdm, at: 1453, units: [b819ee05d2, 1345083ae6], part: Flags Affected}
+- id: 43089e0923
+  gist: OF and CF are cleared; SF, ZF and PF are set from the result.
+  support:
+  - {doc: sdm, at: 1453, units: [b819ee05d2], part: Flags Affected}
+- id: dc023dcd5d
+  gist: or dst, src sets each bit of dst to 1 where either dst or src h…
+  support:
+  - {doc: sdm, at: 1452, units: [300a5f0439, 05c3190835], part: Description}
+- id: f5f85f461a
+  gist: ORing with a mask turns on the bits where the mask has 1s and l…
+  how: derived
+  note: A 1 in the mask forces the result bit to 1; a 0 passes the other bit through.
+  support:
+  - {doc: sdm, at: 1452, units: [05c3190835], part: Description}
+- id: 6cef2a12b4
+  gist: 'Turning bits on: or eax, 0x20 sets bit 5.'
+  how: derived
+  note: 0x20 has only bit 5 set.
+  support:
+  - {doc: sdm, at: 1452, units: [05c3190835], part: Description}
+- id: 90009f31e4
+  gist: Combining bit fields or flag constants into one value.
+  how: editorial
+  note: A typical use.
+- id: 4020ee4f4b
+  gist: 'Setting a bit in memory atomically: lock or dword [rdi], 1.'
+  how: derived
+  note: OR can take a LOCK prefix with a memory destination; the bit set follows from the OR rule.
+  support:
+  - {doc: sdm, at: 1452, units: [7618c9e8a1, 05c3190835], part: Description}
+- id: e71791be0d
+  gist: Immediates are sign-extended.
+  support:
+  - doc: sdm
+    at: 1452
+    units: [4b58dbf182, 44fa6f33c9, ec6649afbf]
+    part: Opcode table
+    note: The opcode table says sign-extended for each immediate form.
+- id: b6b53fae53
+  gist: A 32-bit immediate with its top bit set also sets every bit abo…
+  how: derived
+  note: imm32 is sign-extended to 64 bits, so a set top bit repeats through the upper half.
+  support:
+  - {doc: sdm, at: 1452, units: [44fa6f33c9], part: Opcode table}
+- id: a58d7d2869
+  gist: To set just bit 31 of a 64-bit register, use bts rax, 31.
+  how: derived
+  note: BTS selects a bit position and sets it, with no 32-bit immediate sign-extension problem.
+  support:
+  - doc: sdm
+    at: 822
+    units: [e723388819]
+    part: Description
+    note: From the BTS entry.
+- id: 6d91b16d58
+  gist: Setting every bit.
+  how: editorial
+  note: Heading for the next statement.
+- id: d6c9deb767
+  gist: or rax, -1 (imm8 -1, sign-extended) sets all 64 bits, without n…
+  how: derived
+  note: imm8 -1 sign-extends to 64 one-bits; ORing all ones gives all ones.
+  support:
+  - {doc: sdm, at: 1452, units: [4b58dbf182, 05c3190835], part: Opcode table}
+- id: 586f765144
+  gist: 32-bit operations zero the upper half.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 3b73ce1b65
+  gist: or eax, ebx clears bits 63:32 of rax.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: c16186bada
+  gist: Flags.
+  how: editorial
+  note: Heading for the next statement.
+- id: 4b5d3d454a
+  gist: OF and CF are cleared, SF/ZF/PF are set from the result, and AF…
+  support:
+  - {doc: sdm, at: 1453, units: [b819ee05d2, 1345083ae6], part: Flags Affected}
+- id: 5355a62806
+  gist: At most one memory operand, and lock or needs a memory destinat…
+  support:
+  - {doc: sdm, at: 1452, units: [afd25ca2b2], part: Description}
+  - doc: sdm
+    at: 1453
+    units: [47552c0032]
+    part: 64-Bit Mode Exceptions
+    note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+- id: 0b4f654067
+  gist: or eax, 0x20 ; set bit 5 (rax upper bits become 0) or rax, rbx…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

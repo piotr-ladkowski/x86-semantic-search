@@ -44,25 +44,32 @@ The docs are written to be read by LLMs as well as people. Start with `CLAUDE.md
 | [docs/SCOPE.md](docs/SCOPE.md) | What is in and out of scope, and the rule for deciding. |
 | [docs/CONTENT_GUIDE.md](docs/CONTENT_GUIDE.md) | How to write or review an instruction page or article. Schema, workflow, definition of done. |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How search works, the data flow, configuration, and how it runs on Kubernetes. |
+| [docs/EVIDENCE.md](docs/EVIDENCE.md) | How each statement on a page is traced to the sentence of a reference document it comes from, and how to record and review that. |
 | [content/README.md](content/README.md) | Generated per-instruction checklist (what exists, what is next). |
 | [CLAUDE.md](CLAUDE.md) | Commands and conventions for coding agents. |
 
 # Development
 
-Download the documentation for local llm access
+Download the reference documents for local use (all optional, all git-ignored, none shipped in the image):
 ```bash
 wget https://cdrdv2-public.intel.com/929349/325462-093-sdm-vol-1-2abcd-3abcd-4.pdf -O ./docs/docs.x86.pdf
-wget https://en.wikibooks.org/wiki/X86_Assembly/Print_Version -O ./docs/wikibooks_x86.html
 ```
 
-A second, secondary reference covers what the SDM does not: assemblers, operating systems and calling
-conventions (it is the "x86 Assembly" Wikibooks book, CC BY-SA):
+Secondary references cover what the SDM does not: assemblers, operating systems and calling conventions.
+The first is the "x86 Assembly" Wikibooks book (CC BY-SA, a map of what to check, never copied):
 ```bash
 wget https://en.wikibooks.org/wiki/X86_Assembly/Print_Version -O ./docs/wikibooks_x86.html
 ```
+The primary ABI documents, which the evidence pages quote from when you have them
+(see [docs/EVIDENCE.md](docs/EVIDENCE.md)):
+```bash
+wget https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf -O ./docs/sysv_abi.pdf
+wget https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention -O ./docs/ms_x64_calling_convention.html
+wget https://learn.microsoft.com/en-us/cpp/build/stack-usage -O ./docs/ms_x64_stack_usage.html
+```
 
-Both downloads are git-ignored and only used while authoring content; they are not needed to run or test
-the app, and they are not shipped in the container image.
+They are only used while authoring and reviewing; they are not needed to run or test the app.
+They are copyrighted, so the repository stores only pointers to their sentences, never their text.
 
 Requirements: [uv](https://docs.astral.sh/uv/) (Python 3.12+), Node 20+ (Tailwind build only), and
 Docker/kubectl for deployment.

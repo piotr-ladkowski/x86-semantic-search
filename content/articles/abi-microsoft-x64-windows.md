@@ -21,7 +21,7 @@ search_phrases:
   - why does long have a different size on windows
 ---
 
-64-bit Windows has a single calling convention (no `cdecl`/`stdcall` split as on 32-bit x86). It is a software agreement, not part of the CPU. For Linux see [the System V convention](/articles/abi-system-v-linux).
+64-bit Windows has one default calling convention (no `cdecl`/`stdcall` split as on 32-bit x86). It is a software agreement, not part of the CPU. For Linux see [the System V convention](/articles/abi-system-v-linux).
 
 ## Arguments
 

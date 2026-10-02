@@ -1,0 +1,365 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: b925c338bd
+  gist: Jumps to a nearby label if the status flags satisfy a condition…
+  support:
+  - {doc: sdm, at: 1206, units: [fd60402f41, 00d87191a6, 1506bd42ed], part: Description}
+  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
+- id: d60814beb8
+  gist: Also written as JA, JAE, JB, JBE, JC, JE, JG, JGE, JL, JLE, JNA…
+  support:
+  - {doc: sdm, at: 1203, units: [aa86466ea7, 758f9a92ff, a397db1da2, 53ab55a43e, d19359c7c2, e937db03ed,
+      4c0eb334fa, bc666b5231, 4d1db289db, '2657576261', 44bed4ba22, 580fdbfe31, d50bfbf244, 2a852212b9,
+      46d4e9929c, 18b1475313, 204bac4f79, a0cc797ec1, '9402861489', b5f4d31f9e, 2c8f24d0d5, 07c86d0488,
+      45051362d0, adb6b698eb, 87549eb7ac, 74d9a52aa6, 3bef961500, a31cbb3332, 21faaea01d, 642ef68320,
+      51993a71f0, 5d08b26831], part: Opcode table}
+- id: 02533dfeee
+  gist: Jcc rel8 is encoded as 70+cc cb (70-7F).
+  how: derived
+  note: 'The rel8 rows run from 70 (JO) to 7F (JG): the condition code is added to 70.'
+  support:
+  - {doc: sdm, at: 1203, units: [87549eb7ac, 21faaea01d], part: Opcode table}
+- id: f4b7bdadc3
+  gist: 'Short form: target within -128..+127 bytes of the next instruct…'
+  support:
+  - {doc: sdm, at: 1206, units: [71278983c9, e52fae348e], part: Description}
+- id: e0dd317bbe
+  gist: Jcc rel32 is encoded as 0F 80+cc cd (0F 80-0F 8F).
+  how: derived
+  note: 'The rel32 rows run from 0F 80 (JO) to 0F 8F (JG): the condition code is added to 0F 80.'
+  support:
+  - {doc: sdm, at: 1205, units: [cd7dc81584, cb774f5233], part: Opcode table}
+  - {doc: sdm, at: 1204, units: [c1e813782f], part: Opcode table}
+- id: 478537ccbe
+  gist: 'Near form: signed 32-bit offset, reaching +-2 GiB.'
+  how: derived
+  note: A signed 32-bit offset reaches about 2 GiB either way (the range is derived).
+  support:
+  - {doc: sdm, at: 1206, units: [71278983c9, 459ee5f48a], part: Description}
+- id: 2ef436a64b
+  gist: JRCXZ rel8 is encoded as E3 cb.
+  support:
+  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table, by: match}
+- id: 0687b601e5
+  gist: Jump if RCX = 0.
+  support:
+  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
+- id: 9c615d406c
+  gist: Short form only.
+  how: derived
+  note: Only the rel8 row exists for JRCXZ.
+  support:
+  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
+- id: 8ddaaecd00
+  gist: JECXZ (tests ECX) is the same opcode with a 67h prefix.
+  how: derived
+  note: JECXZ and JRCXZ share E3 cb; the register checked follows the address-size attribute, which the
+    67H prefix changes.
+  support:
+  - {doc: sdm, at: 1203, units: [5d08b26831, 51993a71f0], part: Opcode table}
+  - {doc: sdm, at: 1206, units: [3934d4906e], part: Description}
+- id: a2ef410a52
+  gist: 'Flags read: CF, ZF, SF, OF, PF.'
+  support:
+  - {doc: sdm, at: 1206, units: [fd60402f41], part: Description}
+- id: a904fc46f9
+  gist: No flags are modified.
+  support:
+  - {doc: sdm, at: 1207, units: [71f8e7976e], part: Flags Affected}
+- id: 09d226ec07
+  gist: Which flags are read depends on the condition; JRCXZ reads no f…
+  support:
+  - {doc: sdm, at: 1206, units: [bcfa07befd, fd60402f41], part: Description}
+- id: 2fb174284a
+  gist: jcc label is a family of instructions that jump to label when t…
+  support:
+  - {doc: sdm, at: 1206, units: [fd60402f41, 00d87191a6], part: Description}
+- id: 5bc8ca0027
+  gist: The letters after j name the condition.
+  how: derived
+  note: Each mnemonic is j plus the condition (o, s, b, ...) in the opcode table.
+  support:
+  - {doc: sdm, at: 1206, units: [a7feb8c5ba], part: Description}
+  - {doc: sdm, at: 1203, units: [87549eb7ac, 21faaea01d, a397db1da2], part: Opcode table}
+- id: 9e591b01b2
+  gist: They read the flags left by an earlier instruction (usually cmp…
+  support:
+  - {doc: sdm, at: 1206, units: [fd60402f41], part: Description}
+  - {doc: sdm, at: 1207, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 865
+    units: [9fc1e3da9d]
+    part: Description
+    note: From the CMP entry.
+- id: 0fd65ccb37
+  gist: The SDM uses greater/less for signed numbers and above/below fo…
+  support:
+  - {doc: sdm, at: 1206, units: [4eda31ba2e], part: Description}
+- id: ca0a78c9ec
+  gist: Several names are synonyms for one opcode (je = jz, jb = jc = j…
+  support:
+  - {doc: sdm, at: 1206, units: [e941c52d19, 894d6f882a], part: Description}
+  - {doc: sdm, at: 1203, units: [e937db03ed, 642ef68320, d19359c7c2, a397db1da2, 580fdbfe31], part: Opcode
+      table}
+- id: 1e5648e15c
+  gist: equal / zero | JE, JZ | ZF = 1 | a = b
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [e937db03ed, 642ef68320], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: c85af40ffb
+  gist: not equal / not zero | JNE, JNZ | ZF = 0 | a != b
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [18b1475313, adb6b698eb], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: 25b52b83ef
+  gist: above | JA, JNBE | CF = 0 and ZF = 0 | a > b, unsigned
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [aa86466ea7, 2a852212b9], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: 5e993fefb8
+  gist: above or equal | JAE, JNB, JNC | CF = 0 | a >= b, unsigned
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [758f9a92ff, d50bfbf244, 46d4e9929c], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: 07b281373e
+  gist: below | JB, JNAE, JC | CF = 1 | a < b, unsigned
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [a397db1da2, 580fdbfe31, d19359c7c2], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: f0a153cd17
+  gist: below or equal | JBE, JNA | CF = 1 or ZF = 1 | a <= b, unsigned
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [53ab55a43e, 44bed4ba22], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: cc4d285b35
+  gist: greater | JG, JNLE | ZF = 0 and SF = OF | a > b, signed
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [4c0eb334fa, b5f4d31f9e], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: 962cd39f1a
+  gist: greater or equal | JGE, JNL | SF = OF | a >= b, signed
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [bc666b5231, '9402861489'], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: a0c3d83b5c
+  gist: less | JL, JNGE | SF != OF | a < b, signed
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: [4d1db289db, a0cc797ec1], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: 1d2794107d
+  gist: less or equal | JLE, JNG | ZF = 1 or SF != OF | a <= b, signed
+  how: derived
+  note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
+    a - b.
+  support:
+  - {doc: sdm, at: 1203, units: ['2657576261', 204bac4f79], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+- id: 32cd8ddd05
+  gist: overflow / no overflow | JO / JNO | OF = 1 / OF = 0
+  support:
+  - {doc: sdm, at: 1203, units: [87549eb7ac, 2c8f24d0d5], part: Opcode table}
+- id: 8c23290b42
+  gist: sign / no sign | JS / JNS | SF = 1 / SF = 0 | result negative /…
+  how: derived
+  note: SF is the sign of the result, so 'result negative' is SF = 1.
+  support:
+  - {doc: sdm, at: 1203, units: [21faaea01d, 45051362d0], part: Opcode table}
+  - doc: sdm
+    at: 82
+    units: [8d996b02f3]
+    part: 3.4.3.1 Status Flags
+    note: Status flags (Vol. 1, 3.4.3.1).
+- id: 439ea7e205
+  gist: parity even / odd | JP, JPE / JNP, JPO | PF = 1 / PF = 0
+  support:
+  - {doc: sdm, at: 1203, units: [74d9a52aa6, 3bef961500, 07c86d0488, a31cbb3332], part: Opcode table}
+- id: 7c453e16ca
+  gist: RCX is zero | JRCXZ | RCX = 0 (no flags)
+  support:
+  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
+  - {doc: sdm, at: 1206, units: [bcfa07befd], part: Description}
+- id: 73ba9621be
+  gist: Right after cmp or test to choose between two paths, or to buil…
+  how: editorial
+  note: A typical use.
+- id: 0ecb8e7912
+  gist: To leave a loop early, or to guard a loop/rep against a zero co…
+  how: derived
+  note: The entry recommends JRCXZ at the start of a loop to avoid entering it with a zero count.
+  support:
+  - {doc: sdm, at: 1206, units: [77626ba505, 3f56e86b1f], part: Description}
+- id: d1208375eb
+  gist: Choose the signed (jl, jg) or unsigned (jb, ja) family accordin…
+  how: derived
+  note: Signed and unsigned conditions are separate mnemonics reading the same flags.
+  support:
+  - {doc: sdm, at: 1206, units: [4eda31ba2e], part: Description}
+  - doc: sdm
+    at: 865
+    units: [9fc1e3da9d]
+    part: Description
+    note: From the CMP entry.
+- id: 249f221e09
+  gist: Signed versus unsigned is your choice, not the CPU's.
+  how: derived
+  note: The CPU only sets flags; the choice of mnemonic carries the interpretation.
+  support:
+  - {doc: sdm, at: 1206, units: [4eda31ba2e], part: Description}
+- id: b62fbdf616
+  gist: After cmp rax, rbx, jl and jb test different flags and give dif…
+  how: derived
+  note: JL tests SF != OF, JB tests CF = 1, which differ when the top bit is involved.
+  support:
+  - {doc: sdm, at: 1203, units: [4d1db289db, a397db1da2], part: Opcode table}
+- id: cd059c3830
+  gist: Pick the family that matches the type of your data.
+  how: editorial
+  note: Advice.
+- id: 04f342309b
+  gist: Range of the short form.
+  how: editorial
+  note: Heading for the next statement.
+- id: c66cfc75f0
+  gist: Jcc rel8 reaches only -128 to +127 bytes from the next instruct…
+  how: derived
+  note: An 8-bit signed offset spans -128 to +127; 'from the next instruction' is the usual reading of
+    the offset's base.
+  support:
+  - {doc: sdm, at: 1206, units: [71278983c9, e52fae348e, 812a3aa9fc], part: Description}
+- id: 1db83466f0
+  gist: Farther targets need the near form (0F 8x cd), which assemblers…
+  how: derived
+  note: The 0F 8x rows take a 32-bit offset; which form to use is the assembler's decision.
+  support:
+  - {doc: sdm, at: 1205, units: [cd7dc81584], part: Opcode table}
+  - {doc: sdm, at: 1206, units: [71278983c9], part: Description}
+- id: d1f85342e1
+  gist: Keep the flags intact between the test and the jump.
+  how: editorial
+  note: Heading for the next statement.
+- id: e5c2b08d2b
+  gist: Any instruction that writes flags in between changes the outcom…
+  how: derived
+  note: XOR rewrites the flags and MOV does not.
+  support:
+  - {doc: sdm, at: 1206, units: [fd60402f41], part: Description}
+  - doc: sdm
+    at: 2874
+    units: [b819ee05d2]
+    part: Flags Affected
+    note: From the XOR entry.
+  - doc: sdm
+    at: 1319
+    units: [71f8e7976e]
+    part: Flags Affected
+    note: 'From the MOV entry: Flags Affected is None.'
+- id: 6cae8dedc6
+  gist: jrcxz is special.
+  how: editorial
+  note: Heading for the next statement.
+- id: 30213fc76f
+  gist: It tests rcx itself (not the flags), has only the short form, a…
+  how: derived
+  note: The register checked follows the address-size attribute; the 67H prefix selects the 32-bit size.
+  support:
+  - {doc: sdm, at: 1206, units: [bcfa07befd, 1506bd42ed, 3934d4906e], part: Description}
+  - {doc: sdm, at: 1203, units: [51993a71f0, 5d08b26831], part: Opcode table}
+- id: bf15d8ab7c
+  gist: It is the safe guard in front of a loop or rep.
+  support:
+  - {doc: sdm, at: 1206, units: [77626ba505, 3f56e86b1f], part: Description}
+- id: 7d4d2c2ffe
+  gist: Near jumps only.
+  how: editorial
+  note: Heading for the next statement.
+- id: bfe545df77
+  gist: A jcc cannot jump to another code segment, and a non-canonical…
+  support:
+  - {doc: sdm, at: 1206, units: [388b9f0e77], part: Description}
+  - {doc: sdm, at: 1207, units: [33920ea836], part: 64-Bit Mode Exceptions}
+- id: 6d53df94d4
+  gist: A lock prefix is invalid (#UD).
+  support:
+  - doc: sdm
+    at: 1207
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: 1e0252202c
+  gist: It never modifies the flags.
+  support:
+  - {doc: sdm, at: 1207, units: [71f8e7976e], part: Flags Affected}
+- id: f7a8f5b949
+  gist: cmp rax, rbx jl .signed_less ; taken if rax < rbx as signed num…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

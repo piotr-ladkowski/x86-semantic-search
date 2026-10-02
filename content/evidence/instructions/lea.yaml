@@ -1,0 +1,169 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 12cd5a3de4
+  gist: Computes the address of a memory operand and stores it in a reg…
+  how: derived
+  note: 'The entry says the effective address is computed and stored, and that no flag changes. That no
+    memory is read follows from the exceptions: only #UD is listed, no page fault.'
+  support:
+  - {doc: sdm, at: 1251, units: [f42cf0785e], part: Description}
+  - doc: sdm
+    at: 1252
+    units: [71f8e7976e]
+    part: Flags Affected
+    note: Flags Affected is None.
+  - doc: sdm
+    at: 1252
+    units: [a0867b620f]
+    part: Protected Mode Exceptions
+    note: '#UD if the source is not a memory location.'
+- id: d9e9d18357
+  gist: LEA r64, m is encoded as REX.W + 8D /r.
+  support:
+  - {doc: sdm, at: 1251, units: [97c6ac5354], part: Opcode table, by: match}
+- id: b89fddb907
+  gist: LEA r32, m is encoded as 8D /r.
+  support:
+  - {doc: sdm, at: 1251, units: [222de826bf], part: Opcode table, by: match}
+- id: 3daa232975
+  gist: The address is computed in 64 bits; the low 32 bits are stored…
+  support:
+  - doc: sdm
+    at: 1251
+    units: [8771cc5071]
+    part: Table
+    note: Operand size 32, address size 64.
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: Zero-extension of 32-bit results (Vol. 1, 3.4.1.1).
+- id: d93e5cf98a
+  gist: LEA r16, m is encoded as 8D /r.
+  support:
+  - {doc: sdm, at: 1251, units: [e84af63846], part: Opcode table, by: match}
+- id: 74a1f0f2a2
+  gist: Needs the 66h operand-size prefix; only the low 16 bits are sto…
+  support:
+  - doc: sdm
+    at: 1251
+    units: [6deff93b6e]
+    part: Table
+    note: Operand size 16, address size 64 (66H prefix).
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - {doc: sdm, at: 1252, units: [71f8e7976e], part: Flags Affected}
+- id: c266ac7344
+  gist: lea dst, [expr] evaluates the address expression base + indexsc…
+  support:
+  - {doc: sdm, at: 1251, units: [f42cf0785e], part: Description}
+  - doc: sdm
+    at: 89
+    units: [af85c8688f]
+    part: 3.7.5 Specifying an Offset
+    note: Offset = Base + (Index * Scale) + Displacement (Vol. 1, 3.7.5).
+- id: 78e6d30471
+  gist: 'Despite the bracket syntax, no memory is accessed: nothing is l…'
+  how: derived
+  note: 'The entry describes computing an address, not accessing it, and lists no memory exceptions (#PF,
+    #GP, #SS) for it.'
+  support:
+  - {doc: sdm, at: 1251, units: [f42cf0785e], part: Description}
+  - doc: sdm
+    at: 1252
+    units: [a0867b620f]
+    part: Protected Mode Exceptions
+    note: '#UD if the source is not a memory location.'
+- id: 0b219eece7
+  gist: Taking the address of data or code in position-independent 64-b…
+  how: editorial
+  note: A typical use; the passage cited is background on RIP-relative addressing.
+  support:
+  - doc: sdm
+    at: 84
+    units: [2677ed2da4]
+    part: 3.5.1 Instruction Pointer in 64-Bit Mode
+    note: RIP-relative addressing in 64-bit mode (Vol. 1, 3.5.1).
+- id: a49f397834
+  gist: 'Three-operand addition in one instruction: lea rax, [rdi + rsi]…'
+  how: derived
+  note: The destination is a separate register and the source operands are only read to form the address.
+  support:
+  - {doc: sdm, at: 1251, units: [f42cf0785e, faa6744a43], part: Description}
+- id: bfd06a64a8
+  gist: Cheap multiplication by 2, 3, 4, 5, 8 or 9 (indexscale with sca…
+  how: derived
+  note: Base + index*scale with scale 1, 2, 4 or 8 gives these multipliers; 'cheap' is a performance judgement.
+  support:
+  - {doc: sdm, at: 89, units: [af85c8688f], part: 3.7.5 Specifying an Offset}
+  - doc: sdm
+    at: 88
+    units: [363f63c208]
+    part: 3.7.5 Specifying an Offset
+    note: Scale factor of 2, 4 or 8; no index scaling is a factor of 1.
+- id: a21b1f4ba1
+  gist: Doing arithmetic while preserving the flags, because LEA never…
+  support:
+  - {doc: sdm, at: 1252, units: [71f8e7976e], part: Flags Affected}
+- id: a9ce3ac6a0
+  gist: The source must be a memory operand.
+  support:
+  - {doc: sdm, at: 1251, units: [faa6744a43], part: Description}
+  - doc: sdm
+    at: 1252
+    units: [a0867b620f]
+    part: Protected Mode Exceptions
+    note: '#UD if the source is not a memory location.'
+- id: 51b59ee444
+  gist: lea rax, rbx is invalid (#UD at the machine level).
+  support:
+  - doc: sdm
+    at: 1252
+    units: [a0867b620f]
+    part: Protected Mode Exceptions
+    note: '#UD if the source is not a memory location.'
+  - doc: sdm
+    at: 1252
+    units: [a8aa8932ca]
+    part: 64-Bit Mode Exceptions
+    note: In 64-bit mode the exceptions are the same as in protected mode.
+- id: 6d4ffe80a0
+  gist: RIP-relative addressing uses a signed 32-bit displacement relat…
+  how: derived
+  note: A signed 32-bit displacement reaches about 2 GiB either way (the range is derived).
+  support:
+  - {doc: sdm, at: 90, units: [69449c5966], part: 3.7.5.1 Specifying an Offset in 64-Bit Mode}
+  - {doc: sdm, at: 84, units: [7acbd2fb16], part: 3.5.1 Instruction Pointer in 64-Bit Mode}
+- id: af2ff309d6
+  gist: Result size follows the destination register.
+  support:
+  - {doc: sdm, at: 1251, units: [82403ac33d, 8c1be7250b], part: Description}
+- id: 0694afc121
+  gist: A 32-bit destination takes the low 32 bits of the computed addr…
+  support:
+  - {doc: sdm, at: 1251, units: [8771cc5071], part: Table}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20, b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: Operand-size rules in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 699a5dc277
+  gist: A 67h address-size prefix makes the address calculation 32-bit…
+  support:
+  - doc: sdm
+    at: 1251
+    units: [f938bfde36]
+    part: Table
+    note: Operand size 64, address size 32 (67H prefix).
+- id: 1d192d6304
+  gist: This is rare outside deliberately truncating code.
+  how: editorial
+  note: A judgement about how often it is used.
+- id: 8694f29799
+  gist: lea rax, [rdi + rsi] ; rax = rdi + rsi, flags untouched lea eax…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

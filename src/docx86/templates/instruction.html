@@ -79,6 +79,8 @@
         <h2 class="font-semibold uppercase tracking-wide">Source</h2>
         <p class="mt-1">Intel SDM {{ sdm_revision }}, Vol. 2: {{ ins.sdm_entries | join("; ") }}</p>
         {% for s in ins.extra_sources %}<p class="mt-1">{{ s }}</p>{% endfor %}
+        {% if evidence %}<p class="mt-2"><a href="{{ evidence.url }}" class="text-indigo-600 hover:underline dark:text-indigo-400">Check each statement against its sources</a>
+          ({{ evidence.grounded }} of {{ evidence.total }} statements traced to sources)</p>{% endif %}
       </section>
     </aside>
   </div>

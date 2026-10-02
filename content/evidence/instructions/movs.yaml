@@ -1,0 +1,211 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: e2665576fb
+  gist: Copies one element from [RSI] to [RDI] and advances both pointe…
+  support:
+  - {doc: sdm, at: 1402, units: [a85c1a5cbb, 151a8cbd68], part: Description}
+  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+- id: 4800c110ad
+  gist: Also written as MOVSB, MOVSW, MOVSD, MOVSQ.
+  support:
+  - {doc: sdm, at: 1402, units: [f904f23258, 61daac68b7, 6c31a318f9, 2484e385ad], part: Opcode table}
+- id: fc43361c5b
+  gist: MOVSB (MOVS m8, m8) is encoded as A4.
+  support:
+  - {doc: sdm, at: 1402, units: [a41848efca], part: Opcode table, by: match}
+- id: 2f1eb94fdb
+  gist: Copy 1 byte from [rsi] to [rdi].
+  support:
+  - {doc: sdm, at: 1402, units: [a41848efca, f904f23258], part: Opcode table}
+- id: e50e2987e0
+  gist: MOVSD (MOVS m32, m32) is encoded as A5.
+  support:
+  - {doc: sdm, at: 1402, units: [e69ddf0e8a], part: Opcode table, by: match}
+- id: 1db0d603ae
+  gist: Copy 4 bytes.
+  support:
+  - {doc: sdm, at: 1402, units: [e69ddf0e8a, 6c31a318f9], part: Opcode table}
+- id: bf37569637
+  gist: MOVSW (2 bytes) is the same opcode with the 66h prefix.
+  how: derived
+  note: MOVSW and MOVSD share opcode A5; the operand-size prefix selects 16 bits.
+  support:
+  - {doc: sdm, at: 1402, units: [c6efd20f6b, 61daac68b7, e69ddf0e8a], part: Opcode table}
+- id: 9678a9e9c8
+  gist: MOVSQ (MOVS m64, m64) is encoded as REX.W + A5.
+  support:
+  - {doc: sdm, at: 1402, units: [237cf183b4], part: Opcode table, by: match}
+- id: d408d5851f
+  gist: Copy 8 bytes.
+  support:
+  - {doc: sdm, at: 1402, units: [237cf183b4, 2484e385ad], part: Opcode table}
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - {doc: sdm, at: 1404, units: [71f8e7976e], part: Flags Affected}
+- id: 9786419a17
+  gist: DF (the direction flag) is read, not changed.
+  support:
+  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
+  - {doc: sdm, at: 1404, units: [71f8e7976e], part: Flags Affected}
+- id: 12bc247c9e
+  gist: movs copies one element from the memory at [rsi] to the memory…
+  support:
+  - {doc: sdm, at: 1402, units: [359ee1eccc, 151a8cbd68, 521ccda726, 151587af78], part: Description}
+  - {doc: sdm, at: 1403, units: [3dfb87b407], part: Description}
+- id: c827cb169e
+  gist: 'The suffix chooses the size: movsb 1 byte, movsw 2, movsd 4, mo…'
+  support:
+  - {doc: sdm, at: 1402, units: [74f75d4e22, 151587af78, 2484e385ad], part: Description}
+- id: a168e4e480
+  gist: It is the only common instruction that moves memory to memory.
+  how: derived
+  note: Both operands of MOVS are in memory; MOV's forms have at most one.
+  support:
+  - {doc: sdm, at: 1402, units: [359ee1eccc], part: Description}
+  - doc: sdm
+    at: 1318
+    units: [8f92bd08d9, d31eea6db8]
+    part: Operand encoding
+    note: 'From the MOV entry: its forms have one r/m operand.'
+- id: 7d61eedb7a
+  gist: On its own it copies a single element; with the rep prefix and…
+  support:
+  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+- id: 6c730d4071
+  gist: 'Copying a buffer: set rsi (source), rdi (destination) and rcx (…'
+  how: derived
+  note: Source and destination come from RSI and RDI; REP repeats by the count register.
+  support:
+  - {doc: sdm, at: 1402, units: [6424b167c6], part: Description}
+  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [20668b35cf, 06e40ebb3c]
+    part: Opcode table
+    note: From the REP entry.
+- id: edc2c2debb
+  gist: 'Copying in larger units: rep movsq moves 8 bytes per repetition…'
+  how: derived
+  note: The quadword step is 8 and REP counts repetitions.
+  support:
+  - doc: sdm
+    at: 1852
+    units: [0c64d483ab, 06e40ebb3c]
+    part: Opcode table
+    note: From the REP entry.
+  - {doc: sdm, at: 1404, units: [fe15d9ed9c], part: Operation}
+- id: 05af02f995
+  gist: Moving data backwards (overlapping buffers) by setting DF with…
+  how: derived
+  note: DF = 1 makes the pointers decrement.
+  support:
+  - {doc: sdm, at: 1402, units: [521ccda726], part: Description}
+- id: c4e7645b39
+  gist: The registers are fixed.
+  how: editorial
+  note: Heading for the next statement.
+- id: 116e07028e
+  gist: The source is always rsi and the destination always rdi; where…
+  support:
+  - {doc: sdm, at: 1402, units: [e110fe19a2, 42da7b21c8, 6424b167c6], part: Description}
+- id: 13c3f59f69
+  gist: 'The SDM warns that this form can be misleading: the addresses a…'
+  support:
+  - {doc: sdm, at: 1402, units: [42da7b21c8], part: Description}
+- id: 4c10629fdb
+  gist: rcx counts elements, not bytes.
+  how: derived
+  note: Each repetition moves one element; the element size is the step.
+  support:
+  - doc: sdm
+    at: 1852
+    units: [06e40ebb3c]
+    part: Description
+    note: 'From the REP entry: the count register is decremented per repetition.'
+  - {doc: sdm, at: 1853, units: [db6803bf6f], part: Operation}
+- id: 3b8950745f
+  gist: rep movsq with rcx = 8 copies 64 bytes.
+  how: derived
+  note: 8 repetitions of 8 bytes.
+  support:
+  - {doc: sdm, at: 1402, units: [237cf183b4], part: Opcode table}
+  - doc: sdm
+    at: 1852
+    units: [0c64d483ab, 06e40ebb3c]
+    part: Opcode table
+    note: From the REP entry.
+- id: 7d55aa68ba
+  gist: Overlap needs the right direction.
+  how: editorial
+  note: Heading for the next statement.
+- id: f7e7d09cac
+  gist: A forward copy where the destination starts inside the source o…
+  how: run
+  ref: tests/asm/regs.asm
+  note: copy_bytes on "abcdef" (4 bytes from offset 0 to offset 2) gives "ababab" in `make verify-asm`.
+  support:
+  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
+- id: 918aa41d56
+  gist: Copy backwards instead, starting at the last element with DF =…
+  how: run
+  ref: tests/asm/regs.asm
+  note: copy_backward on "abcdef" gives "ababcd" in `make verify-asm`.
+  support:
+  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
+- id: f3cb3069c2
+  gist: Restore DF with cld afterwards; the System V ABI requires it cl…
+  how: derived
+  note: CLD sets DF = 0, the state the ABI requires.
+  support:
+  - doc: sysv
+    at: 16
+    units: [4929d2daf8]
+    part: 3.2.1 Registers and the Stack Frame
+    note: 'System V ABI 3.2.1: DF must be clear on function entry and return.'
+  - {doc: sdm, at: 1402, units: [521ccda726], part: Description}
+- id: eda58ae357
+  gist: movsd is ambiguous.
+  how: editorial
+  note: Heading for the next statement.
+- id: fe49d176d4
+  gist: With no operands it is this string instruction; with xmm operan…
+  support:
+  - {doc: sdm, at: 1402, units: [6c31a318f9], part: Opcode table}
+  - doc: sdm
+    at: 1393
+    units: [16ad2ce5ce]
+    part: Opcode table
+    note: From the SSE2 MOVSD entry.
+- id: fd4a019142
+  gist: Faults.
+  how: editorial
+  note: Heading for the next statement.
+- id: 2cdc2e0f1f
+  gist: 'A non-canonical address raises #GP(0) and an unmapped page a pa…'
+  support:
+  - {doc: sdm, at: 1405, units: [33920ea836, 9bf63f56fc], part: 64-Bit Mode Exceptions}
+- id: 6d53df94d4
+  gist: A lock prefix is invalid (#UD).
+  support:
+  - doc: sdm
+    at: 1405
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: 6a8d2aa4f2
+  gist: Alignment checking (#AC) applies at privilege level 3 if enable…
+  support:
+  - {doc: sdm, at: 1405, units: [50f5a60140], part: 64-Bit Mode Exceptions}
+- id: 46be064fa9
+  gist: It never changes the flags.
+  support:
+  - {doc: sdm, at: 1404, units: [71f8e7976e], part: Flags Affected}
+- id: fcfc46ecd5
+  gist: 'copy_bytes: ; void copy_bytes(void dst, const void src, size_t…'
+  how: run
+  ref: tests/asm/regs.asm
+  note: copy_bytes, copy_qwords and copy_backward are the functions run by `make verify-asm`.

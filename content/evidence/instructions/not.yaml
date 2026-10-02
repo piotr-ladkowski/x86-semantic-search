@@ -1,0 +1,101 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 07c80d1da0
+  gist: Inverts every bit of the operand in place; unlike most logic in…
+  support:
+  - {doc: sdm, at: 1450, units: [9758a513bd], part: Description}
+  - {doc: sdm, at: 1450, units: [71f8e7976e], part: Flags Affected}
+- id: 9deddff323
+  gist: NOT r/m64 is encoded as REX.W + F7 /2.
+  support:
+  - {doc: sdm, at: 1450, units: [22cc38b8e6], part: Opcode table, by: match}
+- id: 97b845e0fe
+  gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
+  support:
+  - {doc: sdm, at: 1450, units: [24d8383347, 3ab3ecb7f0, e917b81462, 22cc38b8e6], part: Opcode table}
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - {doc: sdm, at: 1450, units: [71f8e7976e], part: Flags Affected}
+- id: d277b26366
+  gist: not dst replaces each 1 bit of dst with 0 and each 0 with 1.
+  support:
+  - {doc: sdm, at: 1450, units: [9758a513bd], part: Description}
+- id: 9c367e59a1
+  gist: It takes a single operand, a register or a memory location, and…
+  support:
+  - {doc: sdm, at: 1450, units: [9758a513bd, 138ae4629d], part: Description}
+- id: c02c460dd3
+  gist: Building the inverse of a mask, for example to clear bits with…
+  how: editorial
+  note: A typical use.
+- id: f5eea6e6b6
+  gist: Computing a bitwise complement without disturbing the flags.
+  how: derived
+  note: NOT is a bitwise complement and its Flags Affected is None.
+  support:
+  - {doc: sdm, at: 1450, units: [9758a513bd, 71f8e7976e], part: Description}
+- id: a9ded7f1d9
+  gist: 'Together with inc, as negation: not rax then inc rax gives -rax…'
+  how: derived
+  note: Two's complement negation is the bitwise complement plus one.
+  support:
+  - {doc: sdm, at: 1450, units: [9758a513bd], part: Description}
+  - doc: sdm
+    at: 1447
+    units: [9fe7a3e7cc]
+    part: Description
+    note: 'From the NEG entry: two''s complement.'
+- id: 726483ac59
+  gist: It sets no flags.
+  support:
+  - {doc: sdm, at: 1450, units: [71f8e7976e], part: Flags Affected}
+- id: d342b35d1f
+  gist: xor rax, -1 produces the same value but also changes SF/ZF/PF/O…
+  how: derived
+  note: XOR with all ones inverts each bit like NOT, but XOR rewrites the flags and NOT leaves them.
+  support:
+  - {doc: sdm, at: 1450, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 2874
+    units: [b819ee05d2, 1345083ae6]
+    part: Flags Affected
+    note: From the XOR entry.
+- id: 586f765144
+  gist: 32-bit operations zero the upper half.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: ab5d27f299
+  gist: not eax writes the inverted low 32 bits and clears bits 63:32,…
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+  - {doc: sdm, at: 1450, units: [9758a513bd], part: Description}
+- id: 39685135bb
+  gist: One operand only, no immediate form; it works on a register or…
+  how: derived
+  note: The opcode table lists only r/m forms with no immediate operand.
+  support:
+  - {doc: sdm, at: 1450, units: [138ae4629d, 22cc38b8e6, 3ab3ecb7f0, e917b81462], part: Description}
+- id: 67a8461ff1
+  gist: 'lock not needs a memory destination (otherwise #UD).'
+  support:
+  - doc: sdm
+    at: 1451
+    units: [47552c0032]
+    part: 64-Bit Mode Exceptions
+    note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+- id: 4bcab65bb4
+  gist: not rax ; rax = ~rax not dword [rdi] ; invert a 32-bit value in…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

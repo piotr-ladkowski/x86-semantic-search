@@ -23,8 +23,10 @@ from . import __version__, api, telemetry, web
 from .config import Settings, get_settings
 from .content import load_content
 from .embedding import get_embedder
+from .evidence import EvidenceStore
 from .index import IndexStaleError, build_index, ensure_fresh, load_index, save_index
 from .search import SearchEngine
+from .sources import SourceRegistry
 
 log = logging.getLogger("docx86")
 PACKAGE_DIR = Path(__file__).parent
@@ -86,6 +88,10 @@ def create_app(
     async def lifespan(app: FastAPI):
         try:
             app.state.engine = engine or build_engine(settings, tracer)
+            app.state.evidence = EvidenceStore(
+                app.state.engine.content, settings.content_dir / "evidence"
+            )
+            app.state.sources = SourceRegistry(settings, settings.cache_dir)
             yield
         finally:
             # Also runs when startup fails (e.g. stale index), so that error trace is exported.

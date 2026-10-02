@@ -1,0 +1,161 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 3c1816f66a
+  gist: Multiplies RAX by the operand as unsigned numbers and stores th…
+  support:
+  - {doc: sdm, at: 1429, units: [044169e7d3, 4850ff1b96, 0f3291adb3], part: Description}
+- id: a7a3f73efc
+  gist: MUL r/m64 is encoded as REX.W + F7 /4.
+  support:
+  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table, by: match}
+- id: 17f22d42c9
+  gist: RDX:RAX := RAX r/m64.
+  support:
+  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table}
+- id: 05be60e4f1
+  gist: The 32-bit form (F7 /4) multiplies EAX and writes EDX:EAX; the…
+  support:
+  - {doc: sdm, at: 1429, units: [89394ebe87, ae4bf5a29c], part: Opcode table}
+- id: 1f1aa91256
+  gist: 'Flags modified: OF, CF; undefined: SF, ZF, AF, PF.'
+  support:
+  - {doc: sdm, at: 1430, units: [9f41ea0667, 90e3d2cc23], part: Flags Affected}
+- id: 22c22fbf46
+  gist: CF and OF are 0 if the upper half of the product is 0, otherwis…
+  support:
+  - {doc: sdm, at: 1430, units: [9f41ea0667], part: Flags Affected}
+  - {doc: sdm, at: 1429, units: [9d0a0e51c2], part: Description}
+- id: a8c3af8839
+  gist: mul src multiplies the unsigned value in rax by src (a register…
+  support:
+  - {doc: sdm, at: 1429, units: [4850ff1b96, 254de13c7b, e91bbaa475], part: Opcode table}
+- id: 343b006115
+  gist: The multiplicand is implicit, so there is only one explicit ope…
+  support:
+  - {doc: sdm, at: 1429, units: [92e9ec2799, 15c63c03d3], part: Description}
+- id: d9694a380d
+  gist: Multiplying unsigned numbers when you need the whole product, f…
+  how: derived
+  note: The quadword row delivers the full 128-bit product in RDX:RAX.
+  support:
+  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
+  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
+- id: 2ea8f5cb9d
+  gist: 'Checking for unsigned overflow of a 64-bit multiply: CF and OF…'
+  support:
+  - {doc: sdm, at: 1430, units: [9f41ea0667], part: Flags Affected}
+- id: ea0f2d1671
+  gist: For an ordinary signed or truncated multiply, imul is simpler (…
+  how: derived
+  note: IMUL has two- and three-operand forms; MUL has only the one-operand form.
+  support:
+  - doc: sdm
+    at: 1155
+    units: [c0bc920325, 1c427b5098, 0527f7241f]
+    part: Description
+    note: From the IMUL entry.
+  - doc: sdm
+    at: 1155
+    units: [c0bc920325, 1c427b5098, 0527f7241f]
+    part: Description
+    note: From the IMUL entry.
+- id: a545ea8414
+  gist: For a multiply that leaves the flags alone and lets you choose…
+  how: derived
+  note: The MULX entry names the implicit source EDX/RDX, two destination operands, and says it multiplies
+    without affecting the arithmetic flags.
+  support:
+  - doc: sdm
+    at: 1441
+    units: [732fc2309f, bc3a60f924]
+    part: Description
+    note: From the MULX entry.
+  - doc: sdm
+    at: 1441
+    units: [732fc2309f, bc3a60f924, 05061e6bf2]
+    part: Description
+    note: From the MULX entry.
+- id: 7f54a5868d
+  gist: Implicit registers.
+  how: editorial
+  note: Heading for the next statement.
+- id: d5d3fd27b0
+  gist: rax is always the multiplicand and rdx is always overwritten by…
+  support:
+  - {doc: sdm, at: 1429, units: [92e9ec2799, 0f3291adb3], part: Description}
+- id: 2d4b26a81b
+  gist: Save anything you need from rdx first.
+  how: editorial
+  note: Advice.
+- id: d961a7d957
+  gist: No immediate operand.
+  how: derived
+  note: The only operand form is ModRM:r/m; no row has an immediate.
+  support:
+  - {doc: sdm, at: 1429, units: [89394ebe87, 4850ff1b96, 15c63c03d3], part: Opcode table}
+  - {doc: sdm, at: 1429, units: [89394ebe87, 4850ff1b96, 15c63c03d3], part: Opcode table}
+- id: efe7a1e97b
+  gist: mul 10 is not valid; load the constant into a register.
+  how: derived
+  note: No immediate form exists, so the assembler rejects it.
+  support:
+  - {doc: sdm, at: 1429, units: [4850ff1b96, 15c63c03d3], part: Opcode table}
+  - {doc: sdm, at: 1429, units: [4850ff1b96, 15c63c03d3], part: Opcode table}
+- id: f1fed617b8
+  gist: Only CF and OF mean anything.
+  support:
+  - {doc: sdm, at: 1430, units: [9f41ea0667, 90e3d2cc23], part: Flags Affected}
+- id: cf25792845
+  gist: SF, ZF, AF and PF are undefined afterwards, so do not branch on…
+  support:
+  - {doc: sdm, at: 1430, units: [90e3d2cc23], part: Flags Affected}
+- id: f898bf2045
+  gist: 32-bit form.
+  how: editorial
+  note: Heading for the next statement.
+- id: f0e19bb0f4
+  gist: mul ecx multiplies eax and writes edx:eax; both writes zero-ext…
+  support:
+  - {doc: sdm, at: 1429, units: [ae4bf5a29c, ae1030617f], part: Opcode table}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: efbead63d5
+  gist: The 8-bit form writes the 16-bit product to ax.
+  support:
+  - {doc: sdm, at: 1429, units: [89394ebe87, b624b485ad], part: Opcode table}
+- id: fd352c64aa
+  gist: 'It is unsigned: for signed values the high half is wrong.'
+  how: derived
+  note: MUL treats the operands as unsigned; IMUL's one-operand form is the signed counterpart.
+  support:
+  - {doc: sdm, at: 1429, units: [044169e7d3], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [29fced48e4]
+    part: Description
+    note: 'From the IMUL entry: signed multiplication.'
+  - {doc: sdm, at: 1429, units: [044169e7d3], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [29fced48e4]
+    part: Description
+    note: 'From the IMUL entry: signed multiplication.'
+- id: 7f798bf7a9
+  gist: Use imul (one-operand form) instead.
+  support:
+  - doc: sdm
+    at: 1155
+    units: [07730dc140, a48af4d695]
+    part: Description
+    note: From the IMUL entry.
+- id: f763fc266b
+  gist: mov rax, 0xFFFFFFFFFFFFFFFF mov rbx, 2 mul rbx ; rdx:rax = 0x1:…
+  how: illustrative
+  note: Short snippets using the forms listed above; mulhi(0xFFFFFFFFFFFFFFFF, 2) = 1 is run by `make
+    verify-asm`.

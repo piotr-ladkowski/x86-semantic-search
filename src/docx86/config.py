@@ -33,6 +33,12 @@ class Settings(BaseSettings):
     sdm_pdf: Path = PROJECT_ROOT / "docs" / "docs.x86.pdf"
     # Local copy of the Wikibooks x86 Assembly print version, used only by `docx86 wiki ...`.
     wikibooks_html: Path = PROJECT_ROOT / "docs" / "wikibooks_x86.html"
+    # More local reference copies, read only by the evidence tooling (see docs/EVIDENCE.md).
+    # Their extracted sentences are cached under cache_dir (safe to delete).
+    sysv_abi_pdf: Path = PROJECT_ROOT / "docs" / "sysv_abi.pdf"
+    ms_calling_convention_html: Path = PROJECT_ROOT / "docs" / "ms_x64_calling_convention.html"
+    ms_stack_usage_html: Path = PROJECT_ROOT / "docs" / "ms_x64_stack_usage.html"
+    cache_dir: Path = PROJECT_ROOT / ".cache"
 
     # Tracing itself is configured with the standard OTEL_* variables (docs/ARCHITECTURE.md). By
     # default spans carry no search text and no client address; this opts in to both.

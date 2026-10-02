@@ -224,3 +224,6 @@ node_modules/
 /index/
 src/docx86/static/app.css
 docs/wikibooks_x86.html
+
+docs/sysv_abi.pdf
+docs/ms_x64_*.html

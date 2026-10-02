@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge, state_badge, coverage_bar %}
+{% block title %}Evidence: {{ page.title }} &middot; doc/x86{% endblock %}
+{% block description %}Which sentence of which reference document supports each statement on the {{ page.title }} page.{% endblock %}
+
+{% set by_label = {"auto": "automatic suggestion, not confirmed", "match": "exact match", "llm": "read and checked by an AI", "human": "checked by a person"} %}
+
+{% macro passage(p) %}
+<figure class="mt-3 border-l-2 pl-3 {{ 'border-dashed border-amber-400' if p.by == 'auto' else 'border-indigo-400' }}">
+  <figcaption class="text-xs text-zinc-500">
+    <span class="font-medium text-zinc-700 dark:text-zinc-300">{{ p.doc_label }}</span>
+    &middot; {{ p.where }}{% if p.part and p.part != p.at | string %} &middot; {{ p.part }}{% endif %}
+    &middot; {{ by_label[p.by] }}
+  </figcaption>
+  {% if p.state == "shown" %}
+    {% set first = p.units[0] if p.units else none %}
+    {% if first and first.kind == "row" %}
+      {% if p.header %}<p class="mt-1 font-mono text-[11px] text-zinc-400">{{ p.header | join(" | ") }}</p>{% endif %}
+      <ul class="mt-1 space-y-0.5 text-xs [&_b]:font-bold">
+        {% for u in p.units %}<li class="font-mono {{ '' if u.cited else 'text-zinc-400 dark:text-zinc-500' }}">{% if u.cited %}<mark class="rounded bg-amber-200/80 px-0.5 text-inherit dark:bg-amber-400/30">{{ u.html }}</mark>{% else %}{{ u.html }}{% endif %}</li>{% endfor %}
+      </ul>
+    {% elif first and first.kind == "code" %}
+      <pre class="mt-1 max-h-48 overflow-auto whitespace-pre-wrap text-xs [&_b]:font-bold"><mark class="rounded bg-amber-200/80 px-0.5 text-inherit dark:bg-amber-400/30">{{ first.html }}</mark></pre>
+    {% else %}
+      <blockquote class="mt-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400 [&_b]:font-semibold">
+        {% for u in p.units %}{% if u.cited %}<mark class="rounded bg-amber-200/80 px-0.5 text-zinc-900 dark:bg-amber-400/30 dark:text-zinc-100">{{ u.html }}</mark>{% else %}{{ u.html }}{% endif %} {% endfor %}
+      </blockquote>
+    {% endif %}
+  {% elif p.state == "unavailable" %}
+    <p class="mt-1 text-sm italic text-zinc-500">The passage is not shown on this server (the document is copyrighted and is not
+      distributed with doc/x86). Open the document at {{ p.where }}.</p>
+  {% else %}
+    <p class="mt-1 text-sm text-rose-700 dark:text-rose-400">The cited sentence is no longer at this location. The document or
+      the sentence splitter changed; run <code>docx86 evidence check</code>.</p>
+  {% endif %}
+  {% if p.note %}<p class="mt-1 text-xs text-zinc-500">Note: {{ p.note }}</p>{% endif %}
+</figure>
+{% endmacro %}
+
+{% block content %}
+<article class="mx-auto max-w-3xl">
+  <p class="text-sm"><a href="{{ page.page_url }}" class="text-indigo-600 hover:underline dark:text-indigo-400">&larr; {{ page.title }}</a>
+    &middot; <a href="/evidence" class="text-zinc-500 hover:underline">all pages</a></p>
+  <h1 class="mt-2 text-3xl font-bold">Evidence</h1>
+  <p class="mt-2 text-lg text-zinc-700 dark:text-zinc-300">
+    Where each statement on the <a href="{{ page.page_url }}" class="text-indigo-600 hover:underline dark:text-indigo-400">{{ page.title }}</a>
+    page comes from. Under a statement you see the sentences it was derived from; the
+    <mark class="rounded bg-amber-200/80 px-0.5 text-zinc-900 dark:bg-amber-400/30 dark:text-zinc-100">highlighted</mark>
+    ones are the cited ones, and <b>bold</b> words occur in both the statement and the source.
+  </p>
+
+  <section class="mt-6 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900" aria-label="Coverage">
+    <p class="text-sm"><strong>{{ page.grounded }}</strong> of {{ page.total }} statements rest on a sentence of a
+      reference document ({{ counts["traced"] }} traced{% if counts["derived"] %}, {{ counts["derived"] }} derived{% endif %}{% if counts["run"] %}, {{ counts["run"] }} run{% endif %}).
+      {% set other = counts["illustrative"] + counts["editorial"] + counts["external"] %}
+      {% if other %}{{ other }} {{ "is" if other == 1 else "are" }} examples, advice or cited to an outside source.{% endif %}
+      {% if page.open %}<strong>{{ page.open }}</strong> {{ "is" if page.open == 1 else "are" }} still open{% if counts["suggested"] %}
+      ({{ counts["suggested"] }} with an unconfirmed suggestion){% endif %}.{% else %}Nothing is open.{% endif %}</p>
+    <div class="mt-2">{{ coverage_bar(counts, page.total, states) }}</div>
+    <ul class="mt-3 flex flex-wrap gap-2 text-xs">
+      <li><a href="{{ page.url }}" class="rounded px-1.5 py-0.5 {{ 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900' if not wanted else 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300' }}">All {{ page.total }}</a></li>
+      {% for s in states %}{% if counts[s] %}
+      <li><a href="{{ page.url }}?state={{ s }}" class="rounded px-1.5 py-0.5 {{ 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900' if wanted == s else 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300' }}">{{ labels[s] }}: {{ counts[s] }}</a></li>
+      {% endif %}{% endfor %}
+    </ul>
+    {% if documents_missing %}
+    <p class="mt-3 text-xs text-zinc-500">The passages themselves are copyrighted and are not stored in this project: they are
+      shown only on a machine that has its own copy of the document. Here, a source is a pointer (document, page, kind of
+      section).</p>
+    {% endif %}
+  </section>
+
+  {% if page.load_problems %}
+  <p class="mt-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-900 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-200">
+    The evidence file for this page could not be read: {{ page.load_problems | join("; ") }}</p>
+  {% endif %}
+
+  {% for section, items in sections.items() %}
+  <section class="mt-8">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">{{ section }}</h2>
+    <ol class="mt-3 space-y-3">
+      {% for i, view, found in items %}
+      <li id="c{{ i }}" class="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+        <div class="flex items-start gap-3">
+          <span class="mt-0.5 w-6 shrink-0 text-right font-mono text-xs text-zinc-400">{{ i }}</span>
+          <div class="min-w-0 flex-1">
+            {% if view.claim.kind == "code" %}
+              <pre class="max-h-40 overflow-auto rounded bg-zinc-900 p-3 text-xs text-zinc-100">{{ view.claim.text }}</pre>
+            {% elif view.claim.kind == "row" %}
+              {% if view.claim.header %}<p class="font-mono text-[11px] text-zinc-400">{{ view.claim.header | join(" | ") }}</p>{% endif %}
+              <p class="font-mono text-sm">{{ view.claim.text }}</p>
+            {% else %}
+              <p class="[&_code]:rounded [&_code]:bg-zinc-100 [&_code]:px-1 [&_code]:font-mono [&_code]:text-[0.9em] dark:[&_code]:bg-zinc-800">{{ view.claim.text | inline_md }}</p>
+            {% endif %}
+            <div class="mt-2 flex flex-wrap items-center gap-2">
+              {{ state_badge(view.state, labels) }}
+              {% if view.entry and view.entry.ref %}<code class="text-xs text-zinc-500">{{ view.entry.ref }}</code>{% endif %}
+            </div>
+            {% if view.entry and view.entry.how != "source" and view.entry.note %}
+            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{{ view.entry.note }}</p>
+            {% endif %}
+            {% if view.state == "unverified" %}
+            <p class="mt-2 text-sm text-zinc-500">No source has been recorded for this statement yet.</p>
+            {% endif %}
+            {% for p in found %}{{ passage(p) }}{% endfor %}
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% else %}
+  <p class="mt-8 text-sm text-zinc-500">No statements in this state.</p>
+  {% endfor %}
+
+  {% if page.stale %}
+  <section class="mt-10">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-rose-700 dark:text-rose-400">Evidence that no longer matches</h2>
+    <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">The wording of these statements changed (or they were removed) after
+      their sources were recorded, so the sources no longer vouch for anything on the page.</p>
+    <ul class="mt-2 list-disc pl-6 text-sm">{% for e in page.stale %}<li>{{ e.gist or e.id }}</li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+</article>
+{% endblock %}

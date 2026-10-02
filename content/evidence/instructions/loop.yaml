@@ -1,0 +1,188 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 074abc71a8
+  gist: Decrements RCX and jumps to a nearby label while it is not zero…
+  support:
+  - {doc: sdm, at: 1274, units: [e56f131544, ba50f7f285, 0883627735, 85076631a8], part: Description}
+- id: fd59e2192c
+  gist: Also written as LOOPE, LOOPZ, LOOPNE, LOOPNZ.
+  support:
+  - {doc: sdm, at: 1274, units: [4c8b7a55bb, '7918710104', 31de0e563f, d5505ad786], part: Opcode table}
+- id: cb0a2c005c
+  gist: LOOP rel8 is encoded as E2 cb.
+  support:
+  - {doc: sdm, at: 1274, units: [f23d95e661], part: Opcode table, by: match}
+- id: 7996b2ec72
+  gist: rcx -= 1; jump if rcx != 0.
+  support:
+  - {doc: sdm, at: 1274, units: [f23d95e661, ba50f7f285], part: Opcode table}
+- id: 1e658e97c4
+  gist: The target must lie within -128..+127 bytes of the next instruc…
+  how: derived
+  note: The offset is a signed byte, -128 to +127, relative to the instruction pointer ('the next instruction'
+    is the usual base).
+  support:
+  - {doc: sdm, at: 1274, units: [2f189ab937, 1f1940a9c5, b9a439db72], part: Description}
+- id: 00a620ec2a
+  gist: LOOPE rel8 is encoded as E1 cb.
+  support:
+  - {doc: sdm, at: 1274, units: [4c8b7a55bb], part: Opcode table, by: match}
+- id: 1dd667a67e
+  gist: Also LOOPZ. rcx -= 1; jump if rcx != 0 and ZF = 1.
+  support:
+  - {doc: sdm, at: 1274, units: [4c8b7a55bb, 31de0e563f, 9aba3b3ad6], part: Opcode table}
+- id: b18de3b756
+  gist: LOOPNE rel8 is encoded as E0 cb.
+  support:
+  - {doc: sdm, at: 1274, units: ['7918710104'], part: Opcode table, by: match}
+- id: 51c7430b5b
+  gist: Also LOOPNZ. rcx -= 1; jump if rcx != 0 and ZF = 0.
+  support:
+  - {doc: sdm, at: 1274, units: ['7918710104', d5505ad786, 9f5dc2f7f7], part: Opcode table}
+- id: 70f7c63d67
+  gist: 'Flags read: ZF.'
+  support:
+  - {doc: sdm, at: 1274, units: [85076631a8], part: Description}
+- id: a904fc46f9
+  gist: No flags are modified.
+  support:
+  - {doc: sdm, at: 1275, units: [71f8e7976e], part: Flags Affected}
+- id: c8e8d68eea
+  gist: LOOPE/LOOPZ read ZF (continue while ZF = 1); LOOPNE/LOOPNZ read…
+  support:
+  - {doc: sdm, at: 1274, units: [9aba3b3ad6, 9f5dc2f7f7], part: Operation}
+- id: 1fd7622cbf
+  gist: LOOP itself ignores the flags.
+  support:
+  - {doc: sdm, at: 1274, units: [6100bab053], part: Operation}
+  - {doc: sdm, at: 1275, units: [1cf86079d9], part: Description}
+- id: 39ab63e376
+  gist: loop label subtracts 1 from the counter register rcx and then,…
+  support:
+  - {doc: sdm, at: 1274, units: [ba50f7f285, 0883627735, e56f131544], part: Description}
+- id: 91cc555d7e
+  gist: When rcx reaches zero execution falls through to the next instr…
+  support:
+  - {doc: sdm, at: 1274, units: [cb1b6111eb], part: Description}
+- id: b039f28453
+  gist: It does the counting and the branching in one instruction and c…
+  support:
+  - {doc: sdm, at: 1274, units: [ba50f7f285], part: Description}
+  - {doc: sdm, at: 1275, units: [71f8e7976e], part: Flags Affected}
+- id: ddd579b50a
+  gist: 'loope/loopz and loopne/loopnz add a second condition: they keep…'
+  support:
+  - {doc: sdm, at: 1274, units: [85076631a8, 9aba3b3ad6, 9f5dc2f7f7], part: Description}
+- id: f490d7bc36
+  gist: They only read ZF; something else inside the loop body must set…
+  support:
+  - {doc: sdm, at: 1274, units: [d9fdceb6b0], part: Description}
+- id: 82c8e0e807
+  gist: 'Running a block a known number of times: put the count in rcx,…'
+  how: editorial
+  note: A typical use.
+- id: 72b9b7d8e5
+  gist: 'Searching or comparing with an early exit: loopne stops when th…'
+  how: derived
+  note: LOOPNE ends when the count reaches zero or ZF is set.
+  support:
+  - {doc: sdm, at: 1274, units: [85076631a8, '7918710104'], part: Description}
+- id: d6bba1de46
+  gist: If you also need the flags from the decrement, a dec rcx / jnz…
+  how: derived
+  note: DEC rcx updates the flags and JNZ tests ZF; LOOP does neither.
+  support:
+  - doc: sdm
+    at: 966
+    units: [7912fbaba8]
+    part: Flags Affected
+    note: 'From the DEC entry: DEC sets OF, SF, ZF, AF, PF.'
+  - doc: sdm
+    at: 1203
+    units: [adb6b698eb]
+    part: Opcode table
+    note: 'From the Jcc entry: JNZ.'
+- id: 91b92e05f0
+  gist: The counter is rcx in 64-bit mode (ecx only if you add a 67h ad…
+  support:
+  - {doc: sdm, at: 1274, units: [e56f131544, 982791d096], part: Description}
+- id: 37dca575dd
+  gist: loop ignores REX.W, so there is no separate 64-bit form to choo…
+  support:
+  - {doc: sdm, at: 1274, units: [982791d096], part: Description}
+- id: 9cf9056c38
+  gist: It decrements first, then tests.
+  support:
+  - {doc: sdm, at: 1274, units: [ba50f7f285], part: Description}
+- id: b8f78228b8
+  gist: Entering the loop with rcx = 0 wraps it to all ones, so the bod…
+  how: derived
+  note: 0 - 1 wraps to all ones, which is not zero.
+  support:
+  - {doc: sdm, at: 1274, units: [3eb7dabcc3], part: Operation}
+  - doc: sdm
+    at: 1206
+    units: [91321adf4a]
+    part: Description
+    note: 'From the Jcc entry: a loop entered with a zero count.'
+- id: a0f9a04421
+  gist: Check for zero first (see jrcxz in jcc).
+  support:
+  - doc: sdm
+    at: 1206
+    units: [3f56e86b1f, 77626ba505]
+    part: Description
+    note: From the Jcc entry (JRCXZ).
+- id: e6dfdf6d48
+  gist: Short range only.
+  how: editorial
+  note: Heading for the next statement.
+- id: 9b49167706
+  gist: 'The target is an 8-bit signed offset: -128 to +127 bytes from t…'
+  support:
+  - {doc: sdm, at: 1274, units: [2f189ab937, 1f1940a9c5], part: Description}
+- id: 3b911b7c95
+  gist: A loop body longer than that cannot use loop; use dec rcx and j…
+  how: derived
+  note: Offsets beyond -128..+127 are not allowed; DEC and JNZ are the alternative.
+  support:
+  - {doc: sdm, at: 1274, units: [1f1940a9c5], part: Description}
+- id: b17cc5d91c
+  gist: Mind the flags inside the body.
+  how: editorial
+  note: Heading for the next statement.
+- id: c1cd39067f
+  gist: loope/loopne use the ZF left by the last flag-setting instructi…
+  support:
+  - {doc: sdm, at: 1274, units: [d9fdceb6b0], part: Description}
+- id: 00c806caa6
+  gist: Use lea instead of add/inc for pointer stepping there, because…
+  how: derived
+  note: LEA changes no flags; ADD and INC set ZF from their result.
+  support:
+  - doc: sdm
+    at: 1252
+    units: [71f8e7976e]
+    part: Flags Affected
+    note: 'From the LEA entry: Flags Affected is None.'
+  - doc: sdm
+    at: 719
+    units: [0647a2eb37]
+    part: Flags Affected
+    note: 'From the ADD entry: flags are set.'
+  - doc: sdm
+    at: 1161
+    units: [7912fbaba8]
+    part: Flags Affected
+    note: From the INC entry.
+- id: 6d01f0731d
+  gist: 'A non-canonical target raises #GP(0), and a lock prefix is inva…'
+  support:
+  - {doc: sdm, at: 1276, units: [6e241b8bc2, 2166ae34ad], part: 64-Bit Mode Exceptions}
+- id: 103a9025e0
+  gist: 'mov ecx, 10 ; writes rcx (upper half zeroed): the body runs 10…'
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

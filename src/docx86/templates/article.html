@@ -28,6 +28,8 @@
   <p class="mt-10 text-xs text-zinc-500">
     Source: Intel SDM {{ sdm_revision }}{% if art.sdm_refs %}, {{ art.sdm_refs | join("; ") }}{% endif %}.
     {% for s in art.extra_sources %}{{ s }} {% endfor %}
+    {% if evidence %}<a href="{{ evidence.url }}" class="text-indigo-600 hover:underline dark:text-indigo-400">Check each statement against its sources</a>
+    ({{ evidence.grounded }} of {{ evidence.total }} statements traced to sources).{% endif %}
   </p>
 </article>
 {% endblock %}

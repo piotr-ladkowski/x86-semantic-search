@@ -1,0 +1,138 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: f295c0eca6
+  gist: Loads the value at the top of the stack into the destination, t…
+  support:
+  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - {doc: sdm, at: 1688, units: [c85667596a], part: Operation}
+- id: f474c52603
+  gist: POP r64 is encoded as 58+ rd.
+  support:
+  - {doc: sdm, at: 1687, units: [de173f4118], part: Opcode table, by: match}
+- id: ce1aa37441
+  gist: A 16-bit form exists with the 66h prefix; a 32-bit pop cannot b…
+  support:
+  - {doc: sdm, at: 1687, units: [aba26f3c16, 32a2eabd2b, cc6c21fff4], part: Opcode table}
+  - {doc: sdm, at: 1688, units: [9360e4623e], part: Description}
+  - doc: sdm
+    at: 189
+    units: [18b8f59c67]
+    part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
+    note: 'Vol. 1, 7.3.1.5: stack manipulation in 64-bit mode.'
+- id: 41ae78d937
+  gist: POP r/m64 is encoded as 8F /0.
+  support:
+  - {doc: sdm, at: 1687, units: [378bbd0827], part: Opcode table, by: match}
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - {doc: sdm, at: 1690, units: [71f8e7976e], part: Flags Affected}
+- id: a030411362
+  gist: pop dst reads the 8-byte value at [rsp], stores it in dst, and…
+  support:
+  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - {doc: sdm, at: 1688, units: [c85667596a], part: Operation}
+- id: b0c1321545
+  gist: 'It undoes a push: the stack is last-in, first-out.'
+  how: derived
+  note: POP loads from the top and increments RSP; PUSH decrements RSP and stores at the top.
+  support:
+  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - doc: sdm
+    at: 1811
+    units: [fcafc8633c]
+    part: Description
+    note: From the PUSH entry.
+- id: 39ac85a242
+  gist: Restoring registers saved with push, in the reverse order they…
+  how: editorial
+  note: A typical use.
+- id: 73318354b7
+  gist: Moving a value from the stack into a register or memory locatio…
+  support:
+  - {doc: sdm, at: 1687, units: [c3c3aca4a4, 3f9c78822c], part: Description}
+- id: 16982341f0
+  gist: 'Throwing a stack value away: pop into a scratch register (or ad…'
+  how: editorial
+  note: Advice.
+- id: 92d2d6e2e7
+  gist: Operand size.
+  how: editorial
+  note: Heading for the next statement.
+- id: 32771e2751
+  gist: A 32-bit pop cannot be encoded in 64-bit mode; use a 64-bit ope…
+  support:
+  - {doc: sdm, at: 1688, units: [9360e4623e], part: Description}
+  - {doc: sdm, at: 1687, units: [32a2eabd2b, cc6c21fff4, 378bbd0827], part: Opcode table}
+  - doc: sdm
+    at: 189
+    units: [18b8f59c67]
+    part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
+    note: 'Vol. 1, 7.3.1.5: stack manipulation in 64-bit mode.'
+- id: 0965b58d03
+  gist: Popping into DS, ES or SS is not valid.
+  support:
+  - {doc: sdm, at: 1688, units: [9360e4623e], part: Description}
+  - {doc: sdm, at: 1687, units: [6d06635bd5, 6924e33be1, 295954d35b], part: Opcode table}
+  - {doc: sdm, at: 1691, units: [1273149eeb], part: 64-Bit Mode Exceptions}
+- id: 7ab0ae2123
+  gist: pop rsp loads rsp from the stack.
+  support:
+  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - doc: sdm
+    at: 1688
+    units: [bbdd976a13]
+    part: Description
+    note: Stated for ESP.
+- id: d5acd6ef05
+  gist: The stack pointer is incremented before the old top-of-stack va…
+  support:
+  - doc: sdm
+    at: 1688
+    units: [bbdd976a13]
+    part: Description
+    note: Stated for ESP; RSP in 64-bit mode.
+- id: e7649ef60e
+  gist: Memory destinations that use rsp.
+  how: editorial
+  note: Heading for the next statement.
+- id: cbcb5a86ea
+  gist: For pop [rsp + 8] the destination address is computed after rsp…
+  support:
+  - doc: sdm
+    at: 1688
+    units: [b3ac953b5b]
+    part: Description
+    note: Stated for ESP; RSP in 64-bit mode.
+- id: fd4a019142
+  gist: Faults.
+  how: editorial
+  note: Heading for the next statement.
+- id: b44c60b60f
+  gist: 'A non-canonical stack address raises #SS(0), a non-canonical me…'
+  support:
+  - {doc: sdm, at: 1691, units: ['8129235435', 33920ea836, 9bf63f56fc], part: 64-Bit Mode Exceptions}
+- id: 6d53df94d4
+  gist: A lock prefix is invalid (#UD).
+  support:
+  - doc: sdm
+    at: 1691
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: 6ba6bc2e67
+  gist: It leaves all flags alone (popf is the instruction that pops in…
+  support:
+  - {doc: sdm, at: 1690, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1696
+    units: [12fa1799ee]
+    part: Description
+    note: 'From the POPF entry: it pops into EFLAGS.'
+- id: 8778d27419
+  gist: pop rbx ; rbx = [rsp]; rsp += 8 pop qword [rdi] ; store the top…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

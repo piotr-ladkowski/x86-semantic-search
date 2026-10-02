@@ -1,0 +1,219 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: ab3618cab5
+  gist: Copies the source operand to the destination without changing a…
+  support:
+  - {doc: sdm, at: 1318, units: [f023429009], part: Description}
+  - {doc: sdm, at: 1319, units: [71f8e7976e], part: Flags Affected}
+- id: 03a43e6775
+  gist: MOV r/m64, r64 is encoded as REX.W + 89 /r.
+  support:
+  - {doc: sdm, at: 1317, units: [9c9ae397ba], part: Opcode table, by: match}
+- id: a82bfcc532
+  gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W; t…
+  support:
+  - {doc: sdm, at: 1317, units: [2b25024520, dd14c2cc61, 550cb4e38b, 9c9ae397ba], part: Opcode table}
+- id: af5f32bd72
+  gist: MOV r64, r/m64 is encoded as REX.W + 8B /r.
+  support:
+  - {doc: sdm, at: 1317, units: [b79af1d5de], part: Opcode table, by: match}
+- id: 9a09b9f8d4
+  gist: MOV r64, imm64 is encoded as REX.W + B8+ rd io.
+  support:
+  - {doc: sdm, at: 1317, units: [9995da5c5f], part: Opcode table, by: match}
+- id: 3cd2548091
+  gist: Loads a full 64-bit constant (assemblers often call this movabs…
+  how: external
+  note: The 64-bit immediate form is the SDM row cited; that assemblers call it movabs is assembler convention
+    (GNU as/LLVM), not in the SDM.
+  support:
+  - {doc: sdm, at: 1317, units: [9995da5c5f], part: Opcode table}
+- id: edd56c5afd
+  gist: Every other MOV form takes at most a 32-bit immediate.
+  how: derived
+  note: The other immediate rows list imm8, imm16 or imm32 only; only the OI row for r64 lists imm64.
+  support:
+  - {doc: sdm, at: 1317, units: [7e90270d76, ba5ee17bdf, de5cf8ea47, 4585c7e167], part: Opcode table}
+- id: 8de74d090c
+  gist: MOV r/m64, imm32 is encoded as REX.W + C7 /0 id.
+  support:
+  - {doc: sdm, at: 1317, units: [4585c7e167], part: Opcode table, by: match}
+- id: 735d1e8ccd
+  gist: imm32 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 1317, units: [4585c7e167], part: Opcode table}
+- id: 9b4cfd0c0d
+  gist: MOV r32, imm32 is encoded as B8+ rd id.
+  support:
+  - {doc: sdm, at: 1317, units: [eb0ffa6710], part: Opcode table, by: match}
+- id: b685c0a6d7
+  gist: The upper 32 bits of the 64-bit register are zeroed.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+  - {doc: sdm, at: 1317, units: [eb0ffa6710], part: Opcode table}
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - {doc: sdm, at: 1319, units: [71f8e7976e], part: Flags Affected}
+- id: 589a0d6892
+  gist: mov dst, src copies src into dst and leaves src unchanged.
+  support:
+  - doc: sdm
+    at: 1318
+    units: [f023429009, 4562a79b3c, 8f92bd08d9, d31eea6db8]
+    part: Description
+    note: The source operand is marked (r) in the operand encoding.
+- id: c680d34500
+  gist: Both operands must be the same size (8, 16, 32 or 64 bits).
+  support:
+  - {doc: sdm, at: 1318, units: [fb50c18bbf], part: Description}
+- id: f53017ceca
+  gist: The source can be a register, a memory location or an immediate…
+  support:
+  - {doc: sdm, at: 1318, units: [e97444f4f0], part: Description}
+- id: 33e973ae74
+  gist: It never touches the flags.
+  support:
+  - {doc: sdm, at: 1319, units: [71f8e7976e], part: Flags Affected}
+- id: a2c1111578
+  gist: 'Copying between registers: mov rax, rbx.'
+  how: editorial
+  note: A typical use.
+- id: 85cf52fb68
+  gist: 'Loading a constant into a register: mov eax, 42.'
+  how: derived
+  note: The B8+ rd id row moves an imm32 into a 32-bit register.
+  support:
+  - {doc: sdm, at: 1317, units: [eb0ffa6710], part: Opcode table}
+- id: ae2e50e071
+  gist: 'Reading or writing memory: mov rax, [rdi] and mov [rdi], rax.'
+  how: derived
+  note: The 8B /r and 89 /r rows move between a register and r/m.
+  support:
+  - {doc: sdm, at: 1317, units: [b79af1d5de, 9c9ae397ba], part: Opcode table}
+- id: d3a63088d5
+  gist: When you only need to move a value.
+  how: editorial
+  note: Lead-in to the next statement.
+- id: f63b2b4b2f
+  gist: To compute an address or a sum use lea or add; to swap two valu…
+  how: editorial
+  note: Advice on choosing between instructions.
+- id: 27953a8cf3
+  gist: No memory-to-memory move.
+  how: derived
+  note: Every general MOV form has one r/m operand and one register or immediate; none has two memory
+    operands.
+  support:
+  - {doc: sdm, at: 1317, units: [9c9ae397ba, b79af1d5de], part: Opcode table}
+  - {doc: sdm, at: 1318, units: [8f92bd08d9, d31eea6db8], part: Operand encoding}
+- id: 1b9456664f
+  gist: At most one operand can be in memory, so go through a register.
+  how: derived
+  note: Same reasoning; going through a register is the advice.
+  support:
+  - {doc: sdm, at: 1318, units: [8f92bd08d9, d31eea6db8], part: Operand encoding}
+- id: a345978313
+  gist: 32-bit moves zero the upper half.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 314b6b317a
+  gist: mov eax, ebx clears bits 63:32 of rax.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: ad9c5850a3
+  gist: 8- and 16-bit moves leave the other bits alone (see the article…
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20, b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for operand sizes in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 02be0b8aec
+  gist: Immediates are small unless you ask for 64 bits.
+  how: derived
+  note: Only the REX.W + B8+ rd io row carries a 64-bit immediate.
+  support:
+  - {doc: sdm, at: 1317, units: [7e90270d76, ba5ee17bdf, de5cf8ea47, 4585c7e167, 9995da5c5f], part: Opcode
+      table}
+- id: 8cc45fe7b3
+  gist: Only mov r64, imm64 carries a full 64-bit constant.
+  how: derived
+  note: Only the REX.W + B8+ rd io row carries a 64-bit immediate.
+  support:
+  - {doc: sdm, at: 1317, units: [9995da5c5f, 4585c7e167], part: Opcode table}
+- id: 24b62d0e73
+  gist: mov r/m64, imm32 sign-extends, so mov qword [rdi], 0xFFFFFFFF s…
+  how: derived
+  note: imm32 is sign-extended to 64 bits for the r/m64 form, so 0xFFFFFFFF becomes all ones; a 32-bit
+    register write zero-extends.
+  support:
+  - {doc: sdm, at: 1317, units: [4585c7e167, eb0ffa6710], part: Opcode table}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 894427d19d
+  gist: It does not change flags, which is why mov reg, 0 is the safe w…
+  how: derived
+  note: MOV affects no flags; XOR rewrites them.
+  support:
+  - {doc: sdm, at: 1319, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 2874
+    units: [b819ee05d2]
+    part: Flags Affected
+    note: From the XOR entry.
+- id: f76fcb70b0
+  gist: Faults and limits.
+  how: editorial
+  note: Heading for the next statement.
+- id: 783c343e32
+  gist: 'A non-canonical memory address raises #GP(0).'
+  support:
+  - {doc: sdm, at: 1320, units: [33920ea836], part: 64-Bit Mode Exceptions}
+- id: 4e160d0d3f
+  gist: mov cannot load CS (#UD), and a lock prefix is invalid (#UD); u…
+  how: derived
+  note: 'The SDM gives #UD for loading CS and for a LOCK prefix; XCHG''s implicit locking is why it is
+    the atomic exchange.'
+  support:
+  - {doc: sdm, at: 1318, units: [4e81c922a2, 37f08092d4], part: Description}
+  - doc: sdm
+    at: 1320
+    units: [af5eca0107, 99bcc32f11]
+    part: 64-Bit Mode Exceptions
+    note: 'The LOCK row is listed under #UD.'
+  - doc: sdm
+    at: 2865
+    units: [44ce533a52]
+    part: Description
+    note: 'From the XCHG entry: it locks a memory operand by itself.'
+- id: 70babe0293
+  gist: With any REX prefix, ah/bh/ch/dh cannot be encoded; the same bi…
+  support:
+  - doc: sdm
+    at: 1317
+    units: [06b14e969c]
+    part: Opcode table
+    note: Footnote on the byte registers in the opcode table.
+- id: 844595d1fa
+  gist: mov rax, rbx ; copy a register mov eax, 1 ; rax = 1 (upper half…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

@@ -28,7 +28,7 @@ NASM, a linker and (optionally) a C compiler. On Debian or Ubuntu:
 sudo apt install nasm binutils gcc
 ```
 
-Other distributions ship the same three packages under the same names. The examples here were tested with NASM 2.16.01, GNU ld 2.40 and GCC 12.2.
+Other distributions package the same tools, but check the package names there. The examples here were tested with NASM 2.16.01, GNU ld 2.40 and GCC 12.2.
 
 ## The three steps
 
@@ -111,7 +111,7 @@ gcc hello_libc.o -o hello_libc
 
 ## The linker warning
 
-Without the last line of each listing, the linker prints:
+Without the last line of the second listing, `gcc` prints this when it links the object file. (Linking the first program with plain `ld` printed nothing on the tested toolchain; the line is still good practice there.)
 
 ```
 ld: warning: hello_libc.o: missing .note.GNU-stack section implies executable stack

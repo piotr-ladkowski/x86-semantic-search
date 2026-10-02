@@ -1,0 +1,135 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: fde21f5809
+  gist: Divides the signed value in RDX:RAX by the operand; the quotien…
+  support:
+  - {doc: sdm, at: 1152, units: [c21055875c, a8bc623d9d, f2ca4ac2a6], part: Description}
+- id: dd8e8fe301
+  gist: IDIV r/m64 is encoded as REX.W + F7 /7.
+  support:
+  - {doc: sdm, at: 1152, units: [f2ca4ac2a6], part: Opcode table, by: match}
+- id: 4c59730686
+  gist: RAX := quotient, RDX := remainder of RDX:RAX / r/m64.
+  support:
+  - {doc: sdm, at: 1152, units: [f2ca4ac2a6, c21055875c], part: Opcode table}
+- id: 674b0c9d83
+  gist: The 32-bit form (F7 /7) divides EDX:EAX; the 8-bit form divides…
+  support:
+  - {doc: sdm, at: 1152, units: [879f756f9f, 73f2b67dd1], part: Opcode table}
+- id: 9eca3a426c
+  gist: 'Flags undefined: CF, OF, SF, ZF, AF, PF.'
+  support:
+  - {doc: sdm, at: 1154, units: [647ea3465f], part: Flags Affected}
+- id: 03450b5210
+  gist: All six status flags are undefined afterwards.
+  support:
+  - {doc: sdm, at: 1154, units: [647ea3465f], part: Flags Affected}
+- id: ce56ab9354
+  gist: 'Errors are reported by the #DE exception, not by a flag.'
+  support:
+  - {doc: sdm, at: 1152, units: [52f0f81ad4], part: Description}
+- id: 7138d31820
+  gist: idiv src divides the signed 128-bit value in rdx:rax by src (a…
+  support:
+  - {doc: sdm, at: 1152, units: [c21055875c, f2ca4ac2a6], part: Description}
+- id: 94958925af
+  gist: The quotient is stored in rax and the remainder in rdx.
+  support:
+  - {doc: sdm, at: 1152, units: [a8bc623d9d], part: Description}
+- id: 627ad2755b
+  gist: The quotient is truncated toward zero, so a non-zero remainder…
+  how: derived
+  note: The SDM gives rounding toward zero and the example -9 / 4 = -2 remainder -1; the sign rule and
+    the -7 / 2 case follow. divmod(-7, 2) = (-3, -1) is checked by `make verify-asm`.
+  support:
+  - {doc: sdm, at: 1152, units: [9348f48605], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [3467acd4bc, 7fcb0b7723]
+    part: Description
+    note: From the shift entry, which compares SAR with IDIV.
+- id: 5e8fa35b14
+  gist: Signed integer division and modulo in one step.
+  support:
+  - {doc: sdm, at: 1152, units: [157883f6c4, c21055875c], part: Description}
+- id: 28a448ce89
+  gist: Dividing a signed value wider than 64 bits by a 64-bit divisor.
+  how: derived
+  note: The dividend is the 128-bit signed RDX:RAX.
+  support:
+  - {doc: sdm, at: 1152, units: [c21055875c, f2ca4ac2a6], part: Description}
+- id: 792a33aad6
+  gist: Sign-extend the dividend, do not zero it.
+  support:
+  - doc: sdm
+    at: 961
+    units: [e69cbbabf3, 4e45cbb2ec]
+    part: Description
+    note: From the CWD/CDQ/CQO entry.
+- id: e77bd92bde
+  gist: Put the value in rax and run cqo to copy its sign into rdx.
+  support:
+  - doc: sdm
+    at: 961
+    units: [e69cbbabf3, 4e45cbb2ec]
+    part: Description
+    note: From the CWD/CDQ/CQO entry.
+- id: 66cdd596f6
+  gist: Zeroing rdx with xor edx, edx turns a negative dividend into a…
+  how: derived
+  note: xor edx, edx makes the upper half of the dividend zero, so a negative rax is read as a large positive
+    128-bit value.
+  support:
+  - {doc: sdm, at: 1152, units: [c21055875c], part: Description}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: db7e0ceaea
+  gist: '#DE (divide error) is raised when the divisor is zero or when t…'
+  support:
+  - {doc: sdm, at: 1154, units: [899e87f561, 602f8497c6], part: 64-Bit Mode Exceptions}
+- id: ae70bad29e
+  gist: The classic case is the most negative 64-bit number divided by…
+  how: derived
+  note: The range check rejects a result above 7FFF...F; -2^63 / -1 = +2^63 is above it.
+  support:
+  - {doc: sdm, at: 1153, units: [78258978bd], part: Operation}
+- id: 18e0d86f0e
+  gist: Fixed registers.
+  how: editorial
+  note: Heading for the next statement.
+- id: ee4ddef765
+  gist: rax and rdx hold the dividend and results, and rdx is overwritt…
+  support:
+  - {doc: sdm, at: 1152, units: [c21055875c, a8bc623d9d], part: Description}
+- id: c38d1db92d
+  gist: No immediate divisor.
+  how: derived
+  note: The source operand is a register or memory; no row has an immediate.
+  support:
+  - {doc: sdm, at: 1152, units: [73f2b67dd1, f2ca4ac2a6, dce6a5353a], part: Opcode table}
+- id: 622ba0843d
+  gist: Load constants into a register.
+  how: editorial
+  note: Advice.
+- id: 1e784c8335
+  gist: Flags are undefined, so do not branch on them after idiv.
+  support:
+  - {doc: sdm, at: 1154, units: [647ea3465f], part: Flags Affected}
+- id: 6d53df94d4
+  gist: A lock prefix is invalid (#UD).
+  support:
+  - doc: sdm
+    at: 1154
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: 1372dd127c
+  gist: mov rax, -7 cqo ; rdx:rax = -7 sign-extended to 128 bits mov rc…
+  how: illustrative
+  note: Short snippet; the same instructions with these operands are run as divmod(-7, 2) by `make verify-asm`.

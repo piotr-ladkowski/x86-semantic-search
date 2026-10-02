@@ -1,0 +1,136 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 25b184a5ef
+  gist: ANDs the two operands to set the flags and discards the result;…
+  how: derived
+  note: ZF is set when the AND is zero; with the same register twice the AND is the value itself, so ZF
+    means 'zero'.
+  support:
+  - {doc: sdm, at: 2010, units: [8e5658a0cd, df137368aa, 188da8e354], part: Description}
+- id: 50bdbb8f4a
+  gist: TEST r/m64, r64 is encoded as REX.W + 85 /r.
+  support:
+  - {doc: sdm, at: 2010, units: [829a06fa2c], part: Opcode table, by: match}
+- id: 97b845e0fe
+  gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
+  support:
+  - {doc: sdm, at: 2010, units: [9767713af2, 81c316adb1, fbd31e52b9, 829a06fa2c], part: Opcode table}
+- id: 5ce4c87836
+  gist: TEST r/m64, imm32 is encoded as REX.W + F7 /0 id.
+  support:
+  - {doc: sdm, at: 2010, units: [f54a2378f7], part: Opcode table, by: match}
+- id: 735d1e8ccd
+  gist: imm32 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 2010, units: [f54a2378f7], part: Opcode table}
+- id: b2e4c9a167
+  gist: 'Flags modified: OF, CF, SF, ZF, PF; undefined: AF.'
+  support:
+  - {doc: sdm, at: 2011, units: [29491e0979, 2e87bb6918, 1345083ae6], part: Flags Affected}
+- id: 6e05257681
+  gist: OF and CF are cleared; SF, ZF and PF are set from the AND resul…
+  support:
+  - {doc: sdm, at: 2011, units: [29491e0979, 2e87bb6918], part: Flags Affected}
+- id: 406605da53
+  gist: No operand is written.
+  support:
+  - doc: sdm
+    at: 2010
+    units: [df137368aa, a3f3934c76, b0bfd0b66e]
+    part: Description
+    note: 'Both operands are marked (r): read only.'
+- id: acd7c4c512
+  gist: test a, b computes a AND b, sets the flags from the result, and…
+  support:
+  - {doc: sdm, at: 2010, units: [8e5658a0cd, df137368aa], part: Description}
+- id: 70ff5f9c3f
+  gist: Neither operand changes.
+  support:
+  - {doc: sdm, at: 2010, units: [a3f3934c76, b0bfd0b66e], part: Operand encoding}
+- id: ef8b76e0ab
+  gist: Afterwards ZF is set if no bit was in common (the AND was zero)…
+  support:
+  - {doc: sdm, at: 2010, units: [5f9a726e5d, facd662afd, 188da8e354, b984eb484a], part: Operation}
+- id: 2ef61447a5
+  gist: 'Checking whether a value is zero or negative: test rax, rax the…'
+  how: derived
+  note: ZF and SF are set from the AND of the value with itself, which is the value.
+  support:
+  - {doc: sdm, at: 2010, units: [5f9a726e5d, facd662afd], part: Operation}
+  - doc: sdm
+    at: 82
+    units: [de682806f5]
+    part: 3.4.3.1 Status Flags
+    note: Status flags (Vol. 1, 3.4.3.1).
+  - doc: sdm
+    at: 82
+    units: [8d996b02f3]
+    part: 3.4.3.1 Status Flags
+    note: Status flags (Vol. 1, 3.4.3.1).
+- id: d3e4e4072a
+  gist: 'Checking whether any of several bits are set: test eax, 0x30.'
+  how: derived
+  note: The AND with a mask is nonzero exactly when a masked bit is set.
+  support:
+  - {doc: sdm, at: 2010, units: [8e5658a0cd], part: Description}
+- id: f096aa305b
+  gist: Reading one flag bit out of a status word without disturbing it…
+  how: editorial
+  note: A typical use.
+- id: 4e96e06065
+  gist: test r, r is the idiom for "is it zero?".
+  how: editorial
+  note: An idiom; see the claim above for why it works.
+- id: 3f099dd5c0
+  gist: ANDing a value with itself leaves it unchanged, so ZF reports w…
+  how: derived
+  note: AND of a value with itself is the value; test r, r is 85 /r, shorter than cmp r, 0 (83 /7 ib).
+  support:
+  - {doc: sdm, at: 2010, units: [8e5658a0cd, fbd31e52b9], part: Description}
+  - doc: sdm
+    at: 865
+    units: [5b7dfed80a]
+    part: Opcode table
+    note: 'From the CMP entry: 83 /7 ib.'
+- id: 0d8c879718
+  gist: ZF means "none of those bits were set", which is the opposite o…
+  how: derived
+  note: ZF is set when the AND is zero, so JNZ is taken when it is not.
+  support:
+  - {doc: sdm, at: 2010, units: [facd662afd, 188da8e354], part: Operation}
+  - doc: sdm
+    at: 82
+    units: [de682806f5]
+    part: 3.4.3.1 Status Flags
+    note: Status flags (Vol. 1, 3.4.3.1).
+- id: b2c33abf18
+  gist: CF and OF are always cleared, so jc/jo after a test never fire,…
+  how: derived
+  note: JC tests CF and JO tests OF; both are cleared, so those branches are never taken.
+  support:
+  - {doc: sdm, at: 2011, units: [29491e0979, 1345083ae6], part: Flags Affected}
+- id: c268c6601b
+  gist: Immediates are sign-extended for 64-bit operands, so a 64-bit t…
+  how: derived
+  note: The 64-bit forms take an imm32 that is sign-extended, so 0x80000000 becomes 0xFFFFFFFF80000000.
+  support:
+  - {doc: sdm, at: 2010, units: [f54a2378f7, fc93e79846], part: Opcode table}
+- id: f47dbdfbed
+  gist: Use a 32-bit register, test eax, 0x80000000, or bt.
+  how: editorial
+  note: Advice.
+- id: c744ec6e01
+  gist: A lock prefix is invalid (#UD); test never writes.
+  support:
+  - doc: sdm
+    at: 2011
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: 3aefb410be
+  gist: test rax, rax ; ZF=1 if rax == 0; SF=1 if rax is negative jz .i…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

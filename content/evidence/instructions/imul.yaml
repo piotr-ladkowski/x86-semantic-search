@@ -1,0 +1,176 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 9dbb27635f
+  gist: Signed multiply with one-, two- or three-operand forms; the mul…
+  support:
+  - {doc: sdm, at: 1155, units: [29fced48e4, c0bc920325], part: Description}
+  - {doc: sdm, at: 1156, units: [dc0aca86bb], part: Description}
+- id: 1008699af2
+  gist: IMUL r64, r/m64 is encoded as REX.W + 0F AF /r.
+  support:
+  - {doc: sdm, at: 1155, units: [707718d6b6], part: Opcode table, by: match}
+- id: aba7734028
+  gist: dst = dst src, truncated to 64 bits.
+  support:
+  - {doc: sdm, at: 1155, units: [1c427b5098, f44ec58bd7], part: Description}
+- id: 62e627f8cb
+  gist: 16- and 32-bit versions exist; there is no 8-bit version of thi…
+  support:
+  - {doc: sdm, at: 1155, units: [71f39eb84e, 6a4923f8af, 707718d6b6], part: Opcode table}
+- id: 000a474de0
+  gist: IMUL r64, r/m64, imm8 is encoded as REX.W + 6B /r ib.
+  support:
+  - {doc: sdm, at: 1155, units: [b0a30c9484], part: Opcode table, by: match}
+- id: 6b5326247d
+  gist: dst = src imm8 (sign-extended).
+  support:
+  - {doc: sdm, at: 1155, units: [b0a30c9484, 0527f7241f], part: Opcode table}
+- id: b9b6665729
+  gist: Does not modify the source.
+  support:
+  - doc: sdm
+    at: 1155
+    units: [3540a75f5f, d402f37a3d, 177b77852a]
+    part: Operand encoding
+    note: The source r/m is marked (r) only.
+- id: 120fb116e4
+  gist: IMUL r64, r/m64, imm32 is encoded as REX.W + 69 /r id.
+  support:
+  - {doc: sdm, at: 1155, units: [52a9b97a0d], part: Opcode table, by: match}
+- id: ef31b497d1
+  gist: dst = src imm32 (sign-extended).
+  support:
+  - {doc: sdm, at: 1155, units: [52a9b97a0d], part: Opcode table}
+  - {doc: sdm, at: 1156, units: [4eb6aec65b], part: Description}
+- id: c4d834de74
+  gist: There is no imm64 form.
+  how: derived
+  note: The immediate rows list imm8, imm16 and imm32 only.
+  support:
+  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a, 9576ed014e], part: Opcode table}
+  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a, 9576ed014e], part: Opcode table}
+- id: 086c145a6f
+  gist: IMUL r/m64 is encoded as REX.W + F7 /5.
+  support:
+  - {doc: sdm, at: 1155, units: [97b151ad0a], part: Opcode table, by: match}
+- id: a0d23eb5b3
+  gist: 'One-operand form: RDX:RAX := RAX r/m64, the signed counterpart…'
+  support:
+  - {doc: sdm, at: 1155, units: [97b151ad0a, 07730dc140], part: Opcode table}
+- id: 1f1aa91256
+  gist: 'Flags modified: OF, CF; undefined: SF, ZF, AF, PF.'
+  support:
+  - {doc: sdm, at: 1157, units: [ae9ccff032, db5611f02c, 90e3d2cc23], part: Flags Affected}
+- id: 14572ed562
+  gist: 'Two- and three-operand forms: CF and OF are set when the result…'
+  support:
+  - {doc: sdm, at: 1157, units: [db5611f02c], part: Flags Affected}
+- id: c1485bdb86
+  gist: 'One-operand form: set when the product does not fit in the lowe…'
+  support:
+  - {doc: sdm, at: 1157, units: [ae9ccff032], part: Flags Affected}
+- id: b598694834
+  gist: imul multiplies signed integers.
+  support:
+  - {doc: sdm, at: 1155, units: [29fced48e4], part: Description}
+- id: fb8e68cc35
+  gist: 'It has three forms:'
+  support:
+  - {doc: sdm, at: 1155, units: [c0bc920325], part: Description}
+- id: 15841f991b
+  gist: 'Two operands: imul dst, src computes dst = dst src, keeping onl…'
+  support:
+  - {doc: sdm, at: 1155, units: [1c427b5098, f44ec58bd7], part: Description}
+- id: b5d108032f
+  gist: 'Three operands: imul dst, src, imm computes dst = src imm witho…'
+  support:
+  - {doc: sdm, at: 1155, units: [0527f7241f, d402f37a3d, 177b77852a], part: Description}
+- id: 83cb1d90c4
+  gist: 'One operand: imul src is the signed twin of mul: rdx:rax = rax…'
+  support:
+  - {doc: sdm, at: 1155, units: [07730dc140, a48af4d695], part: Description}
+  - {doc: sdm, at: 1156, units: [949789b518], part: Description}
+- id: 4ac7731a95
+  gist: The everyday multiply of two integers, or of an integer by a co…
+  how: editorial
+  note: A typical use.
+- id: d8116bc405
+  gist: When you want the destination to be any register instead of bei…
+  how: derived
+  note: In the two- and three-operand forms the destination is any general-purpose register; the one-operand
+    form is fixed to rdx:rax.
+  support:
+  - {doc: sdm, at: 1155, units: [75fc930d10, 3540a75f5f], part: Description}
+  - {doc: sdm, at: 1155, units: [75fc930d10, 3540a75f5f], part: Description}
+- id: cb5d073f7f
+  gist: The one-operand form when you need the full signed 128-bit prod…
+  how: editorial
+  note: A typical use.
+- id: bd12b3e35b
+  gist: Truncating forms.
+  how: editorial
+  note: Heading for the next statement.
+- id: 98bcbed536
+  gist: The two- and three-operand forms drop the high half, and CF/OF…
+  support:
+  - {doc: sdm, at: 1156, units: [dc0aca86bb, e971fbf5ef, 4d76483166], part: Description}
+- id: 37e716c7c8
+  gist: For a multiply that cannot overflow you can ignore them.
+  how: editorial
+  note: Advice.
+- id: 28b231a194
+  gist: Same low bits as unsigned.
+  how: editorial
+  note: Heading for the next statement.
+- id: f360457542
+  gist: The low 64 bits of a product are identical for signed and unsig…
+  support:
+  - {doc: sdm, at: 1156, units: [70668e9485], part: Description}
+- id: 7bbe861f32
+  gist: CF/OF then describe signed overflow, so use mul if you need uns…
+  support:
+  - {doc: sdm, at: 1156, units: [f4332a97fd], part: Description}
+- id: '5576604025'
+  gist: Immediates are sign-extended, at most 32 bits.
+  support:
+  - {doc: sdm, at: 1156, units: [44d92f8adc, 4eb6aec65b], part: Description}
+  - {doc: sdm, at: 1155, units: [52a9b97a0d], part: Opcode table}
+- id: 64f94cc1a7
+  gist: There is no imul r64, r/m64, imm64.
+  how: derived
+  note: No row has a 64-bit immediate.
+  support:
+  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a], part: Opcode table}
+  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a], part: Opcode table}
+- id: 4135943ef8
+  gist: Only CF and OF are defined; SF, ZF, AF and PF are undefined aft…
+  support:
+  - {doc: sdm, at: 1157, units: [ae9ccff032, db5611f02c, 90e3d2cc23], part: Flags Affected}
+- id: ee4adcb76d
+  gist: No 8-bit two- or three-operand forms.
+  how: derived
+  note: The two- and three-operand rows list 16-, 32- and 64-bit registers only.
+  support:
+  - {doc: sdm, at: 1155, units: [71f39eb84e, 6a4923f8af, 707718d6b6, 4d0071f7ba, 9576ed014e], part: Opcode
+      table}
+  - {doc: sdm, at: 1155, units: [71f39eb84e, 6a4923f8af, 707718d6b6, 4d0071f7ba, 9576ed014e], part: Opcode
+      table}
+- id: b2437967b8
+  gist: Use the 16-, 32- or 64-bit registers.
+  how: editorial
+  note: Advice.
+- id: 0b4a1f9887
+  gist: 32-bit operations zero the upper half of the destination regist…
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 66cd7069cc
+  gist: imul rax, rbx ; rax = rax rbx (low 64 bits) imul rax, rbx, 10 ;…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

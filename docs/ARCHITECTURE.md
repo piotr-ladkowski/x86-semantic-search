@@ -38,7 +38,9 @@ brute-force cosine similarity over an in-memory `numpy` matrix is exact and take
 | `highlight.py` | Server-side syntax highlighting of fenced code blocks with Pygments (no JavaScript). Corrects the NASM lexer for prefixes (`rep movsb`) and directives (`equ`); the colours are CSS rules in `assets/app.css`, and `tests/test_highlight.py` fails if content produces a token class with no rule. |
 | `wikibooks.py` | Authoring aid like `sdm.py`: parses the Wikibooks book into sections so authors can look up assembler, OS and ABI topics (`docx86 wiki ...`). stdlib only; not imported by the web app. |
 | `telemetry.py` | OpenTelemetry tracing: builds the tracer provider from `OTEL_*` env, scrubs user data from spans, and returns the `telemetry=` config for FastAPI. See *Observability*. |
-| `cli.py` | `docx86 validate | build-index | progress | eval | sdm`. |
+| `textunits.py`, `claims.py`, `sources.py` | Evidence plumbing: sentence splitting and fingerprints; breaking a page into claims; reading the reference documents (SDM, System V ABI, Microsoft pages, Wikibooks) into citable units. Authoring/review only; PyMuPDF is imported lazily and is not in the image. |
+| `evidence.py`, `suggest.py`, `evidence_cli.py` | The evidence ledger (pointers from claims to source sentences, coverage, checking, passage views), the candidate finder behind `evidence suggest`, and the `docx86 evidence ...` commands. See `docs/EVIDENCE.md`. |
+| `cli.py` | `docx86 validate | build-index | progress | eval | sdm | wiki | evidence`. |
 | `templates/`, `static/` | Jinja2 templates; Tailwind output `static/app.css` (built, git-ignored). |
 
 ## Search algorithm
@@ -94,8 +96,10 @@ Verified: running the image against edited content without rebuilding exits with
 | `GET /instructions`, `/instructions/{name}` | Browse by category; page. `{name}` may be a slug, mnemonic or alias in any case; non-canonical names 301 to the slug. |
 | `GET /articles`, `/articles/{slug}` | Articles. |
 | `GET /about` | Plain-language ("explain like I'm five") description of the search. The page counts and one real example search are computed at request time, so it cannot drift from the code; if you change how ranking works, update the wording in `templates/about.html`. |
+| `GET /evidence`, `/instructions/{name}/evidence`, `/articles/{slug}/evidence` | Which source sentence supports which statement of a page (overview / per page, `?state=` filter). Pointers always; source passages only where the reader has the documents locally. See `docs/EVIDENCE.md`. |
 | `GET /api/search?q=&kind=&limit=` | JSON. `q` 1-200 chars, `limit` 1-25 (default 8). Intended for tools and agents. |
 | `GET /api/instructions`, `/api/instructions/{name}` | JSON list / full page (no rendered HTML). |
+| `GET /api/evidence`, `/api/evidence/{instructions\|articles}/{slug}` | JSON coverage totals / one page's claims with their sources. |
 | `GET /healthz` | Liveness: process is serving. |
 | `GET /readyz` | Readiness: content and index loaded (returns counts). |
 | `GET /docs` | FastAPI's generated OpenAPI UI. |
@@ -114,9 +118,13 @@ All settings are environment variables (`src/docx86/config.py`, prefix `DOCX86_`
 | `DOCX86_MODEL_OFFLINE` | `false` | Never touch the network; load from the cache only (`1` in the image). |
 | `DOCX86_EMBED_THREADS` | `1` | ONNX threads. onnxruntime otherwise sizes its pool by *node* cores and ignores the pod CPU limit, causing throttling. |
 | `DOCX86_REBUILD_STALE_INDEX` | `false` | Dev convenience, see above. |
-| `DOCX86_SDM_PDF` | `docs/docs.x86.pdf` | Used only by `docx86 sdm`. |
+| `DOCX86_SDM_PDF` | `docs/docs.x86.pdf` | Used by `docx86 sdm` and the evidence tooling. |
 | `DOCX86_TRACE_USER_DATA` | `false` | Keep the user's search text in traces (`url.query`, `docx86.search.query`). Off by default; see *Observability*. |
-| `DOCX86_WIKIBOOKS_HTML` | `docs/wikibooks_x86.html` | Used only by `docx86 wiki`. |
+| `DOCX86_WIKIBOOKS_HTML` | `docs/wikibooks_x86.html` | Used by `docx86 wiki` and the evidence tooling. |
+| `DOCX86_SYSV_ABI_PDF` | `docs/sysv_abi.pdf` | System V AMD64 ABI; evidence tooling only. |
+| `DOCX86_MS_CALLING_CONVENTION_HTML` | `docs/ms_x64_calling_convention.html` | Microsoft x64 calling convention page; evidence tooling only. |
+| `DOCX86_MS_STACK_USAGE_HTML` | `docs/ms_x64_stack_usage.html` | Microsoft x64 stack usage page; evidence tooling only. |
+| `DOCX86_CACHE_DIR` | `<repo>/.cache` | Extracted source sentences (`units/`); safe to delete. Unwritable is fine. |
 | `DOCX86_LOG_LEVEL` | `INFO` | Python log level. |
 
 Tracing is configured with the standard `OTEL_*` variables instead; see *Observability*.
@@ -204,9 +212,11 @@ Multi-stage `Dockerfile` (about 640 MB):
 
 1. `css`: Node builds Tailwind output (`npm ci`, lockfile pinned).
 2. `build`: `uv sync --frozen` (lockfile pinned), copies content, runs `docx86 build-index` (downloads the
-   model into `/opt/models` and writes `/app/index`) and `docx86 validate`. A content error fails the image build.
+   model into `/opt/models` and writes `/app/index`), `docx86 validate` and `docx86 evidence check --no-sources`
+   (stale claims, malformed ledgers). A content error fails the image build.
 3. runtime: `python:3.13-slim`, UID/GID 10001, no shell login, copies only venv + src + content + index +
-   models + CSS. The SDM PDF, tests, Node and uv are not in it.
+   models + CSS. The reference documents (SDM, ABI, Microsoft pages), tests, Node and uv are not in it, so the evidence pages show
+   pointers but no source text there.
 
 Verified: the image runs with `--network none --read-only --cap-drop ALL --user 10001 --memory 512m`, becomes
 ready, serves search in about 9 ms, uses about 256 MiB, and logs no warnings.
@@ -243,6 +253,7 @@ The app is stateless, so scaling is just `replicas`. Content changes ship as a n
   search behaviour, index staleness, every HTTP route, progress generation, and checks on the real `content/`
   (including that the generated progress files are current, and, if the PDF is present, that every roster
   SDM title exists in it).
+- Evidence: `test_textunits`, `test_claims`, `test_sources` (synthetic PDF and HTML documents), `test_evidence`, `test_suggest`, `test_evidence_web`, `test_evidence_cli`, and `test_real_evidence`, which checks the repository's own ledgers (valid, nothing stale, no source text, curated pages fully accounted for) and, where the documents are downloaded, that every pointer resolves.
 - `tests/test_telemetry.py` checks span structure and parentage, `traceparent` continuation, that probes are not traced, the privacy defaults (the query text appears in no span attribute), that only traces are exported, and the `OTEL_*` handling.
 - `make verify-asm`: builds the toolchain image in `tests/asm/Dockerfile` (NASM, binutils, GCC, MinGW-w64, Wine), then
   assembles, links and runs every example program from the articles and compares the output with `expected_*.txt`
@@ -251,4 +262,4 @@ The app is stateless, so scaling is just `replicas`. Content changes ship as a n
   exist in `tests/asm/`.
 - `make eval`: runs `content/eval.yaml` against the real model; fails if an expected page is outside the top 3.
   With few pages top-3 is a weak bar; tighten it as the corpus grows.
-- `make check` = lint + test + validate + progress freshness. Run it before committing.
+- `make check` = lint + test + validate + evidence + progress freshness. Run it before committing.

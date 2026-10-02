@@ -1,0 +1,160 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: cdd509d5e9
+  gist: In 64-bit mode a 32-bit register write zero-extends into the fu…
+  support:
+  - doc: sdm
+    at: 79
+    units: [3452e313a5, f25a5adc20, c377e3471d, b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 8762b69d4e
+  gist: When an instruction in 64-bit mode writes a general-purpose reg…
+  support:
+  - doc: sdm
+    at: 79
+    units: [3452e313a5]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: ef9044aa09
+  gist: 64-bit (rax) | all 64 bits | n/a
+  support:
+  - doc: sdm
+    at: 79
+    units: [3452e313a5]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: feb71b0955
+  gist: 32-bit (eax) | low 32 bits | bits 63:32 are set to 0 (zero-exte…
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 1762af6199
+  gist: 16-bit (ax) | low 16 bits | bits 63:16 are left unchanged
+  support:
+  - doc: sdm
+    at: 79
+    units: [c377e3471d, b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 1bbf06c96d
+  gist: 8-bit (al, ah) | that byte | the other 56 bits are left unchang…
+  support:
+  - doc: sdm
+    at: 79
+    units: [c377e3471d, b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 72958688c7
+  gist: 'The 32-bit case is the one that surprises people: mov eax, ebx…'
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 054bf35213
+  gist: Zeroing and small constants are cheaper in 32-bit form.
+  how: derived
+  note: The opcode table shows B8+ rd id (opcode plus a 4-byte immediate) against REX.W + C7 /0 id (REX,
+    opcode, ModRM, a 4-byte immediate).
+  support:
+  - doc: sdm
+    at: 1317
+    units: [eb0ffa6710, 4585c7e167]
+    part: Opcode table
+    note: 'From the MOV entry: B8+ rd id and REX.W + C7 /0 id.'
+- id: 4ba8c781f3
+  gist: xor eax, eax clears all of rax, and mov eax, 1 (5 bytes, B8 01…
+  how: derived
+  note: 5 bytes is opcode + imm32; 7 is REX + opcode + ModRM + imm32. `make verify-asm` checks that the
+    listing shows B8 01 00 00 00.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+  - doc: sdm
+    at: 1317
+    units: [eb0ffa6710, 4585c7e167]
+    part: Opcode table
+    note: From the MOV entry.
+- id: 059a75a189
+  gist: mov eax, eax zero-extends the low 32 bits of rax in place, a co…
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 8c12a9b0b6
+  gist: Signed values need an explicit sign extension.
+  how: derived
+  note: 'Narrow writes do not sign-extend: 32-bit zero-extends, 8/16-bit leave the rest.'
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20, c377e3471d]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 103cd63d32
+  gist: Use movsxd rax, eax (or cdqe for the accumulator) before using…
+  support:
+  - doc: sdm
+    at: 1409
+    units: [57ed0bf58f]
+    part: Opcode table
+    note: From the MOVSX/MOVSXD entry.
+  - doc: sdm
+    at: 842
+    units: [ca770370ab]
+    part: Description
+    note: From the CDQE entry.
+  - doc: sdm
+    at: 190
+    units: [8c507b796d]
+    part: 7.3.1.7 Type Conversion Instructions in 64-Bit Mode
+    note: 'Vol. 1, 7.3.1.7: MOVSXD sign-extends 32 to 64 bits.'
+- id: 2e3e24529e
+  gist: 8- and 16-bit writes keep stale upper bits.
+  support:
+  - doc: sdm
+    at: 79
+    units: [b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 6fec1de449
+  gist: After mov al, 1 the rest of rax still holds whatever it held be…
+  how: derived
+  note: An 8-bit write leaves the upper 56 bits; MOVZX zero-extends.
+  support:
+  - doc: sdm
+    at: 79
+    units: [b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+  - doc: sdm
+    at: 1419
+    units: [398bac2a5d]
+    part: Description
+    note: From the MOVZX entry.
+- id: 98b81b5e0c
+  gist: For address calculations the SDM says to sign-extend the regist…
+  support:
+  - doc: sdm
+    at: 79
+    units: [d03ffb7ebc]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: 'Vol. 1, 3.4.1.1: general-purpose registers in 64-bit mode.'
+- id: 40e621453a
+  gist: mov rax, -1 ; rax = 0xFFFFFFFFFFFFFFFF mov eax, 1 ; rax = 0x000…
+  how: run
+  ref: tests/asm/partial.asm
+  note: partial.asm is run by `make verify-asm` and prints the three values shown.

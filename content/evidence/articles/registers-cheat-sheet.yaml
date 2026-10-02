@@ -1,0 +1,300 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: e2631be595
+  gist: Register names at every size, which instructions give RAX, RCX,…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: 0aab64e680
+  gist: Each register can be used at four widths, each with its own nam…
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: 6fd6bc1ee2
+  gist: rax | eax | ax | al | ah
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: b3b4e40502
+  gist: rbx | ebx | bx | bl | bh
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: fd8756c79a
+  gist: rcx | ecx | cx | cl | ch
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: 7fea399651
+  gist: rdx | edx | dx | dl | dh
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: 05775e3075
+  gist: rsi | esi | si | sil | -
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: 680f6b7f38
+  gist: rdi | edi | di | dil | -
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: fde0302ae6
+  gist: rbp | ebp | bp | bpl | -
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: fbd47c7ff3
+  gist: rsp | esp | sp | spl | -
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: e4c947b9cf
+  gist: r8 ... r15 | r8d ... r15d | r8w ... r15w | r8b ... r15b | -
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: cb46919e65
+  gist: 'Three rules that catch people out:'
+  how: editorial
+  note: Lead-in to the three rules.
+- id: f87fe3b9fb
+  gist: Writing a 32-bit name clears the upper 32 bits; writing an 8- o…
+  support:
+  - {doc: sdm, at: 79, units: [f25a5adc20, c377e3471d, b4a4d677a2], part: 3.4.1.1 General-Purpose Registers
+      in 64-Bit Mode}
+- id: '3387013738'
+  gist: See Why writing EAX clears the top half of RAX.
+  how: editorial
+  note: Link to the sibling article.
+- id: 390005b446
+  gist: r8-r15, sil, dil, bpl and spl can only be reached through a REX…
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+  - {doc: sdm, at: 78, units: [002f1010c3], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
+  - {doc: sdm, at: 79, units: [2d4f0c0c2e], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
+- id: d68f674cca
+  gist: With any REX prefix, ah, bh, ch and dh cannot be encoded (the s…
+  support:
+  - {doc: sdm, at: 79, units: [2d4f0c0c2e, 7f7b184007], part: 3.4.1.1 General-Purpose Registers in 64-Bit
+      Mode}
+- id: 59855376fd
+  gist: 'NASM rejects it: mov ah, sil fails with "cannot use high byte r…'
+  how: run
+  ref: tests/asm/run.sh
+  note: '`make verify-asm` assembles `mov ah, sil` and checks NASM''s message.'
+- id: b475043d4b
+  gist: There is no separate name for the upper part of a register.
+  how: derived
+  note: Table 3-2 lists byte, word, doubleword and quadword names; none names bits 63:32.
+  support:
+  - doc: sdm
+    at: 79
+    units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
+    part: Table
+    note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+- id: 1a7eb805ae
+  gist: To get at bits 63:32 you shift (shr rax, 32).
+  how: derived
+  note: SHR moves bits toward the low end, so a shift by 32 brings bits 63:32 down.
+  support:
+  - {doc: sdm, at: 1893, units: [6270709cc1, a82b35c96e], part: Description}
+- id: 72e24bc735
+  gist: For ordinary arithmetic, loads and stores every register is equ…
+  how: editorial
+  note: A statement about absence of special roles in ordinary instructions; the specific roles are traced
+    below.
+- id: 07e6089ecc
+  gist: The differences below come from specific instructions that name…
+  how: editorial
+  note: Lead-in to the table of built-in jobs.
+- id: 7fb83c4c22
+  gist: 'rax | Accumulator: implicit multiplicand, dividend, comparand a…'
+  support:
+  - doc: sdm
+    at: 78
+    units: [9e87dd5d89]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 1429, units: [92e9ec2799], part: Description}
+  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+  - {doc: sdm, at: 842, units: [ca770370ab], part: Description}
+  - {doc: sdm, at: 898, units: [294ba4653d], part: Description}
+  - {doc: sdm, at: 1966, units: [01b4684e50], part: Description}
+  - {doc: sdm, at: 1271, units: [d984683726], part: Description}
+  - {doc: sdm, at: 1905, units: [bd6969fe6d], part: Description}
+  - {doc: sdm, at: 2871, units: [43b4a27416], part: Description}
+  - {doc: sdm, at: 907, units: [71cb545f05], part: Description}
+  - {doc: sdm, at: 1850, units: [0dadc75f63], part: Description}
+- id: deaae57a2d
+  gist: 'rbx | Almost none in 64-bit mode: table base for xlat, low half…'
+  how: derived
+  note: XLATB uses RBX as the table base and CMPXCHG16B takes RCX:RBX; 'almost none' is the author's summary.
+  support:
+  - doc: sdm
+    at: 78
+    units: [2cebcf9954]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 2871, units: [d5ab0f074a, 340d0309bb], part: Description}
+  - {doc: sdm, at: 900, units: [d3909f256c], part: Description}
+- id: 955c1f1193
+  gist: 'rcx | Counter: cl holds variable shift counts, rcx counts loop,…'
+  support:
+  - doc: sdm
+    at: 78
+    units: [ae488c181f]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+  - {doc: sdm, at: 1274, units: [e56f131544], part: Description}
+  - {doc: sdm, at: 1852, units: [7340ea2c83], part: Description}
+  - {doc: sdm, at: 1206, units: [1506bd42ed], part: Description}
+  - {doc: sdm, at: 1988, units: [9bff1f6ea3], part: Description}
+- id: 3e8273a289
+  gist: 'rdx | High half of a 128-bit value: product of mul, dividend an…'
+  support:
+  - doc: sdm
+    at: 78
+    units: [e24f8e32c9]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
+  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+  - {doc: sdm, at: 961, units: [e69cbbabf3], part: Description}
+  - {doc: sdm, at: 907, units: [71cb545f05], part: Description}
+  - {doc: sdm, at: 1850, units: [0dadc75f63], part: Description}
+- id: 00b2318dd9
+  gist: rsi | Source pointer of the string instructions | movs, lods, c…
+  support:
+  - doc: sdm
+    at: 78
+    units: [acaedd399f]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 1402, units: [708d5fe8d6], part: Description}
+  - {doc: sdm, at: 1271, units: [d984683726], part: Description}
+  - {doc: sdm, at: 885, units: [9c84ce4d33], part: Description}
+- id: 58e5d1fc04
+  gist: rdi | Destination pointer of the string instructions | movs, st…
+  support:
+  - doc: sdm
+    at: 78
+    units: [b33a69ac70]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 1402, units: [868df30365], part: Description}
+  - {doc: sdm, at: 1966, units: [8427d70552], part: Description}
+  - {doc: sdm, at: 1905, units: [f19fc09c16], part: Description}
+  - {doc: sdm, at: 885, units: [9f96db01e9], part: Description}
+- id: d94fec7cef
+  gist: rsp | The stack pointer | push, pop, call, ret, leave
+  support:
+  - doc: sdm
+    at: 78
+    units: [3ec780b89b]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 1811, units: [fcafc8633c], part: Description}
+  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - {doc: sdm, at: 826, units: [ca50a95fdd], part: Description}
+  - {doc: sdm, at: 1858, units: [d61d3da693], part: Description}
+  - {doc: sdm, at: 1254, units: [72f3eafd14], part: Description}
+- id: 14ce54168d
+  gist: rbp | A frame pointer by convention; leave restores it, otherwi…
+  support:
+  - doc: sdm
+    at: 78
+    units: [81e3b052df]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+  - {doc: sdm, at: 1254, units: [72f3eafd14, 445289b062], part: Description}
+  - {doc: sdm, at: 999, units: [0750a41da1], part: Description}
+- id: 5c95fb6a36
+  gist: r8 ... r15 | No built-in job, except that syscall saves RFLAGS…
+  how: derived
+  note: SYSCALL saves RFLAGS in R11; no instruction in the table names R8-R15 implicitly.
+  support:
+  - {doc: sdm, at: 1988, units: [25e9784d3b], part: Description}
+  - {doc: sdm, at: 78, units: [ae8f37dbed], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
+- id: c14f97ed45
+  gist: 'Deeper dives: RCX, RAX and RDX, RSI and RDI, RSP and RBP.'
+  how: editorial
+  note: Links to sibling articles.
+- id: f4b4e3453a
+  gist: Keep a value you still need out of the register an instruction…
+  how: derived
+  note: Each instruction writes or reads the named register implicitly; the advice to keep values out
+    of them follows.
+  support:
+  - {doc: sdm, at: 1429, units: [92e9ec2799], part: Description}
+  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+  - {doc: sdm, at: 1852, units: [7340ea2c83], part: Description}
+  - {doc: sdm, at: 1988, units: [9bff1f6ea3, 25e9784d3b], part: Description}
+  - {doc: sdm, at: 1402, units: [6424b167c6], part: Description}
+- id: 0d27e3b961
+  gist: r8-r15 and rbx are the "quiet" registers no instruction forces…
+  how: editorial
+  note: Advice; the claim that no instruction forces these registers is the absence of an entry in the
+    table above.
+- id: a28b244de7
+  gist: r8-r15 need a REX prefix, which adds a byte unless the instruct…
+  how: derived
+  note: REX prefixes are what reach R8-R15 (and 64-bit operand size); the prefix is one byte.
+  support:
+  - {doc: sdm, at: 78, units: [002f1010c3], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
+- id: 1c8be35fe0
+  gist: The operating system's calling convention decides which registe…
+  how: derived
+  note: Both ABI documents split the registers into preserved and scratch.
+  support:
+  - {doc: sysv, at: 16, units: [92911cf2d5, 0202d90800], part: 3.2.1 Registers and the Stack Frame}
+  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, befd0ad03e], part: Caller/callee
+      saved registers}
+- id: 3bb8dcbb03
+  gist: Both Linux and Windows preserve rbx, rbp, rsp and r12-r15; Wind…
+  support:
+  - {doc: sysv, at: 16, units: [92911cf2d5, 9592e208d5], part: 3.2.1 Registers and the Stack Frame}
+  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1], part: Caller/callee saved registers}
+- id: f52b59d6a0
+  gist: 'Details: System V (Linux) and Microsoft x64 (Windows).'
+  how: editorial
+  note: Links to sibling articles.

@@ -3,7 +3,7 @@ IMAGE ?= docx86
 TAG   ?= 0.1.0
 
 .DEFAULT_GOAL := help
-.PHONY: help setup css index validate progress test eval verify-asm lint fmt check dev image
+.PHONY: help setup css index validate progress evidence test eval verify-asm lint fmt check dev image
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-10s %s\n", $$1, $$2}'
@@ -24,6 +24,9 @@ validate: ## Validate content/ (schema, cross-references, roster)
 progress: ## Regenerate the README progress block and content/README.md
 	uv run docx86 progress
 
+evidence: ## Check the evidence ledgers (stale claims, pointers into the local documents)
+	uv run docx86 evidence check
+
 test: ## Run the test suite (no model download needed)
 	uv run pytest
 
@@ -42,7 +45,7 @@ fmt: ## Auto-fix lint issues and format
 	uv run ruff check --fix .
 	uv run ruff format .
 
-check: lint test validate ## Everything CI would run; do this before committing
+check: lint test validate evidence ## Everything CI would run; do this before committing
 	uv run docx86 progress --check
 
 dev: css ## Dev server on :8000 with reload (rebuilds a stale index on start)

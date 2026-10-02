@@ -1,0 +1,209 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: e4da586ad7
+  gist: Prefix that repeats one string instruction RCX times; REPE and…
+  support:
+  - {doc: sdm, at: 1852, units: [66597eb95d], part: Description}
+  - {doc: sdm, at: 1854, units: [40370a9880], part: Description}
+  - {doc: sdm, at: 1856, units: [761c6062da], part: Description}
+- id: 88a25227fb
+  gist: Also written as REPE, REPZ, REPNE, REPNZ.
+  support:
+  - {doc: sdm, at: 1854, units: [7b6c3d947b, 43fd618f6a], part: Description}
+  - {doc: sdm, at: 1856, units: [384b91250d, 13c0a1fa34], part: Description}
+- id: 9e94e75af6
+  gist: REP MOVS / STOS / LODS is encoded as F3 + string opcode.
+  support:
+  - {doc: sdm, at: 1852, units: [20668b35cf, e624faefc5, d00490e280], part: Opcode table}
+- id: 8dec5c7f07
+  gist: e.g. rep movsb = F3 A4; rep stosq = F3 REX.W AB.
+  support:
+  - {doc: sdm, at: 1852, units: [20668b35cf, 257ecc7e4e], part: Opcode table}
+- id: 6d3513c9d1
+  gist: (INS and OUTS also accept REP but are privileged.)
+  how: derived
+  note: 'REP applies to INS and OUTS; the INS entry''s #GP(0) is for CPL above IOPL, which is what ''privileged''
+    means here.'
+  support:
+  - {doc: sdm, at: 1852, units: [2dd56035f0], part: Description}
+  - doc: sdm
+    at: 1167
+    units: [61e17c6bb1]
+    part: 64-Bit Mode Exceptions
+    note: 'From the INS entry: the I/O privilege check.'
+- id: c51f9b0c5e
+  gist: REPE CMPS / SCAS (also REPZ) is encoded as F3 + string opcode.
+  support:
+  - {doc: sdm, at: 1854, units: [62007c85e1, 89796b16b5], part: Opcode table}
+- id: 41d735003b
+  gist: Repeat while the compared elements are equal (ZF = 1).
+  support:
+  - {doc: sdm, at: 1854, units: [a7670241fc, 40370a9880], part: Description}
+- id: 30d6d47ef4
+  gist: The byte F3 is the same as for REP.
+  support:
+  - {doc: sdm, at: 1852, units: [20668b35cf], part: Opcode table}
+  - {doc: sdm, at: 1854, units: [62007c85e1], part: Opcode table}
+- id: b1e12049da
+  gist: REPNE CMPS / SCAS (also REPNZ) is encoded as F2 + string opcode.
+  support:
+  - {doc: sdm, at: 1856, units: [c4b20615b6, 9c652713cb], part: Opcode table}
+- id: 6894f4eb67
+  gist: Repeat while the compared elements differ (ZF = 0).
+  support:
+  - {doc: sdm, at: 1856, units: [936ce0ed7f, 761c6062da], part: Description}
+- id: 70f7c63d67
+  gist: 'Flags read: ZF.'
+  support:
+  - {doc: sdm, at: 1854, units: [a7670241fc], part: Description}
+  - {doc: sdm, at: 1856, units: [936ce0ed7f], part: Description}
+- id: e9101d5c9f
+  gist: The prefixes do not change flags.
+  support:
+  - {doc: sdm, at: 1853, units: [71f8e7976e], part: Flags Affected}
+  - {doc: sdm, at: 1855, units: [c946051c07], part: Flags Affected}
+- id: 8c4ce26f6f
+  gist: REPE and REPNE read ZF (set by the CMPS or SCAS they repeat); R…
+  support:
+  - {doc: sdm, at: 1854, units: [a7670241fc, 2460ebe111], part: Description}
+  - {doc: sdm, at: 1856, units: [936ce0ed7f], part: Description}
+  - {doc: sdm, at: 1852, units: [06e40ebb3c], part: Description}
+- id: df8fc3c12e
+  gist: A repeat prefix placed before a string instruction (movs, stos,…
+  support:
+  - {doc: sdm, at: 1852, units: [2dd56035f0, 615edebf54], part: Description}
+  - {doc: sdm, at: 1854, units: [7b6c3d947b], part: Description}
+- id: 5d72bcde92
+  gist: The count register is rcx in 64-bit mode (ecx with a 67h prefix…
+  support:
+  - {doc: sdm, at: 1852, units: [7340ea2c83, 69bd867494, 23a1178a1a], part: Description}
+- id: 7879a34944
+  gist: Each repetition decrements rcx, and the repetition stops when i…
+  support:
+  - {doc: sdm, at: 1852, units: [06e40ebb3c], part: Description}
+  - {doc: sdm, at: 1853, units: [0cc2dc93fa], part: Operation}
+- id: f78eb9064c
+  gist: rep | movs, stos, lods | (never; only the count)
+  support:
+  - {doc: sdm, at: 1852, units: [06e40ebb3c, 2dd56035f0], part: Description}
+- id: 044ab1ffa0
+  gist: repe / repz | cmps, scas | the comparison finds a difference (Z…
+  support:
+  - {doc: sdm, at: 1854, units: [a7670241fc, 7b6c3d947b], part: Description}
+- id: 3137eabf64
+  gist: repne / repnz | cmps, scas | the comparison finds a match (ZF =…
+  support:
+  - {doc: sdm, at: 1856, units: [936ce0ed7f, 384b91250d], part: Description}
+- id: 728a8ddcbf
+  gist: 'Block copy and fill: rep movsb, rep stosq.'
+  support:
+  - {doc: sdm, at: 1852, units: [20668b35cf, 257ecc7e4e], part: Opcode table}
+- id: 3b316d8c72
+  gist: 'Searching: repne scasb scans memory for the byte in al.'
+  support:
+  - {doc: sdm, at: 1856, units: [9c652713cb], part: Opcode table}
+- id: d73cd5e05d
+  gist: 'Comparing buffers: repe cmpsb runs until the first mismatch.'
+  support:
+  - {doc: sdm, at: 1854, units: [62007c85e1, a7670241fc], part: Opcode table}
+- id: 14455059b8
+  gist: It repeats only one instruction.
+  support:
+  - {doc: sdm, at: 1852, units: [615edebf54], part: Description}
+- id: 1ce54b3d4c
+  gist: The SDM is explicit that to repeat a block of instructions you…
+  support:
+  - {doc: sdm, at: 1852, units: [cc5fe8d90f], part: Description}
+- id: ca12566237
+  gist: The count is tested before each repetition.
+  support:
+  - {doc: sdm, at: 1853, units: [db6803bf6f], part: Operation}
+- id: aa30379fe2
+  gist: With rcx = 0 the string instruction runs zero times.
+  support:
+  - {doc: sdm, at: 1853, units: [db6803bf6f], part: Operation}
+- id: dfcccc6391
+  gist: This is the opposite of loop, which decrements first and would…
+  how: derived
+  note: REP tests the count first (WHILE CountReg != 0); LOOP decrements first.
+  support:
+  - {doc: sdm, at: 1853, units: [db6803bf6f], part: Operation}
+  - doc: sdm
+    at: 1274
+    units: [ba50f7f285]
+    part: Description
+    note: 'From the LOOP entry: the count is decremented, then checked.'
+- id: a78e261457
+  gist: For repe/repne a zero count also means the flags are untouched,…
+  how: derived
+  note: With a zero count the string instruction never runs, so it never sets ZF.
+  support:
+  - {doc: sdm, at: 1855, units: [db6803bf6f], part: Operation}
+  - {doc: sdm, at: 1855, units: [c946051c07], part: Flags Affected}
+- id: 93ec5a7e4e
+  gist: The prefix byte is shared.
+  how: editorial
+  note: Heading for the next statement.
+- id: d0330192b4
+  gist: F3 means rep before movs/stos/lods and repe before cmps/scas; F…
+  support:
+  - {doc: sdm, at: 1852, units: [20668b35cf, e624faefc5, d00490e280], part: Opcode table}
+  - {doc: sdm, at: 1854, units: [62007c85e1, 89796b16b5], part: Opcode table}
+  - {doc: sdm, at: 1856, units: [c4b20615b6, 9c652713cb], part: Opcode table}
+- id: 153defdb96
+  gist: rep cmpsb and repe cmpsb therefore produce the same bytes.
+  how: derived
+  note: REPE CMPS is F3 A6; that an assembler also accepts rep cmpsb and emits the same F3 byte was not
+    run here.
+  support:
+  - {doc: sdm, at: 1854, units: [62007c85e1, 43fd618f6a], part: Opcode table}
+- id: 50b973d844
+  gist: After the instruction the registers have moved.
+  how: editorial
+  note: Heading for the next statement.
+- id: 691c7f4012
+  gist: rcx holds the repetitions left and rsi/rdi point past the last…
+  how: derived
+  note: The SDM describes this state for a suspended repeat; the same registers are what remain after
+    the last repetition.
+  support:
+  - {doc: sdm, at: 1853, units: [acbed6f462, 0cc2dc93fa], part: Description}
+- id: 563629aa31
+  gist: After repne scasb finds a match, rdi is one past it.
+  how: derived
+  note: SCAS advances RDI after each compare, then the ZF test ends the loop.
+  support:
+  - {doc: sdm, at: 1857, units: [8552245e5c, 0835d176c1], part: Operation}
+  - {doc: sdm, at: 1856, units: [9c652713cb], part: Opcode table}
+- id: 0a26358a40
+  gist: The direction flag decides which way the pointers move, and the…
+  support:
+  - doc: sdm
+    at: 1402
+    units: [151a8cbd68, 521ccda726]
+    part: Description
+    note: 'From the MOVS entry: DF sets the direction.'
+  - doc: sysv
+    at: 16
+    units: [4929d2daf8]
+    part: 3.2.1 Registers and the Stack Frame
+    note: 'System V ABI 3.2.1: DF must be clear on function entry and return.'
+- id: b1181b15b5
+  gist: Faults and interrupts.
+  how: editorial
+  note: Heading for the next statement.
+- id: 40b9d297c7
+  gist: Exceptions raised by the repeated instruction (non-canonical ad…
+  how: derived
+  note: The entry lists only exceptions generated by the associated instruction.
+  support:
+  - {doc: sdm, at: 1853, units: [2f7f57435f], part: Exceptions (All Operating Modes)}
+  - {doc: sdm, at: 1853, units: [999a10c197], part: Description}
+- id: e4f747c6ec
+  gist: 'my_strlen: ; size_t my_strlen(const char s) mov rdx, rdi ; reme…'
+  how: run
+  ref: tests/asm/regs.asm
+  note: my_strlen and mem_equal are run by `make verify-asm` (strlen = 5, 0; equal = 1, 0, 1).

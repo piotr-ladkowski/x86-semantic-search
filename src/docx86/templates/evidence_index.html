@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge, coverage_bar %}
+{% block title %}Evidence &middot; doc/x86{% endblock %}
+{% block description %}How much of each doc/x86 page has been traced to a sentence of the Intel manual or another reference document.{% endblock %}
+
+{% block content %}
+<article class="mx-auto max-w-3xl">
+  <h1 class="text-3xl font-bold">Evidence</h1>
+  <p class="mt-3 text-lg text-zinc-700 dark:text-zinc-300">
+    A page being found is not the same as it being right. For every sentence, table row and code listing on a page we
+    record which sentences of the reference documents it was derived from, so you can read the two side by side.
+  </p>
+
+  <div class="prose prose-zinc mt-4 max-w-none dark:prose-invert prose-code:before:content-none prose-code:after:content-none">
+    <p>
+      Open a page&rsquo;s evidence from the <em>Source</em> box on its page. The statements are listed in order; the
+      sources they rest on sit under them with the cited sentences highlighted. A statement is in one of these states:
+    </p>
+    <ul>
+      <li><strong>Traced</strong>: a person or an AI read the cited sentences and judged that they support it
+        (an exact match of an opcode and instruction form in an SDM table is also counted).</li>
+      <li><strong>Derived</strong>: not stated in a source, but follows from sentences that are cited; the note says how.</li>
+      <li><strong>Checked by running it</strong>: a program in the repository assembles and runs the example.</li>
+      <li><strong>Illustrative</strong> and <strong>advice</strong>: an invented example, or a recommendation, with nothing to quote.</li>
+      <li><strong>Cited to an outside source</strong>: such as a compiler manual; the note names it, but it is not one of
+        the documents we can look sentences up in.</li>
+      <li><strong>Suggested</strong>: found by text similarity and <em>not</em> confirmed by anyone. Treat as a hint.</li>
+      <li><strong>Not yet checked</strong>: nothing recorded yet.</li>
+    </ul>
+    <p>
+      The reference documents are copyrighted, so this project stores only pointers (document, page, a fingerprint of the
+      sentence), never their text. The passages appear on a machine that has its own copy of each document; the pointers
+      work everywhere.
+    </p>
+  </div>
+
+  <section class="mt-6 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+    {% set total = totals.values() | sum %}
+    {% set grounded = totals.traced + totals.derived + totals.run %}
+    <p class="text-sm"><strong>{{ grounded }}</strong> of {{ total }} statements rest on a sentence of a reference document.
+      {{ totals.illustrative + totals.editorial + totals.external }} are examples, advice or cited to an outside source.
+      {{ totals.suggested }} have only an unconfirmed suggestion and {{ totals.unverified }} have nothing recorded yet.</p>
+    <div class="mt-2">{{ coverage_bar(totals, total, states) }}</div>
+  </section>
+
+  <table class="mt-8 w-full text-left text-sm">
+    <thead class="text-xs uppercase tracking-wide text-zinc-500">
+      <tr><th class="py-2 pr-3 font-semibold">Page</th><th class="py-2 pr-3 font-semibold">Statements</th><th class="w-1/3 py-2 font-semibold">Coverage</th></tr>
+    </thead>
+    <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+      {% for p in pages %}
+      <tr>
+        <td class="py-2 pr-3"><a href="{{ p.url }}" class="font-medium text-indigo-600 hover:underline dark:text-indigo-400">{{ p.title }}</a>
+          {% if p.kind == "article" %}{{ badge("article") }}{% endif %}</td>
+        <td class="py-2 pr-3 text-zinc-600 dark:text-zinc-400">{{ p.total }}</td>
+        <td class="py-2" title="{{ p.grounded }} of {{ p.total }} rest on a source">{{ coverage_bar(p.counts(), p.total, states) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</article>
+{% endblock %}

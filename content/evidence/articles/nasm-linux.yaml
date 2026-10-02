@@ -1,0 +1,244 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 501bc39446
+  gist: Install NASM, assemble, link with ld or gcc, run and read the e…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: 8c3cc64c80
+  gist: NASM, a linker and (optionally) a C compiler.
+  how: run
+  ref: tests/asm/Dockerfile
+  note: The toolchain image installs exactly NASM, binutils and GCC.
+- id: 1c776ea64c
+  gist: 'On Debian or Ubuntu:'
+  how: editorial
+  note: 'Scope: the package command below was run on Debian 12 only.'
+- id: ea2a7beb04
+  gist: sudo apt install nasm binutils gcc
+  how: run
+  ref: tests/asm/Dockerfile
+  note: The toolchain image installs these packages with apt-get on Debian 12 (not through sudo).
+- id: c1c650d887
+  gist: Other distributions package the same tools, but check the packa…
+  how: editorial
+  note: Advice to check package names elsewhere.
+- id: 6aa7ba37db
+  gist: The examples here were tested with NASM 2.16.01, GNU ld 2.40 an…
+  how: run
+  ref: tests/asm/run.sh
+  note: The harness asserts these tool versions.
+- id: f11a6bd037
+  gist: 'Assemble: nasm -f elf64 hello.asm -o hello.o turns source into…'
+  how: run
+  ref: tests/asm/run.sh
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: 5b79b2d3be
+  gist: -f elf64 selects the 64-bit Linux object format.
+  how: run
+  ref: tests/asm/run.sh
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+  support:
+  - {doc: wikibooks, at: NASM Syntax, units: [1e7a5adedc], part: NASM Syntax}
+- id: 098ccf804c
+  gist: 'Link: ld hello.o -o hello (or gcc hello.o -o hello when the pro…'
+  how: run
+  ref: tests/asm/run.sh
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: fb84feaaff
+  gist: 'Run: ./hello, then echo $? to read the exit status.'
+  how: run
+  ref: tests/asm/run.sh
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: c62168167c
+  gist: This program starts at _start and talks to the kernel with the…
+  how: run
+  ref: tests/asm/hello.asm
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: f53895f7e5
+  gist: The system call number goes in rax and the arguments in rdi, rs…
+  support:
+  - {doc: sysv, at: 125, units: [0fd82f5895, 4cadd5d06c], part: Miscellaneous Remarks}
+- id: b2573f4d1d
+  gist: '; hello.asm - Linux x86-64, no C library: talks to the kernel w…'
+  how: run
+  ref: tests/asm/hello.asm
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: 5e2fda5642
+  gist: nasm -f elf64 hello.asm -o hello.o ld hello.o -o hello ./hello…
+  how: run
+  ref: tests/asm/run.sh
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: 3add7b9612
+  gist: 'Notes:'
+  how: editorial
+  note: Heading for the next statement.
+- id: af47d40004
+  gist: global _start makes the entry point visible to the linker.
+  how: run
+  ref: tests/asm/run.sh
+  note: Without `global _start`, ld warns it cannot find the entry symbol.
+- id: 9a2e6a87cc
+  gist: '_start is not a function: nothing called it, so it must end by…'
+  how: derived
+  note: Nothing calls _start (the kernel starts the process), so there is no return address; the crash
+    on ret is checked by `make verify-asm`.
+  support:
+  - doc: sdm
+    at: 1988
+    units: [9bff1f6ea3]
+    part: Description
+    note: From the SYSCALL entry.
+- id: 38a9387499
+  gist: A ret there crashes the program with a segmentation fault.
+  how: run
+  ref: tests/asm/run.sh
+  note: A `ret` from _start exits with status 139 (SIGSEGV).
+- id: a893984a3c
+  gist: lea rsi, [rel msg] computes the address relative to rip.
+  how: run
+  ref: tests/asm/hello.asm
+  note: objdump shows the rip-relative lea.
+  support:
+  - doc: sdm
+    at: 84
+    units: [7acbd2fb16]
+    part: 3.5.1 Instruction Pointer in 64-Bit Mode
+    note: RIP-relative addressing (Vol. 1, 3.5.1).
+- id: 221915fe37
+  gist: In the disassembly it becomes lea rsi, [rip+0xfef].
+  how: run
+  ref: tests/asm/run.sh
+  note: The harness checks the `lea rsi,[rip+0x...]` form; the exact offset depends on the link layout.
+- id: 03f22dec1b
+  gist: 'msglen: equ $ - msg is an assembly-time constant: the number of…'
+  how: run
+  ref: tests/asm/hello.asm
+  note: The program writes the whole string and nothing more, so the computed length is right.
+- id: '8614313298'
+  gist: Linking through gcc brings in the C runtime, which calls your m…
+  how: run
+  ref: tests/asm/hello_libc.asm
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: d76fd15af2
+  gist: 'Now you follow the function-calling convention: the first argum…'
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - {doc: sysv, at: 23, units: [0f7d542149], part: 3.2.3 Parameter Passing}
+- id: 8bf75a2d24
+  gist: ; hello_libc.asm - Linux x86-64, uses the C library (the C runt…
+  how: run
+  ref: tests/asm/hello_libc.asm
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: a631eec874
+  gist: nasm -f elf64 hello_libc.asm -o hello_libc.o gcc hello_libc.o -…
+  how: run
+  ref: tests/asm/run.sh
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: 682042ba8f
+  gist: gcc -no-pie hello_libc.o -o hello_libc works too.
+  how: run
+  ref: tests/asm/run.sh
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: 63cf3e6d3e
+  gist: main is a real function here, so it ends with ret; its return v…
+  how: run
+  ref: tests/asm/run.sh
+  note: A variant returning 7 exits with status 7.
+- id: 6ec5ac95f5
+  gist: The push rbp is there to restore 16-byte stack alignment before…
+  how: derived
+  note: The ABI requires (%rsp + 8) to be a multiple of 16 at function entry, so rsp is 8 modulo 16 inside
+    main until the push. That a missing push 'may crash' is hedged; the ABI article records a crash with
+    floating-point arguments.
+  support:
+  - {doc: sysv, at: 17, units: [7dfd811182], part: 3.2.2 The Stack Frame}
+- id: 2297af1fd3
+  gist: Without the last line of the second listing, gcc prints this wh…
+  how: run
+  ref: tests/asm/run.sh
+  note: gcc prints the warning when the note is missing.
+- id: 0c86670edc
+  gist: (Linking the first program with plain ld printed nothing on the…
+  how: run
+  ref: tests/asm/run.sh
+  note: The harness asserts that plain ld prints nothing for a _start program without the note; 'still
+    good practice' is advice.
+- id: 71290af6d6
+  gist: 'ld: warning: hello_libc.o: missing .note.GNU-stack section impl…'
+  how: run
+  ref: tests/asm/run.sh
+  note: The harness checks both lines (the object file name differs).
+- id: c7e53d60ac
+  gist: The line section .note.GNU-stack noalloc noexec nowrite progbit…
+  how: run
+  ref: tests/asm/run.sh
+  note: With the line gcc links without a warning; without it gcc says the object implies an executable
+    stack.
+- id: eed3125da9
+  gist: Put it at the end of every file you assemble for Linux.
+  how: editorial
+  note: Advice.
+- id: 064bb7882f
+  gist: 'nasm -f elf64 hello.asm -o hello.o -l hello.lst # listing: sour…'
+  how: run
+  ref: tests/asm/run.sh
+  note: The listing, objdump and debug-info commands are run.
+- id: 461add0f14
+  gist: The listing shows the bytes behind each line (for example mov e…
+  how: run
+  ref: tests/asm/run.sh
+  note: The listing contains B801000000.
+  support:
+  - doc: sdm
+    at: 1317
+    units: [eb0ffa6710]
+    part: Opcode table
+    note: 'From the MOV entry: B8+ rd id.'
+- id: 2dfffb10bf
+  gist: Copying a 32-bit tutorial.
+  how: editorial
+  note: Heading for the next statement.
+- id: 52f4b68c6a
+  gist: Older examples (including the Wikibooks hello-world) use nasm -…
+  support:
+  - {doc: wikibooks, at: Hello World (Linux), units: [276939b983, b0bfcdcd4f, e48d91b3b9], part: Hello
+      World (Linux)}
+- id: cee11cb389
+  gist: In 64-bit code use -f elf64, syscall, and write = 1, exit = 60…
+  how: run
+  ref: tests/asm/hello.asm
+  note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
+- id: 455d2dbccd
+  gist: Forgetting global _start.
+  how: editorial
+  note: Heading for the next statement.
+- id: 5d137b7fb5
+  gist: ld only warns (cannot find entry symbol _start; defaulting to .…
+  how: run
+  ref: tests/asm/run.sh
+  note: The warning text is checked; where execution then starts is ld's default, not run.
+- id: f5576e4172
+  gist: Falling off the end of _start.
+  how: editorial
+  note: Heading for the next statement.
+- id: 31540f0b0a
+  gist: 'There is no caller to return to: always finish with the exit sy…'
+  how: derived
+  note: No caller means a ret pops a meaningless address; the crash is checked by `make verify-asm`.
+  support:
+  - doc: sdm
+    at: 1988
+    units: [9bff1f6ea3]
+    part: Description
+    note: From the SYSCALL entry.
+- id: b7347c6a3a
+  gist: 'Forgetting the stack alignment before calling C functions: see…'
+  how: editorial
+  note: Link to the sibling article.
+- id: 757bece4f4
+  gist: 'Related: System V calling convention, the same on Windows.'
+  how: editorial
+  note: Links to sibling articles.

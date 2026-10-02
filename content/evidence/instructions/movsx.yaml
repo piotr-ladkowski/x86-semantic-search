@@ -1,0 +1,170 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 93b7ad7329
+  gist: Copies a byte, word or doubleword into a larger register, filli…
+  support:
+  - {doc: sdm, at: 1409, units: [40f37d4273, e64d93c8c1], part: Description}
+- id: 42899dcc64
+  gist: Also written as MOVSXD.
+  support:
+  - {doc: sdm, at: 1409, units: [57ed0bf58f], part: Opcode table}
+- id: 8c4875eb9e
+  gist: MOVSX r64, r/m8 is encoded as REX.W + 0F BE /r.
+  support:
+  - {doc: sdm, at: 1409, units: [144a2c5ae4], part: Opcode table, by: match}
+- id: 3134fc5094
+  gist: MOVSX r64, r/m16 is encoded as REX.W + 0F BF /r.
+  support:
+  - {doc: sdm, at: 1409, units: [66a1950ce6], part: Opcode table, by: match}
+- id: 8cf7809969
+  gist: MOVSXD r64, r/m32 is encoded as REX.W + 63 /r.
+  support:
+  - {doc: sdm, at: 1409, units: [57ed0bf58f], part: Opcode table, by: match}
+- id: ba71af06db
+  gist: The form that sign-extends a doubleword into a quadword; cdqe d…
+  how: derived
+  note: MOVSXD with REX.W is the doubleword-to-quadword row; CDQE is the fixed eax-to-rax form.
+  support:
+  - {doc: sdm, at: 1409, units: [57ed0bf58f], part: Opcode table}
+  - doc: sdm
+    at: 842
+    units: [ca770370ab, 5a740eead6, 1b9c0d5000]
+    part: Description
+    note: From the CWDE/CDQE entry.
+- id: f6d860db7b
+  gist: MOVSX r32, r/m8 is encoded as 0F BE /r.
+  support:
+  - {doc: sdm, at: 1409, units: [fe20d2c53d], part: Opcode table, by: match}
+- id: d248529452
+  gist: Also zeroes bits 63:32 of the 64-bit register.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+  - {doc: sdm, at: 1409, units: [fe20d2c53d], part: Opcode table}
+- id: 96285e92d1
+  gist: MOVSX r32, r/m16 is encoded as 0F BF /r.
+  support:
+  - {doc: sdm, at: 1409, units: [9bb7967623], part: Opcode table, by: match}
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - {doc: sdm, at: 1409, units: [71f8e7976e], part: Flags Affected}
+- id: 039acdcbb0
+  gist: movsx dst, src copies a byte or word from a register or memory…
+  support:
+  - {doc: sdm, at: 1409, units: [40f37d4273, e64d93c8c1], part: Description}
+- id: ae3c9be940
+  gist: movsxd is the same idea for a 32-bit source and a 64-bit destin…
+  support:
+  - {doc: sdm, at: 1409, units: [57ed0bf58f], part: Opcode table}
+- id: b8ef8375cf
+  gist: 'Loading a signed byte or 16-bit value into a full register: mov…'
+  how: derived
+  note: The 0F BE /r row sign-extends a byte from r/m8, which can be memory.
+  support:
+  - {doc: sdm, at: 1409, units: [fe20d2c53d, 40f37d4273], part: Opcode table}
+- id: 22f5a9cde5
+  gist: Turning a signed 32-bit value into a 64-bit one before using it…
+  how: derived
+  note: The REX.W + 63 /r row sign-extends r/m32 into r64; the use cases are the author's.
+  support:
+  - {doc: sdm, at: 1409, units: [57ed0bf58f], part: Opcode table}
+- id: d139748b00
+  gist: Preparing a value for signed comparison or division at a larger…
+  how: editorial
+  note: A typical use.
+- id: d6a84f245c
+  gist: 32-bit to 64-bit is movsxd (opcode 63, needs REX.W), not movsx.
+  how: derived
+  note: The MOVSX rows have r/m8 and r/m16 sources only; the r/m32 source is the MOVSXD row, opcode 63,
+    with REX.W.
+  support:
+  - {doc: sdm, at: 1409, units: [57ed0bf58f, 294bb47456, 9bb7967623], part: Opcode table}
+- id: 44910126b0
+  gist: Without REX.W the 63 form is just a 32-bit copy, which zero-ext…
+  how: derived
+  note: The SDM discourages MOVSXD without REX.W and says regular MOV should be used; a 32-bit register
+    write zero-extends.
+  support:
+  - {doc: sdm, at: 1409, units: [7f5bf5f43e, 8d1e070836, 85813a4a40], part: Opcode table}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 6ce7fde0a4
+  gist: A plain 32-bit mov zero-extends, so it is the wrong tool for si…
+  how: derived
+  note: Zero-extension of 32-bit results is the SDM's rule; 'wrong tool' follows.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: a468fd0866
+  gist: This is a classic source of bugs when a negative int is used as…
+  how: editorial
+  note: A remark about common bugs.
+- id: 5d9ed77bbe
+  gist: The destination must be wider than the source (except for the d…
+  how: derived
+  note: Every row has a source (r/m) narrower than its destination except the 32-to-32 MOVSXD row; none
+    has an immediate.
+  support:
+  - {doc: sdm, at: 1409, units: [40f37d4273, 7f5bf5f43e, d31eea6db8], part: Description}
+- id: 98cb9236be
+  gist: For unsigned values use movzx.
+  how: derived
+  note: MOVZX zero-extends.
+  support:
+  - doc: sdm
+    at: 1419
+    units: [398bac2a5d]
+    part: Description
+    note: From the MOVZX entry.
+- id: 665932f30a
+  gist: cdqe does the same job as movsxd rax, eax using only rax.
+  how: derived
+  note: CDQE sign-extends EAX into RAX; MOVSXD RAX, EAX does the same.
+  support:
+  - doc: sdm
+    at: 842
+    units: [ca770370ab, 5a740eead6, 1b9c0d5000]
+    part: Description
+    note: From the CWDE/CDQE entry.
+  - {doc: sdm, at: 1409, units: [57ed0bf58f], part: Opcode table}
+- id: fffaa8082b
+  gist: Byte registers.
+  how: editorial
+  note: Heading for the next statement.
+- id: 212ccf52b1
+  gist: With a REX prefix the byte source ah/bh/ch/dh is not available;…
+  support:
+  - doc: sdm
+    at: 1409
+    units: [06b14e969c]
+    part: Opcode table
+    note: Footnote on the byte registers in the opcode table.
+- id: 46be064fa9
+  gist: It never changes the flags.
+  support:
+  - {doc: sdm, at: 1409, units: [71f8e7976e], part: Flags Affected}
+- id: 6d53df94d4
+  gist: A lock prefix is invalid (#UD).
+  support:
+  - doc: sdm
+    at: 1410
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: 48002653b5
+  gist: movsx eax, byte [rsi] ; eax = signed byte; bits 63:32 of rax ar…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

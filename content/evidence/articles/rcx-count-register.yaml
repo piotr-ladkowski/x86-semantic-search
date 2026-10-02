@@ -1,0 +1,212 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: cabfc5747e
+  gist: Variable shift counts must be in CL, LOOP, REP and JRCXZ count…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: 1c672dbfcb
+  gist: rcx is the one register hard-wired as a count.
+  support:
+  - doc: sdm
+    at: 78
+    units: [ae488c181f]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: ECX is the counter for string and loop operations.'
+- id: d34561d123
+  gist: 'Five things only RCX, ECX or CL can do:'
+  how: editorial
+  note: Lead-in to the five numbered items; that these are the only such uses is the author's claim.
+- id: 9a8bc84ea4
+  gist: Supply a variable shift or rotate count (as cl).
+  support:
+  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+  - {doc: sdm, at: 1823, units: [9d0156a885], part: Description}
+- id: 0de917fd76
+  gist: Count iterations for loop, loope, loopne, the rep string prefix…
+  support:
+  - {doc: sdm, at: 1274, units: [e56f131544], part: Description}
+  - {doc: sdm, at: 1852, units: [23a1178a1a, 66597eb95d], part: Description}
+  - {doc: sdm, at: 1206, units: [1506bd42ed], part: Description}
+- id: e98b21ce81
+  gist: Be silently overwritten by syscall.
+  support:
+  - {doc: sdm, at: 1988, units: [9bff1f6ea3, 25e9784d3b], part: Description}
+- id: 6f01296cd3
+  gist: Carry the sub-leaf number into cpuid (and return IA32_TSC_AUX f…
+  support:
+  - {doc: sdm, at: 907, units: [5c83ce8887, 71cb545f05], part: Opcode table}
+  - {doc: sdm, at: 1848, units: [85c21b3e4e], part: Description}
+- id: 69745895b5
+  gist: Hold the high half of the replacement value in cmpxchg16b (the…
+  support:
+  - {doc: sdm, at: 900, units: [d3909f256c, c718ec8b3b], part: Description}
+- id: 29b2b2ee6d
+  gist: For everything else rcx is an ordinary register.
+  how: editorial
+  note: A statement about absence (no other hard-wired use), which a pointer cannot show.
+- id: e5f1de7be9
+  gist: The shifts (shl, shr, sar), the rotates (rol, ror, rcl, rcr) an…
+  support:
+  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+  - {doc: sdm, at: 1823, units: [9d0156a885], part: Description}
+  - {doc: sdm, at: 1929, units: [a1f28522bd], part: Description}
+- id: 0a91a5857f
+  gist: An immediate count or the constant 1 needs no register at all,…
+  support:
+  - {doc: sdm, at: 1893, units: [6a7744d2a3, e3b3cee5a0], part: Description}
+- id: 9e4a2a5721
+  gist: 'shl_by: ; unsigned long shl_by(unsigned long x, unsigned long n…'
+  how: run
+  ref: tests/asm/regs.asm
+  note: shl_by(3, 4) = 48 is checked by `make verify-asm`.
+  support:
+  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+- id: a904b684aa
+  gist: 'The count is masked: only the low 6 bits of cl are used for a 6…'
+  support:
+  - {doc: sdm, at: 1893, units: [c45c18538a], part: Description}
+  - {doc: sdm, at: 1823, units: [7ed399abbd], part: Description}
+- id: b78b936f1c
+  gist: shl rax, cl with cl = 64 shifts by 0.
+  how: derived
+  note: A 6-bit mask turns 64 into 0.
+  support:
+  - {doc: sdm, at: 1893, units: [c45c18538a, c506491372], part: Description}
+- id: 133dfd3dff
+  gist: Whatever else was in rcx is needed again afterwards, so save it…
+  how: editorial
+  note: Advice.
+- id: f7ee341d63
+  gist: The way around it is BMI2.
+  how: derived
+  note: SHLX, SHRX and SARX take the count from a general register.
+  support:
+  - {doc: sdm, at: 1898, units: [b4306ae55b, d19aeb191e], part: Description}
+- id: 6c7b47bf4c
+  gist: shlx, shrx and sarx take the count from any general-purpose reg…
+  support:
+  - {doc: sdm, at: 1898, units: [b4306ae55b, d19aeb191e], part: Description}
+- id: 017a74d937
+  gist: They exist only on processors with BMI2, so check CPUID before…
+  support:
+  - {doc: sdm, at: 1898, units: [327239fc79, f809660091, 72770f5c6f], part: Opcode table}
+- id: c199eb2164
+  gist: loop decrements rcx and jumps back while it is not zero.
+  support:
+  - {doc: sdm, at: 1274, units: [ba50f7f285, 0883627735], part: Description}
+- id: 9bbb56206f
+  gist: loope and loopne also test ZF.
+  support:
+  - {doc: sdm, at: 1274, units: [85076631a8], part: Description}
+- id: 357eca031e
+  gist: The decrement happens before the test, so rcx = 0 on entry mean…
+  how: derived
+  note: The count is decremented, then checked; 0 - 1 wraps to all ones.
+  support:
+  - {doc: sdm, at: 1274, units: [ba50f7f285], part: Description}
+  - {doc: sdm, at: 1206, units: [91321adf4a], part: Description}
+- id: 7addeb983c
+  gist: rep movsb, rep stosb and friends repeat the string instruction…
+  support:
+  - {doc: sdm, at: 1852, units: [66597eb95d, 06e40ebb3c, 7340ea2c83], part: Description}
+- id: ef36fef1c4
+  gist: jrcxz jumps if rcx is zero and is the usual guard in front of a…
+  support:
+  - {doc: sdm, at: 1206, units: [1506bd42ed, 3f56e86b1f, 77626ba505], part: Description}
+- id: 14aca5bf2f
+  gist: In 64-bit mode the counter is rcx.
+  support:
+  - {doc: sdm, at: 1852, units: [7340ea2c83], part: Description}
+  - {doc: sdm, at: 1274, units: [e56f131544], part: Description}
+- id: 210b5dee8b
+  gist: Only with a 67h address-size prefix does it become ecx, so mov…
+  support:
+  - {doc: sdm, at: 1274, units: [982791d096], part: Description}
+  - {doc: sdm, at: 1852, units: [69bd867494], part: Description}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 28d4b0c7e4
+  gist: 'fill_bytes: ; void fill_bytes(void dst, int byte, size_t n) mov…'
+  how: run
+  ref: tests/asm/regs.asm
+  note: fill_bytes is run by `make verify-asm`.
+  support:
+  - {doc: sdm, at: 1852, units: [06e40ebb3c], part: Description}
+- id: 3fd13c641f
+  gist: syscall saves the address of the following instruction in rcx a…
+  support:
+  - {doc: sdm, at: 1988, units: [9bff1f6ea3, 25e9784d3b], part: Description}
+- id: d68429c415
+  gist: Both registers are therefore lost across every syscall; do not…
+  how: derived
+  note: SYSCALL overwrites RCX and R11, and the System V appendix says the kernel destroys them.
+  support:
+  - {doc: sdm, at: 1988, units: [9bff1f6ea3, 25e9784d3b], part: Description}
+  - {doc: sysv, at: 125, units: [9c0d3eaec8], part: Miscellaneous Remarks}
+- id: 4625dfd9f8
+  gist: This is also why the Linux kernel takes its fourth argument in…
+  how: derived
+  note: The kernel interface skips RCX because SYSCALL uses it for the return address.
+  support:
+  - {doc: sysv, at: 125, units: [c1c84ca62a, 4cadd5d06c], part: Miscellaneous Remarks}
+  - {doc: sdm, at: 1988, units: [9bff1f6ea3], part: Description}
+- id: c792daf26f
+  gist: cpuid reads the leaf from eax and, for some leaves, the sub-lea…
+  support:
+  - {doc: sdm, at: 907, units: [71cb545f05, 5c83ce8887, bd795f7268], part: Description}
+- id: bdb02da4e6
+  gist: rdtscp returns the time-stamp counter in edx:eax and IA32_TSC_A…
+  support:
+  - {doc: sdm, at: 1848, units: [85c21b3e4e], part: Description}
+- id: de06b8c6dd
+  gist: The 16-byte atomic compare-and-exchange compares rdx:rax with m…
+  support:
+  - {doc: sdm, at: 900, units: [c43fbaf713, d3909f256c], part: Description}
+- id: 1220380a52
+  gist: Conflicts are the real cost.
+  how: editorial
+  note: Heading for the next statement.
+- id: cbb5523dd2
+  gist: Code that shifts by a variable amount inside a rep or loop body…
+  how: derived
+  note: REP and LOOP count in RCX; a variable shift needs CL, which is part of RCX.
+  support:
+  - {doc: sdm, at: 1852, units: [7340ea2c83], part: Description}
+  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+- id: 18da4a3313
+  gist: Calling conventions already use rcx.
+  how: derived
+  note: Both conventions pass an integer argument in RCX.
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+- id: fdf5583a33
+  gist: On Linux it carries the 4th argument; on Windows the 1st.
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+- id: 99715d90ee
+  gist: A function that needs a shift count in cl often has to move its…
+  how: derived
+  note: An argument already in RCX has to move before CL can be loaded with a count.
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+- id: 0f6b24f54c
+  gist: 8-bit cl only reaches the low byte and leaves the rest of rcx u…
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20, b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for operand sizes in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 2ac2c03675
+  gist: 'Instruction pages: SHL, SHR, SAR, LOOP, Jcc and JRCXZ.'
+  how: editorial
+  note: Links to instruction pages.

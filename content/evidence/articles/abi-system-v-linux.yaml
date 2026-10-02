@@ -1,0 +1,221 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 9265bf59c5
+  gist: Which registers carry arguments and results, which registers a…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: 250802ea49
+  gist: This is the convention used by Linux and most other Unix-like s…
+  how: external
+  note: The ABI document's Appendix A describes the Linux kernel interface; that most other Unix-like
+    systems use the convention is general knowledge, not in the document.
+  support:
+  - {doc: sysv, at: 124, units: [6ac0d0f79e], part: Calling Conventions}
+- id: c6f70cadb6
+  gist: 'It is a software agreement, not part of the CPU: the Intel manu…'
+  how: editorial
+  note: That the SDM is silent on calling conventions is an absence, which a pointer cannot show; the
+    ABI document is the source of the convention.
+- id: 397f31ede1
+  gist: For Windows see the Microsoft x64 convention.
+  how: editorial
+  note: Link to the sibling article.
+- id: 317d2ede39
+  gist: Integer and pointer arguments 1 to 6 | rdi, rsi, rdx, rcx, r8,…
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+- id: 72668664df
+  gist: Floating-point arguments 1 to 8 | xmm0 ... xmm7
+  support:
+  - {doc: sysv, at: 21, units: [2645ba506d], part: 3.2.3 Parameter Passing}
+- id: 69e145699b
+  gist: Everything beyond that | On the stack, pushed right to left; ea…
+  support:
+  - {doc: sysv, at: 21, units: [00265e391a, e2f362f778], part: 3.2.3 Parameter Passing}
+  - {doc: sysv, at: 18, units: [4ac531652b], part: 3.2.3 Parameter Passing}
+- id: 222b98bfe5
+  gist: The first stack argument is therefore at [rsp + 8] when the cal…
+  how: derived
+  note: Figure 3.3 puts the return address at 8(%rbp) and memory argument eightbyte 0 at 16(%rbp), one
+    eightbyte apart; at function entry %rsp points at the return address, so that argument is at [rsp
+    + 8]. sum7 reads its seventh argument there under `make verify-asm`.
+  support:
+  - {doc: sysv, at: 17, units: [c71b6badcd], part: 3.2.1 Registers and the Stack Frame}
+  - {doc: sysv, at: 21, units: [00265e391a], part: 3.2.3 Parameter Passing}
+- id: c91e556108
+  gist: There is no shadow space (that is a Windows feature).
+  how: derived
+  note: Figure 3.3 has the first memory argument directly above the return address, with no reserved space
+    between.
+  support:
+  - {doc: sysv, at: 17, units: [c71b6badcd], part: 3.2.1 Registers and the Stack Frame}
+- id: 405cf2d6c1
+  gist: 'Integer and floating-point arguments count separately: the 2nd…'
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da, 2645ba506d], part: 3.2.3 Parameter Passing}
+- id: 10ffdf6dfb
+  gist: 'add3: ; long add3(long a, long b, long c): a=rdi, b=rsi, c=rdx…'
+  how: run
+  ref: tests/asm/sysv.asm
+  note: add3 is assembled and run in `make verify-asm`.
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+- id: c266c6f32f
+  gist: 'Integer or pointer: rax; a 128-bit integer uses rax and rdx.'
+  how: derived
+  note: INTEGER-class results use %rax then %rdx; a 128-bit integer is two eightbytes.
+  support:
+  - {doc: sysv, at: 23, units: [0f7d542149], part: 3.2.3 Parameter Passing}
+  - {doc: sysv, at: 19, units: [712aa7f7bd], part: 3.2.3 Parameter Passing}
+- id: 33b5f5b94c
+  gist: 'Floating-point: xmm0 (and xmm1 for a second one).'
+  support:
+  - {doc: sysv, at: 23, units: [fe611f153c], part: 3.2.3 Parameter Passing}
+- id: e04925c151
+  gist: 'A struct too large for registers: the caller allocates the spac…'
+  support:
+  - {doc: sysv, at: 23, units: [787a28d551, 5fdf9cc5c9, 006a81343a], part: 3.2.3 Parameter Passing}
+- id: ed5010c92f
+  gist: rbx, rbp, r12, r13, r14, r15 (and rsp) | rax, rcx, rdx, rsi, rd…
+  support:
+  - {doc: sysv, at: 16, units: [92911cf2d5, 0202d90800], part: 3.2.1 Registers and the Stack Frame}
+  - {doc: sysv, at: 22, units: [158681191a, f62da9fcd4, b3e7188278, e9368e520f, b0118af7c7], part: 3.2.3
+      Parameter Passing}
+- id: c6353a16cb
+  gist: A function that wants to use a preserved register saves it firs…
+  how: derived
+  note: The ABI requires the called function to preserve these registers; saving and restoring them is
+    how. The compiler prologue was observed (extra_sources).
+  support:
+  - {doc: sysv, at: 16, units: [92911cf2d5, 85204c06f9], part: 3.2.1 Registers and the Stack Frame}
+- id: 1145af5588
+  gist: The direction flag must be clear on entry and return.
+  support:
+  - {doc: sysv, at: 16, units: [4929d2daf8], part: 3.2.1 Registers and the Stack Frame}
+- id: dea97fa6b5
+  gist: 'keep_rbx: ; long keep_rbx(long x): uses rbx, so it must save an…'
+  how: run
+  ref: tests/asm/sysv.asm
+  note: keep_rbx is assembled and run in `make verify-asm`.
+  support:
+  - {doc: sysv, at: 16, units: [92911cf2d5], part: 3.2.1 Registers and the Stack Frame}
+- id: a5c1195cea
+  gist: If a caller needs a scratch register's value to survive a call,…
+  support:
+  - {doc: sysv, at: 16, units: [0202d90800], part: 3.2.1 Registers and the Stack Frame}
+- id: ec74557b6a
+  gist: 'Alignment: rsp must be a multiple of 16 immediately before a ca…'
+  how: derived
+  note: (%rsp + 8) is a multiple of 16 at function entry, which is after the call pushed 8 bytes, so rsp
+    was a multiple of 16 before the call.
+  support:
+  - {doc: sysv, at: 17, units: [d1956c1de1, 7dfd811182], part: 3.2.2 The Stack Frame}
+- id: dfc60acd96
+  gist: Because call pushes the 8-byte return address, rsp is 8 modulo…
+  how: derived
+  note: A multiple of 16 before the call minus the pushed 8 bytes is 8 modulo 16.
+  support:
+  - {doc: sysv, at: 17, units: [7dfd811182], part: 3.2.2 The Stack Frame}
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    note: 'From the CALL entry: a near call pushes the return address.'
+- id: 79d24e7c84
+  gist: 'A misaligned call can crash: a call to printf with a floating-p…'
+  how: external
+  note: Observed in a test, recorded in this article's extra_sources; not reproduced by a program in tests/asm.
+- id: c56e8bdb72
+  gist: 'Red zone: the 128 bytes below rsp may be used by a leaf functio…'
+  support:
+  - {doc: sysv, at: 17, units: [1c525edb6e, 0616474a02, 0c37f534ac], part: 3.2.2 The Stack Frame}
+- id: da2e61796b
+  gist: A function that calls others must not rely on it.
+  support:
+  - {doc: sysv, at: 17, units: [1c525edb6e], part: 3.2.2 The Stack Frame}
+- id: f4030e43df
+  gist: Variadic functions such as printf also need al set to the numbe…
+  support:
+  - {doc: sysv, at: 21, units: [7a65e5edb3, c072292262], part: 3.2.3 Parameter Passing}
+- id: 155ce90975
+  gist: 'say_answer: ; void say_answer(void): printf("answer = %d\n", 42…'
+  how: run
+  ref: tests/asm/sysv.asm
+  note: say_answer is assembled and run in `make verify-asm`.
+  support:
+  - {doc: sysv, at: 21, units: [7a65e5edb3], part: 3.2.3 Parameter Passing}
+- id: b78fd27803
+  gist: The syscall instruction talks to the kernel, not to a function,…
+  support:
+  - {doc: sysv, at: 125, units: [7b48560ab1, 4cadd5d06c], part: Miscellaneous Remarks}
+  - {doc: sysv, at: 124, units: [708d3eae80], part: Calling Conventions}
+- id: 69c498709a
+  gist: System call number | rax
+  support:
+  - {doc: sysv, at: 125, units: [0fd82f5895], part: Miscellaneous Remarks}
+- id: 1d80acf487
+  gist: Arguments 1 to 6 | rdi, rsi, rdx, r10, r8, r9
+  support:
+  - {doc: sysv, at: 125, units: [4cadd5d06c], part: Miscellaneous Remarks}
+- id: c568bd45a5
+  gist: 'Result | rax: a value from -4095 to -1 means an error (it is -e…'
+  support:
+  - {doc: sysv, at: 125, units: [b8845329d1, 11685d2e5d], part: Miscellaneous Remarks}
+- id: 1b4888afa9
+  gist: Destroyed | rcx and r11 (the CPU stores the return address and…
+  support:
+  - {doc: sysv, at: 125, units: [9c0d3eaec8], part: Miscellaneous Remarks}
+  - doc: sdm
+    at: 1988
+    units: [9bff1f6ea3, 25e9784d3b]
+    part: Description
+    note: 'From the SYSCALL entry: RCX receives the next instruction address, R11 the flags.'
+- id: 5d0385a888
+  gist: Note r10 where a function call would use rcx.
+  support:
+  - {doc: sysv, at: 125, units: [c1c84ca62a, 4cadd5d06c], part: Miscellaneous Remarks}
+- id: 94b0265ae7
+  gist: No system call takes more than six arguments, and none passes a…
+  support:
+  - {doc: sysv, at: 125, units: [221d13085f], part: Miscellaneous Remarks}
+- id: 3a145996bf
+  gist: See the NASM-on-Linux guide for a complete write + exit program.
+  how: editorial
+  note: Link to the sibling article.
+- id: 0fe6a55519
+  gist: On Linux, int is 32 bits, while long and pointers are 64 bits.
+  support:
+  - doc: sysv
+    at: 13
+    units: [4225a02d8b]
+    part: 3.1.2 Data Representation
+    note: 'Figure 3.1: sizes of the basic types (the passage is the whole table).'
+- id: 052fb0b48f
+  gist: Forgetting to preserve rbx, rbp or r12-r15 corrupts the caller'…
+  how: derived
+  note: The callee must preserve these registers; skipping that changes the caller's values. 'Far from
+    the bug' is the author's remark.
+  support:
+  - {doc: sysv, at: 16, units: [92911cf2d5, 85204c06f9], part: 3.2.1 Registers and the Stack Frame}
+- id: 015932816a
+  gist: 32-bit tutorials (including most of the Wikibooks examples) pas…
+  how: external
+  note: The Wikibooks examples are 32-bit (int 0x80, stack arguments), shown here; that they do not apply
+    in 64-bit code is the ABI document's convention above.
+  support:
+  - {doc: wikibooks, at: Hello World (Linux), units: [e48d91b3b9], part: Hello World (Linux)}
+  - {doc: wikibooks, at: Example I/O (Linux and BSD), units: [ac6f11b2e0], part: Example I/O (Linux and
+      BSD)}
+- id: d0b3fdb427
+  gist: In a direct syscall, rcx and r11 are destroyed and the fourth a…
+  support:
+  - {doc: sysv, at: 125, units: [9c0d3eaec8, 4cadd5d06c], part: Miscellaneous Remarks}
+  - {doc: sysv, at: 124, units: [edab074ca7], part: Calling Conventions}
+- id: de84ee3e42
+  gist: If you instead call a libc wrapper such as write as an ordinary…
+  support:
+  - {doc: sysv, at: 124, units: [edab074ca7, 708d3eae80], part: Calling Conventions}
+  - {doc: sysv, at: 125, units: [c1c84ca62a], part: Miscellaneous Remarks}

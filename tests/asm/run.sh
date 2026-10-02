@@ -22,6 +22,43 @@ for f in regs sysv frame partial; do nasm -f elf64 $f.asm -o $f.o || fail=1; don
 gcc -O1 test_linux.c regs.o sysv.o frame.o partial.o -o test_linux
 check "linux register/ABI functions" "$(cat expected_linux.txt)" "$(./test_linux)"
 
+# ---- statements the NASM-on-Linux article makes about tools and mistakes ----------------------------
+contains() {  # contains <name> <needle> <haystack>
+    case "$3" in *"$2"*) echo "ok    $1" ;; *) echo "FAIL  $1"; echo "   expected to contain: $2"; echo "   actual:   $3"; fail=1 ;; esac
+}
+contains "toolchain: NASM version the article quotes" "2.16.01" "$(nasm -v)"
+contains "toolchain: ld version the article quotes" "2.40" "$(ld --version | head -1)"
+contains "toolchain: GCC version the article quotes" "12.2" "$(gcc --version | head -1)"
+
+sed '/^section .note.GNU-stack/d' hello_libc.asm > nostack_libc.asm && nasm -f elf64 nostack_libc.asm -o nostack_libc.o
+contains "linux: gcc warns when .note.GNU-stack is missing" \
+    "missing .note.GNU-stack section implies executable stack" "$(gcc nostack_libc.o -o nostack_libc 2>&1)"
+sed '/^section .note.GNU-stack/d' hello.asm > nostack.asm && nasm -f elf64 nostack.asm -o nostack.o
+check "linux: plain ld prints no warning for a _start program without the note" "" "$(ld nostack.o -o nostack 2>&1)"
+
+contains "linux: the gcc warning also says the behaviour is deprecated" \
+    "NOTE: This behaviour is deprecated" "$(gcc nostack_libc.o -o nostack_libc 2>&1)"
+sed 's/^        xor     eax, eax .*/        mov     eax, 7/' hello_libc.asm > ret7.asm && nasm -f elf64 ret7.asm -o ret7.o && gcc ret7.o -o ret7
+./ret7 >/dev/null; check "linux: the value main returns becomes the exit status" 7 $?
+
+printf 'bits 64\nmov ah, sil\n' > highbyte.asm
+contains "nasm rejects mixing a high-byte register with a REX-only register" \
+    "cannot use high byte register in rex instruction" "$(nasm -f elf64 highbyte.asm -o highbyte.o 2>&1)"
+
+sed 's/^global _start//' hello.asm > noglobal.asm && nasm -f elf64 noglobal.asm -o noglobal.o
+contains "linux: ld warns when global _start is missing" \
+    "cannot find entry symbol _start; defaulting to" "$(ld noglobal.o -o noglobal 2>&1)"
+
+printf 'global _start\nsection .text\n_start:\n        ret\nsection .note.GNU-stack noalloc noexec nowrite progbits\n' > retstart.asm
+nasm -f elf64 retstart.asm -o retstart.o && ld retstart.o -o retstart
+./retstart 2>/dev/null; check "linux: ret from _start crashes with SIGSEGV (status 139)" 139 $?
+
+nasm -f elf64 hello.asm -o hello_l.o -l hello.lst
+contains "linux: the listing shows B8 01 00 00 00 for mov eax, 1" "B801000000" "$(cat hello.lst)"
+contains "linux: objdump shows the rip-relative lea" "lea    rsi,[rip+0x" "$(objdump -d -M intel hello)"
+nasm -f elf64 -g -F dwarf hello.asm -o hello_g.o
+contains "linux: -g -F dwarf adds debug sections" ".debug_info" "$(readelf -S hello_g.o)"
+
 # ---- Windows (cross-built with MinGW-w64, run under Wine) --------------------------------------
 export WINEDEBUG=-all WINEDLLOVERRIDES="mscoree,mshtml=" WINEPREFIX=/tmp/wineprefix
 wine=/usr/lib/wine/wine64

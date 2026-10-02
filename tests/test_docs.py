@@ -37,3 +37,37 @@ def test_architecture_lists_every_setting():
         assert f"`DOCX86_{name.upper()}`" in doc, (
             f"ARCHITECTURE.md does not document DOCX86_{name.upper()}"
         )
+
+
+EVIDENCE = (PROJECT_ROOT / "docs" / "EVIDENCE.md").read_text(encoding="utf-8")
+
+
+def test_evidence_doc_describes_every_state_command_and_document():
+    from docx86 import evidence
+    from docx86.sources import DOCUMENT_SOURCES
+
+    for state in evidence.STATES:
+        assert f"`{state}`" in EVIDENCE, f"EVIDENCE.md does not describe the state `{state}`"
+    for doc in DOCUMENT_SOURCES:
+        assert f"`{doc}`" in EVIDENCE, f"EVIDENCE.md does not list the document `{doc}`"
+    for by in ("auto", "match", "llm", "human"):
+        assert f"`{by}`" in EVIDENCE
+    parser_actions = {
+        "status",
+        "show",
+        "find",
+        "cite",
+        "mark",
+        "retarget",
+        "prune",
+        "suggest",
+        "check",
+    }
+    for action in parser_actions:
+        assert f"docx86 evidence {action}" in EVIDENCE, f"EVIDENCE.md lacks `evidence {action}`"
+
+
+def test_architecture_lists_the_evidence_routes():
+    doc = (PROJECT_ROOT / "docs" / "ARCHITECTURE.md").read_text(encoding="utf-8")
+    for route in ("/evidence", "/instructions/{name}/evidence", "/api/evidence"):
+        assert route in doc, f"ARCHITECTURE.md does not list {route}"

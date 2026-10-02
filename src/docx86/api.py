@@ -6,7 +6,9 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
+from .evidence import EvidenceStore, page_to_dict
 from .search import Hit, SearchEngine
+from .sources import SourceRegistry
 
 MAX_QUERY_LENGTH = 200
 DEFAULT_LIMIT = 8
@@ -19,7 +21,17 @@ def get_engine(request: Request) -> SearchEngine:
     return request.app.state.engine
 
 
+def get_evidence(request: Request) -> EvidenceStore:
+    return request.app.state.evidence
+
+
+def get_sources(request: Request) -> SourceRegistry:
+    return request.app.state.sources
+
+
 Engine = Annotated[SearchEngine, Depends(get_engine)]
+Evidence = Annotated[EvidenceStore, Depends(get_evidence)]
+Sources = Annotated[SourceRegistry, Depends(get_sources)]
 
 
 def hit_to_dict(engine: SearchEngine, hit: Hit) -> dict:
@@ -79,3 +91,39 @@ def get_instruction(engine: Engine, name: str) -> dict:
     if ins is None:
         raise HTTPException(404, f"No documented instruction '{name}'")
     return ins.model_dump(mode="json", exclude={"body_html"})
+
+
+@router.get("/evidence")
+def evidence_summary(evidence: Evidence) -> dict:
+    """How many statements on each page are traced to a source sentence (counts only)."""
+    return {
+        "totals": evidence.totals(),
+        "pages": [
+            {
+                "kind": p.kind,
+                "slug": p.slug,
+                "status": p.status,
+                "total": p.total,
+                "grounded": p.grounded,
+                "open": p.open,
+                "counts": p.counts(),
+                "url": p.url,
+            }
+            for p in evidence.pages()
+        ],
+    }
+
+
+@router.get("/evidence/{kind}/{slug}")
+def evidence_for_page(
+    evidence: Evidence, sources: Sources, kind: Literal["instructions", "articles"], slug: str
+) -> dict:
+    """Every statement of a page with the places it is derived from.
+
+    Pointers are always present. Passages of the reference documents appear only on a machine
+    that has its own copy of them (they are copyrighted and not part of this service).
+    """
+    page = evidence.get("instruction" if kind == "instructions" else "article", slug)
+    if page is None:
+        raise HTTPException(404, f"No {kind[:-1]} '{slug}'")
+    return page_to_dict(page, sources)

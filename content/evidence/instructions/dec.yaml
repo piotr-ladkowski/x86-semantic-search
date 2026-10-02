@@ -1,0 +1,124 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 76be015e16
+  gist: Subtracts 1 from the operand in place without changing the carr…
+  support:
+  - {doc: sdm, at: 966, units: [df93137ccf], part: Description}
+- id: c2376811f7
+  gist: DEC r/m64 is encoded as REX.W + FF /1.
+  support:
+  - {doc: sdm, at: 966, units: [e197f6b11e], part: Opcode table, by: match}
+- id: 6017ec976a
+  gist: The 32- and 16-bit forms are FF /1 and the 8-bit form is FE /1.
+  support:
+  - {doc: sdm, at: 966, units: [7e6706b7b2, 4d57305b42, 585ce219c6], part: Opcode table}
+- id: 750e51498d
+  gist: The one-byte 48+ rd encodings of 32-bit mode do not exist in 64…
+  support:
+  - {doc: sdm, at: 966, units: [6ce58f1fe4, 9efaef2b74, 5fc8d5bb40], part: Description}
+- id: 2aed03aa46
+  gist: 'Flags modified: OF, SF, ZF, AF, PF.'
+  support:
+  - {doc: sdm, at: 966, units: [7912fbaba8], part: Flags Affected}
+- id: e88bf7bcd0
+  gist: CF is NOT affected; that is the difference from sub reg, 1.
+  support:
+  - {doc: sdm, at: 966, units: [056a03066d, 4596c12adf], part: Flags Affected}
+- id: 80ac84ef0a
+  gist: dec dst subtracts 1 from dst and stores the result back, settin…
+  support:
+  - {doc: sdm, at: 966, units: [df93137ccf, d10b3b545f, 7912fbaba8, 056a03066d], part: Description}
+- id: 06f87ab620
+  gist: 'Counting down: dec rcx followed by jnz loops until rcx reaches…'
+  how: derived
+  note: DEC sets ZF from its result, so JNZ right after it tests the decremented value.
+  support:
+  - {doc: sdm, at: 966, units: [7912fbaba8], part: Flags Affected}
+  - doc: sdm
+    at: 82
+    units: [de682806f5]
+    part: 3.4.3.1 Status Flags
+    note: Status flags (Vol. 1, 3.4.3.1).
+- id: 46c163d3df
+  gist: Stepping an index backwards.
+  how: editorial
+  note: A typical use.
+- id: da34b62511
+  gist: 'Decrementing memory in place, atomically if you add lock: lock…'
+  support:
+  - {doc: sdm, at: 966, units: [138ae4629d, 7618c9e8a1], part: Description}
+- id: 34e9cf5185
+  gist: CF is preserved.
+  support:
+  - {doc: sdm, at: 966, units: [056a03066d], part: Flags Affected}
+- id: 43e3620085
+  gist: sub rax, 1 updates CF; dec rax does not, which is what lets a l…
+  how: derived
+  note: The SDM says DEC leaves CF alone so a loop counter can be updated without disturbing it; SBB chains
+    consuming CF are the multi-word case.
+  support:
+  - {doc: sdm, at: 966, units: [4596c12adf, 056a03066d, 41464b6748], part: Description}
+- id: 75a88b285b
+  gist: The short encodings are gone in 64-bit mode.
+  support:
+  - {doc: sdm, at: 966, units: [6ce58f1fe4], part: Description}
+- id: 4635ad9507
+  gist: In 32-bit code dec r32 was a single byte (48-4F); in 64-bit mod…
+  support:
+  - {doc: sdm, at: 966, units: [6ce58f1fe4, 5fc8d5bb40, 585ce219c6], part: Description}
+- id: ebb9445d32
+  gist: Wrap-around.
+  how: editorial
+  note: Heading for the next statement.
+- id: e6fc10708e
+  gist: dec on 0 gives all ones (ZF clear, SF set), so a dec/jnz loop e…
+  how: derived
+  note: 0 - 1 is all ones in two's complement; ZF and SF follow from that result. A loop that decrements
+    first and tests after runs 2^64 times from 0.
+  support:
+  - {doc: sdm, at: 966, units: [d10b3b545f, 7912fbaba8], part: Operation}
+  - doc: sdm
+    at: 82
+    units: [de682806f5]
+    part: 3.4.3.1 Status Flags
+    note: Status flags (Vol. 1, 3.4.3.1).
+  - doc: sdm
+    at: 82
+    units: [8d996b02f3]
+    part: 3.4.3.1 Status Flags
+    note: Status flags (Vol. 1, 3.4.3.1).
+- id: 3127b140de
+  gist: Test for zero before entering the loop.
+  how: editorial
+  note: Advice.
+- id: 586f765144
+  gist: 32-bit operations zero the upper half.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: b40ce2c600
+  gist: dec eax clears bits 63:32 of rax.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: c28cb8aece
+  gist: 'lock dec needs a memory destination (otherwise #UD).'
+  support:
+  - doc: sdm
+    at: 967
+    units: [47552c0032]
+    part: 64-Bit Mode Exceptions
+    note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+- id: 53d06eb709
+  gist: 'mov rcx, 10 .again: nop ; ... loop body, runs 10 times ... dec…'
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

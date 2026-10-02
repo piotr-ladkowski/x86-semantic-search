@@ -1,0 +1,172 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 1559949ef6
+  gist: Subtracts the second operand from the first and sets the flags,…
+  support:
+  - {doc: sdm, at: 865, units: [1a066e1724, 3bb9b063e1], part: Description}
+- id: eea4619b9a
+  gist: CMP r/m64, r64 is encoded as REX.W + 39 /r.
+  support:
+  - {doc: sdm, at: 865, units: [d6de8a508c], part: Opcode table, by: match}
+- id: 97b845e0fe
+  gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
+  support:
+  - {doc: sdm, at: 865, units: [4825b31922, e3fda71b25, fe85b35d58, d6de8a508c], part: Opcode table}
+- id: 238a29b505
+  gist: CMP r64, r/m64 is encoded as REX.W + 3B /r.
+  support:
+  - {doc: sdm, at: 865, units: [90a56b3192], part: Opcode table, by: match}
+- id: b86519a968
+  gist: CMP r/m64, imm8 is encoded as REX.W + 83 /7 ib.
+  support:
+  - {doc: sdm, at: 865, units: [b6561e2095], part: Opcode table, by: match}
+- id: 51e483d20e
+  gist: imm8 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 865, units: [b6561e2095, 946a37cb6d], part: Opcode table}
+- id: 3c787307ff
+  gist: CMP r/m64, imm32 is encoded as REX.W + 81 /7 id.
+  support:
+  - {doc: sdm, at: 865, units: [b6e6f8a896], part: Opcode table, by: match}
+- id: 735d1e8ccd
+  gist: imm32 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 865, units: [b6e6f8a896], part: Opcode table}
+- id: e0264187b6
+  gist: CMP RAX, imm32 is encoded as REX.W + 3D id.
+  support:
+  - {doc: sdm, at: 865, units: [663f9cbda6], part: Opcode table, by: match}
+- id: dde1c70266
+  gist: Short encoding for the accumulator.
+  how: derived
+  note: The accumulator row (3D id, operand encoding I) has no ModRM byte, which the general 81 /7 id
+    form needs.
+  support:
+  - {doc: sdm, at: 865, units: [663f9cbda6, 09bba7787f], part: Opcode table}
+- id: 462694adb8
+  gist: 'Flags modified: CF, OF, SF, ZF, AF, PF.'
+  support:
+  - {doc: sdm, at: 866, units: [1a792e6456], part: Flags Affected}
+- id: ca55b92b7d
+  gist: Set exactly as SUB would set them; no register or memory is wri…
+  support:
+  - {doc: sdm, at: 865, units: [3bb9b063e1, fb75803af8, b0bfd0b66e], part: Description}
+  - {doc: sdm, at: 866, units: [9332f2e5cd], part: Description}
+- id: 29b87f52c6
+  gist: cmp a, b computes a - b, sets the status flags from that result…
+  support:
+  - doc: sdm
+    at: 865
+    units: [1a066e1724, 3bb9b063e1, fb75803af8, b0bfd0b66e]
+    part: Description
+    note: 'Both operands are marked (r): read only.'
+- id: 91e1d90a68
+  gist: It exists to feed a conditional instruction (jcc, setcc, cmovcc…
+  support:
+  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+- id: 64b1e2d91e
+  gist: 'Before a conditional jump, setcc or cmovcc: cmp rax, rbx then j…'
+  how: derived
+  note: The SDM says Jcc, CMOVcc and SETcc conditions are based on CMP's result; JL and JE are rows of
+    the Jcc table.
+  support:
+  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+  - doc: sdm
+    at: 1203
+    units: [4d1db289db, e937db03ed]
+    part: Opcode table
+    note: From the Jcc entry.
+- id: 767a82a610
+  gist: 'Comparing a register or memory value with a constant: cmp dword…'
+  support:
+  - {doc: sdm, at: 865, units: [3ac5030a2b, a3f3934c76], part: Opcode table}
+- id: 3df9a56606
+  gist: Checking equality (je/jne) or ordering.
+  how: derived
+  note: JE and JNE test ZF, which CMP sets from the subtraction.
+  support:
+  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+  - doc: sdm
+    at: 1203
+    units: [e937db03ed, 18b1475313]
+    part: Opcode table
+    note: From the Jcc entry.
+- id: cff82bcf3d
+  gist: For a plain "is this zero?" test, test reg, reg is a byte short…
+  how: derived
+  note: 85 /r is an opcode byte plus a ModRM byte; cmp reg, 0 needs an opcode, a ModRM byte and an immediate
+    byte (the imm8 form).
+  support:
+  - doc: sdm
+    at: 2010
+    units: [fbd31e52b9]
+    part: Opcode table
+    note: 'From the TEST entry: 85 /r.'
+  - doc: sdm
+    at: 865
+    units: [5b7dfed80a]
+    part: Opcode table
+    note: 83 /7 ib.
+- id: f934cf1d22
+  gist: Operand order.
+  how: editorial
+  note: Heading for the next statement.
+- id: 64ded36497
+  gist: cmp a, b computes a - b, so cmp rax, rbx followed by jl jumps w…
+  how: derived
+  note: JL jumps when SF differs from OF; for a subtraction that is the signed 'less than' case.
+  support:
+  - {doc: sdm, at: 865, units: [3bb9b063e1], part: Description}
+  - doc: sdm
+    at: 1203
+    units: [4d1db289db]
+    part: Opcode table
+    note: From the Jcc entry.
+- id: 475e98f91b
+  gist: Signed versus unsigned is chosen by the instruction that reads…
+  how: derived
+  note: JB and JA test CF and ZF (unsigned); JL and JG test SF, OF and ZF (signed).
+  support:
+  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+  - doc: sdm
+    at: 1203
+    units: [a397db1da2, aa86466ea7, 4d1db289db, 4c0eb334fa]
+    part: Opcode table
+    note: From the Jcc entry.
+  - doc: sdm
+    at: 1974
+    units: [90a715b8dd]
+    part: Description
+    note: 'From the SUB entry: CF for unsigned, OF for signed.'
+- id: 1a91d386b2
+  gist: Immediates are sign-extended to the size of the first operand:…
+  support:
+  - {doc: sdm, at: 865, units: [946a37cb6d, b6e6f8a896], part: Description}
+- id: 881ad8ee9d
+  gist: To compare a 64-bit register with 4294967295, load that constan…
+  how: derived
+  note: The 64-bit immediate form takes an imm32 sign-extended; 4294967295 does not fit as a positive
+    value.
+  support:
+  - {doc: sdm, at: 865, units: [b6e6f8a896, 946a37cb6d], part: Opcode table}
+- id: 16631dc74c
+  gist: At most one memory operand.
+  how: derived
+  note: Every form in the opcode table has one r/m operand and a register or immediate; none has two.
+  support:
+  - {doc: sdm, at: 865, units: [fe85b35d58, 29a2d4c8b0, a3f3934c76], part: Opcode table}
+- id: c2b7f17143
+  gist: A lock prefix is always invalid (#UD), since cmp never writes.
+  support:
+  - doc: sdm
+    at: 866
+    units: [2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    note: '#UD if the LOCK prefix is used.'
+- id: cbd5761cc5
+  gist: cmp rax, rbx ; flags from rax - rbx jl .less ; taken if rax < r…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

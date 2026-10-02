@@ -1,0 +1,151 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: e98e2e652e
+  gist: Bitwise AND of destination and source, stored in the destinatio…
+  how: derived
+  note: Masking and clearing bits follow from the rule that a result bit is 1 only where both operands
+    have a 1.
+  support:
+  - {doc: sdm, at: 764, units: [db92d708ee, 7dfaec5a3d], part: Description}
+- id: 0bcea776f4
+  gist: AND r/m64, r64 is encoded as REX.W + 21 /r.
+  support:
+  - {doc: sdm, at: 764, units: [03c2624ec2], part: Opcode table, by: match}
+- id: 97b845e0fe
+  gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
+  support:
+  - {doc: sdm, at: 764, units: [dabcdb8994, 4dea47c8e4, dc2c08f314, 03c2624ec2], part: Opcode table}
+- id: d5b89660db
+  gist: AND r64, r/m64 is encoded as REX.W + 23 /r.
+  support:
+  - {doc: sdm, at: 764, units: [1a4ff0e3e7], part: Opcode table, by: match}
+- id: d1c6f42904
+  gist: AND r/m64, imm8 is encoded as REX.W + 83 /4 ib.
+  support:
+  - {doc: sdm, at: 764, units: [968bb49d94], part: Opcode table, by: match}
+- id: 51e483d20e
+  gist: imm8 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 764, units: [968bb49d94], part: Opcode table}
+- id: c5b330cd40
+  gist: AND r/m64, imm32 is encoded as REX.W + 81 /4 id.
+  support:
+  - {doc: sdm, at: 764, units: [3cc527ea33], part: Opcode table, by: match}
+- id: 735d1e8ccd
+  gist: imm32 is sign-extended to 64 bits.
+  support:
+  - {doc: sdm, at: 764, units: [3cc527ea33], part: Opcode table}
+- id: 48d0d84a9d
+  gist: AND RAX, imm32 is encoded as REX.W + 25 id.
+  support:
+  - {doc: sdm, at: 764, units: [87e0a69cd0], part: Opcode table, by: match}
+- id: b2e4c9a167
+  gist: 'Flags modified: OF, CF, SF, ZF, PF; undefined: AF.'
+  support:
+  - {doc: sdm, at: 765, units: [b819ee05d2, 1345083ae6], part: Flags Affected}
+- id: 43089e0923
+  gist: OF and CF are cleared; SF, ZF and PF are set from the result.
+  support:
+  - {doc: sdm, at: 765, units: [b819ee05d2], part: Flags Affected}
+- id: 6583db0218
+  gist: and dst, src sets each bit of dst to 1 only where both dst and…
+  support:
+  - {doc: sdm, at: 764, units: [db92d708ee, 7dfaec5a3d], part: Description}
+- id: e411158457
+  gist: ANDing with a mask keeps the bits where the mask has 1s and cle…
+  how: derived
+  note: A bit of the mask that is 1 passes the other operand's bit through; a 0 forces the result bit
+    to 0.
+  support:
+  - {doc: sdm, at: 764, units: [7dfaec5a3d], part: Description}
+- id: ab0b422030
+  gist: 'Keeping only some bits: and eax, 0xFF leaves just the low byte.'
+  how: derived
+  note: 0xFF has 1s in the low byte only.
+  support:
+  - {doc: sdm, at: 764, units: [7dfaec5a3d], part: Description}
+- id: a9f24f01c9
+  gist: 'Clearing specific bits: AND with the inverted mask.'
+  how: derived
+  note: An inverted mask has 0s at the bits to clear.
+  support:
+  - {doc: sdm, at: 764, units: [7dfaec5a3d], part: Description}
+- id: b001550aa8
+  gist: 'Rounding down to a power-of-two boundary: and rsp, -16 clears t…'
+  how: derived
+  note: -16 is 0xFF...F0 when the imm8 is sign-extended, so the low 4 bits are cleared.
+  support:
+  - {doc: sdm, at: 764, units: [7dfaec5a3d, 968bb49d94], part: Description}
+- id: e7db8bd820
+  gist: If you only want the flags and not the result, use test, which…
+  support:
+  - doc: sdm
+    at: 2010
+    units: [8e5658a0cd, df137368aa]
+    part: Description
+    note: From the TEST entry.
+- id: e71791be0d
+  gist: Immediates are sign-extended.
+  support:
+  - doc: sdm
+    at: 764
+    units: [968bb49d94, 3cc527ea33, 87e0a69cd0]
+    part: Opcode table
+    note: The opcode table says sign-extended for each immediate form.
+- id: d832d32686
+  gist: A 32-bit immediate with its top bit set becomes a mask with all…
+  how: derived
+  note: imm32 is sign-extended to 64 bits, so a set top bit repeats through the upper half.
+  support:
+  - {doc: sdm, at: 764, units: [3cc527ea33, 87e0a69cd0], part: Opcode table}
+- id: 2fe4ae6203
+  gist: So a 64-bit and cannot mask with 0xFFFFFFFF using an immediate;…
+  how: derived
+  note: Sign-extension makes 0xFFFFFFFF into 0xFFFFFFFFFFFFFFFF; a 32-bit operation zero-extends its result.
+  support:
+  - {doc: sdm, at: 764, units: [3cc527ea33], part: Opcode table}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 586f765144
+  gist: 32-bit operations zero the upper half.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: 5d49a90ac6
+  gist: and eax, ebx clears bits 63:32 of rax.
+  support:
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+- id: c16186bada
+  gist: Flags.
+  how: editorial
+  note: Heading for the next statement.
+- id: 4b5d3d454a
+  gist: OF and CF are cleared, SF/ZF/PF are set from the result, and AF…
+  support:
+  - {doc: sdm, at: 765, units: [b819ee05d2, 1345083ae6], part: Flags Affected}
+- id: fa8e3088c0
+  gist: At most one memory operand, and lock and needs a memory destina…
+  support:
+  - {doc: sdm, at: 764, units: [afd25ca2b2], part: Description}
+  - doc: sdm
+    at: 765
+    units: [47552c0032]
+    part: 64-Bit Mode Exceptions
+    note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+- id: 2d49b8b893
+  gist: and eax, 0xFF ; keep the low byte (rax upper bits become 0) and…
+  how: illustrative
+  note: Short snippets using the forms listed above; not run.

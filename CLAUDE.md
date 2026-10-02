@@ -23,6 +23,7 @@ make test       # pytest (hash embedder; no model/network)
 uv run pytest tests/test_search.py::test_semantic_ranking   # a single test
 make validate   # uv run docx86 validate   (add --sdm to check roster titles against the PDF)
 make progress   # regenerate README progress block + content/README.md (never hand-edit them)
+make evidence   # uv run docx86 evidence check: stale claims, bad pointers, reviewed pages fully covered
 make verify-asm # assemble + run the articles' example programs in Docker (tests/asm; Windows ones under Wine)
 make index      # embed content/ -> index/   (needed when search-relevant text changed)
 make eval       # real-model search regression check (content/eval.yaml); downloads the model once
@@ -35,6 +36,10 @@ On NixOS, `uv run`/`make` may fail with `ImportError: libstdc++.so.6` (numpy's e
 
 Wikibooks lookup (needs `docs/wikibooks_x86.html`, a secondary source for assemblers, OS and ABI topics only):
 `uv run docx86 wiki find|show|grep <text>`. Never copy its prose (CC BY-SA); cite the section in `extra_sources`.
+
+Evidence ledger (`docs/EVIDENCE.md`): which sentence of which document supports which statement of a page.
+`uv run docx86 evidence status|show|find|cite|mark|suggest|check`. After writing or editing a page run
+`evidence suggest <slug> --write`, then read the open claims against the documents and `cite`/`mark` them.
 
 SDM lookup (needs `docs/docs.x86.pdf`; download command is in README.md):
 `uv run docx86 sdm find <text>` lists matching entries with PDF pages;
@@ -65,6 +70,13 @@ The schema in `src/docx86/models.py` is the content contract; `tests/test_docs.p
   just Wikibooks. State what was *not* run (for example real Windows).
 - **Label code fences** (```` ```nasm ````, ```` ```bash ````): they are highlighted on the server by `highlight.py`; colours are rules in `assets/app.css` (run `make css`), and a test fails if content uses a token class that has no rule.
 - **Authors write `status: draft`.** Only a human sets `reviewed`.
+- **Editing a sentence orphans its evidence.** Evidence is keyed by the fingerprint of a claim's wording, so
+  `make evidence` fails after you reword a checked sentence. Re-read the source, then fix the ledger (`cite`
+  again, or change the `id`). Never write `by: human`; record what you actually read as `llm`, and leave a
+  claim open rather than citing a sentence that does not say it.
+- **The evidence ledger holds pointers only, never source text** (copyright, same rule as SDM prose). Do not add a
+  `quote` field or paste a sentence of a source into `note`; the passage is rendered from the reader's own
+  copy of the document in `docs/`.
 - **Generated files:** `content/README.md`, the block between `<!-- progress:start/end -->` in `README.md`,
   `index/`, `src/docx86/static/app.css`. Regenerate with `make progress` / `make index` / `make css`.
   After adding or changing a page, run `make progress` (the test suite fails on stale progress files).

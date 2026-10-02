@@ -3,7 +3,9 @@
   "zinc": "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
   "indigo": "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300",
   "amber": "bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
-  "green": "bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+  "green": "bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
+  "rose": "bg-rose-50 text-rose-800 dark:bg-rose-950 dark:text-rose-300",
+  "sky": "bg-sky-50 text-sky-800 dark:bg-sky-950 dark:text-sky-300"
 } %}
 <span class="inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium {{ tones[tone] }}">{{ text }}</span>
 {% endmacro %}
@@ -37,4 +39,21 @@
   </div>
   <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{{ art.summary }}</p>
 </a>
+{% endmacro %}
+
+{# Evidence: one tone per state of a statement; the bar shows how a page's statements are covered. #}
+{% set state_tones = {"traced": "green", "run": "green", "derived": "indigo", "illustrative": "zinc",
+                      "editorial": "zinc", "external": "sky", "suggested": "amber", "unverified": "rose"} %}
+{% set state_bars = {"traced": "bg-emerald-500", "run": "bg-emerald-400", "derived": "bg-indigo-400",
+                     "illustrative": "bg-zinc-400", "editorial": "bg-zinc-300 dark:bg-zinc-600",
+                     "external": "bg-sky-300",
+                     "suggested": "bg-amber-400", "unverified": "bg-rose-400"} %}
+
+{% macro state_badge(state, labels) %}{{ badge(labels[state], state_tones[state]) }}{% endmacro %}
+
+{% macro coverage_bar(counts, total, states) %}
+<div class="flex h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800" role="img"
+     aria-label="{% for s in states %}{% if counts[s] %}{{ counts[s] }} {{ s }}{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}">
+  {% for s in states %}{% if counts[s] and total %}<span class="{{ state_bars[s] }}" style="width: {{ (100 * counts[s] / total) | round(1) }}%"></span>{% endif %}{% endfor %}
+</div>
 {% endmacro %}

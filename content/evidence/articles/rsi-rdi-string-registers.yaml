@@ -1,0 +1,137 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers only (document, page or section, fingerprint); never source text. Managed by
+# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: f1d6590713
+  gist: How movs, stos, lods, scas and cmps use RSI and RDI as pointers…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: 09ab0932ff
+  gist: The string instructions work on memory through two implicit poi…
+  support:
+  - {doc: sdm, at: 1402, units: [708d5fe8d6, 868df30365, 6424b167c6], part: Description}
+  - {doc: sdm, at: 1403, units: [3dfb87b407], part: Description}
+- id: 0e8538d58d
+  gist: After each element is processed, the instruction moves the poin…
+  support:
+  - {doc: sdm, at: 1402, units: [151a8cbd68], part: Description}
+- id: 7223c40fdb
+  gist: These pointers are what rsi and rdi are for; for ordinary instr…
+  how: derived
+  note: The SDM names ESI and EDI as the string-operation pointers; for ordinary instructions they are
+    general registers.
+  support:
+  - doc: sdm
+    at: 78
+    units: [acaedd399f, b33a69ac70]
+    part: 3.4.1 General-Purpose Registers
+    note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+- id: b9b46883a7
+  gist: movs (movsb, movsw, movsd, movsq) | Copy from [rsi] to [rdi]; a…
+  support:
+  - {doc: sdm, at: 1402, units: [a85c1a5cbb, 151a8cbd68, 6424b167c6], part: Description}
+- id: d451c99739
+  gist: stos | Store al/ax/eax/rax at [rdi]; advance rdi
+  support:
+  - {doc: sdm, at: 1966, units: [01b4684e50, d9130a29c0], part: Description}
+  - {doc: sdm, at: 1967, units: [95f4efeacd], part: Description}
+- id: 5a7895503a
+  gist: lods | Load al/ax/eax/rax from [rsi]; advance rsi
+  support:
+  - {doc: sdm, at: 1271, units: [d984683726, 57f297d0a6], part: Description}
+- id: ed414e5748
+  gist: scas | Compare al/ax/eax/rax with [rdi]; advance rdi
+  support:
+  - {doc: sdm, at: 1905, units: [bd6969fe6d, f19fc09c16, 937216cddf], part: Description}
+- id: 77306e6025
+  gist: cmps | Compare [rsi] with [rdi]; advance both
+  support:
+  - {doc: sdm, at: 885, units: [d0470b8bc2, 9c84ce4d33, 9f96db01e9], part: Description}
+  - {doc: sdm, at: 886, units: [7eabcd5a0b], part: Description}
+- id: 0ce6ab55a9
+  gist: 'Each instruction advances the pointers by the element size: 1,…'
+  support:
+  - {doc: sdm, at: 1402, units: [151587af78], part: Description}
+  - {doc: sdm, at: 1404, units: [fe15d9ed9c], part: Operation}
+  - {doc: sdm, at: 886, units: [5ffb444cf5, aaafc0377d], part: Description}
+- id: dbb61df9ad
+  gist: The direction depends on the direction flag.
+  support:
+  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
+- id: 9ab632a3eb
+  gist: With DF = 0 (cld) the pointers move up in memory; with DF = 1 (…
+  support:
+  - {doc: sdm, at: 1402, units: [521ccda726], part: Description}
+- id: a51e6954f6
+  gist: In 64-bit mode the pointers are rsi/rdi.
+  support:
+  - {doc: sdm, at: 1403, units: [510a7058f0, 3dfb87b407], part: Description}
+- id: e465cff107
+  gist: A 67h prefix selects esi/edi instead, truncating the addresses.
+  how: derived
+  note: '''32-bit address size is supported using the prefix 67H'' with 32-bit addresses in ESI/EDI; truncation
+    is the consequence.'
+  support:
+  - {doc: sdm, at: 1403, units: [510a7058f0, 3dfb87b407], part: Description}
+- id: 13774bad47
+  gist: 'After the instruction the pointers have moved: rdi points just…'
+  how: derived
+  note: The pointer advances after each element, so after a store or a matching SCAS it is one element
+    past.
+  support:
+  - {doc: sdm, at: 1402, units: [151a8cbd68], part: Description}
+  - {doc: sdm, at: 1966, units: [d9130a29c0], part: Description}
+  - {doc: sdm, at: 1857, units: [8552245e5c], part: Operation}
+- id: '9467589552'
+  gist: On their own they handle one element.
+  support:
+  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+- id: f6b988a1ec
+  gist: Prefixing them with rep (or repe/repne for cmps and scas) repea…
+  support:
+  - {doc: sdm, at: 1852, units: [66597eb95d, 06e40ebb3c], part: Description}
+  - {doc: sdm, at: 1854, units: [7b6c3d947b], part: Description}
+  - {doc: sdm, at: 1856, units: [384b91250d], part: Description}
+- id: d4cf08b73d
+  gist: 'copy_bytes: ; void copy_bytes(void dst, const void src, size_t…'
+  how: run
+  ref: tests/asm/regs.asm
+  note: copy_bytes is run by `make verify-asm`.
+- id: a8cd709911
+  gist: 'Linux (System V): rdi and rsi are the 1st and 2nd argument regi…'
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - {doc: sysv, at: 16, units: [0202d90800, 9592e208d5], part: 3.2.1 Registers and the Stack Frame}
+- id: cb6475de74
+  gist: 'This lines up neatly with memcpy(dst, src, n): the arguments ar…'
+  how: derived
+  note: memcpy(dst, src, n) arrives in rdi, rsi, rdx; REP MOVS wants destination in rdi, source in rsi,
+    count in rcx.
+  support:
+  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - {doc: sdm, at: 1402, units: [6424b167c6], part: Description}
+- id: 56fa8d8ea4
+  gist: The ABI also requires DF to be clear on entry and return, so a…
+  support:
+  - {doc: sysv, at: 16, units: [4929d2daf8], part: 3.2.1 Registers and the Stack Frame}
+- id: 4f201ec25b
+  gist: 'Windows (x64): rdi and rsi are nonvolatile: a function that use…'
+  support:
+  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, a0664dcfae], part: Caller/callee
+      saved registers}
+- id: 6a4bcc9d2b
+  gist: The arguments arrive in rcx, rdx, r8, r9, so a Windows copy rou…
+  how: derived
+  note: Arguments arrive in rcx, rdx, r8, r9; RSI and RDI must be saved and restored if used.
+  support:
+  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+  - {doc: msx64, at: Caller/callee saved registers, units: [a0664dcfae], part: Caller/callee saved registers}
+- id: 5eaed5bd44
+  gist: This is why portable assembly that uses string instructions loo…
+  how: editorial
+  note: A summary of the two bullets above.
+- id: e3cca5b876
+  gist: 'Instruction pages: MOVS, STOS, REP.'
+  how: editorial
+  note: Links to instruction pages.

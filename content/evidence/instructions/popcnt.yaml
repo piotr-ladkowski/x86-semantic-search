@@ -6,7 +6,13 @@ claims:
 - id: 6dd10acda0
   gist: Counts the bits set to 1 in the source and stores the count in…
   support:
-  - {doc: sdm, at: 1694, units: [568ba8b630], part: Description}
+  - doc: sdm
+    at: 1694
+    units: [568ba8b630]
+    part: Description
+    quotes:
+      568ba8b630: This instruction calculates the number of bits set to 1 in the second operand (source)
+        and returns the count in the first operand (a destination register).
 - id: 62dabf0041
   gist: Needs the POPCNT CPU feature (reported by CPUID).
   support:
@@ -15,14 +21,28 @@ claims:
     units: [3054813a7d]
     part: 64-Bit Mode Exceptions
     note: 'The #UD condition names the CPUID bit.'
+    quotes:
+      3054813a7d: '#UD If CPUID.01H:ECX.POPCNT[23] = 0.'
 - id: 92dcfb064c
   gist: POPCNT r64, r/m64 is encoded as F3 REX.W 0F B8 /r.
   support:
-  - {doc: sdm, at: 1694, units: [647ce3dc65], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1694
+    units: [647ce3dc65]
+    part: Opcode table
+    by: match
+    quotes:
+      647ce3dc65: F3 REX.W 0F B8 /r | POPCNT r64, r/m64 | RM | Valid | N.E. | POPCNT on r/m64
 - id: d7f2a46b77
   gist: POPCNT r32, r/m32 is encoded as F3 0F B8 /r.
   support:
-  - {doc: sdm, at: 1694, units: [4913c0c04a], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1694
+    units: [4913c0c04a]
+    part: Opcode table
+    by: match
+    quotes:
+      4913c0c04a: F3 0F B8 /r | POPCNT r32, r/m32 | RM | Valid | Valid | POPCNT on r/m32
 - id: 674272e6ba
   gist: The upper 32 bits of the destination are zeroed.
   support:
@@ -32,14 +52,28 @@ claims:
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1); the POPCNT entry does not
       repeat it.
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 65fc9e8712
   gist: A 16-bit form also exists.
   support:
-  - {doc: sdm, at: 1694, units: [b0424059ab], part: Opcode table}
+  - doc: sdm
+    at: 1694
+    units: [b0424059ab]
+    part: Opcode table
+    quotes:
+      b0424059ab: F3 0F B8 /r | POPCNT r16, r/m16 | RM | Valid | Valid | POPCNT on r/m16
 - id: 2e16fbec7c
   gist: 'Flags modified: OF, SF, ZF, AF, CF, PF.'
   support:
-  - {doc: sdm, at: 1694, units: [91e18d5a18, 20d2c743b9], part: Flags Affected}
+  - doc: sdm
+    at: 1694
+    units: [91e18d5a18, 20d2c743b9]
+    part: Flags Affected
+    quotes:
+      91e18d5a18: OF, SF, ZF, AF, CF, PF are all cleared.
+      20d2c743b9: ZF is set if SRC = 0, otherwise ZF is cleared.
 - id: 34e43cd655
   gist: OF, SF, AF, CF and PF are cleared.
   support:
@@ -48,17 +82,30 @@ claims:
     units: [91e18d5a18]
     part: Flags Affected
     note: The SDM says all six are cleared and then gives ZF its own rule.
+    quotes:
+      91e18d5a18: OF, SF, ZF, AF, CF, PF are all cleared.
 - id: 8eee130f4f
   gist: ZF is set if the source is 0, otherwise cleared.
   support:
-  - {doc: sdm, at: 1694, units: [20d2c743b9], part: Flags Affected}
+  - doc: sdm
+    at: 1694
+    units: [20d2c743b9]
+    part: Flags Affected
+    quotes:
+      20d2c743b9: ZF is set if SRC = 0, otherwise ZF is cleared.
 - id: dd2a389b52
   gist: popcnt dst, src counts how many bits of src are 1 and writes th…
   how: derived
   note: The count is built by a loop over the operand's bits, and the operand has at most 64, so the range
     is 0 to 64.
   support:
-  - {doc: sdm, at: 1694, units: [568ba8b630, aec40bb670], part: Description}
+  - doc: sdm
+    at: 1694
+    units: [568ba8b630, aec40bb670]
+    part: Description
+    quotes:
+      568ba8b630: This instruction calculates the number of bits set to 1 in the second operand (source)
+        and returns the count in the first operand (a destination register).
 - id: 43d1217a96
   gist: This is also called the population count or Hamming weight.
   how: editorial
@@ -77,18 +124,34 @@ claims:
   how: derived
   note: A nonzero value with exactly one bit set is a power of two; the count is 1 exactly then.
   support:
-  - {doc: sdm, at: 1694, units: [568ba8b630], part: Description}
+  - doc: sdm
+    at: 1694
+    units: [568ba8b630]
+    part: Description
+    quotes:
+      568ba8b630: This instruction calculates the number of bits set to 1 in the second operand (source)
+        and returns the count in the first operand (a destination register).
 - id: 9ce30621ef
   gist: Not part of baseline x86-64.
   how: derived
   note: A CPUID bit that must be checked, because the instruction faults without it, means it is not guaranteed
     by baseline x86-64.
   support:
-  - {doc: sdm, at: 1695, units: [3054813a7d], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1695
+    units: [3054813a7d]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      3054813a7d: '#UD If CPUID.01H:ECX.POPCNT[23] = 0.'
 - id: 6cb864fe8d
   gist: It requires the POPCNT CPU feature (CPUID leaf 01H, ECX bit 23)…
   support:
-  - {doc: sdm, at: 1695, units: [3054813a7d], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1695
+    units: [3054813a7d]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      3054813a7d: '#UD If CPUID.01H:ECX.POPCNT[23] = 0.'
 - id: 6cd5f46a02
   gist: Check CPUID before use when you cannot assume a recent CPU.
   how: editorial
@@ -101,13 +164,22 @@ claims:
     units: [d31eea6db8]
     part: Operand encoding
     note: Operand 1 is ModRM:reg (a register, written); operand 2 is ModRM:r/m (register or memory, read).
+    quotes:
+      d31eea6db8: RM | ModRM:reg (w) | ModRM:r/m (r) | N/A | N/A
 - id: 9011cd3374
   gist: There is no immediate form and no 8-bit form.
   how: derived
   note: The opcode table lists only 16-, 32- and 64-bit register forms with an r/m source; no imm and
     no r8 form is listed.
   support:
-  - {doc: sdm, at: 1694, units: [b0424059ab, 4913c0c04a, 647ce3dc65], part: Opcode table}
+  - doc: sdm
+    at: 1694
+    units: [b0424059ab, 4913c0c04a, 647ce3dc65]
+    part: Opcode table
+    quotes:
+      b0424059ab: F3 0F B8 /r | POPCNT r16, r/m16 | RM | Valid | Valid | POPCNT on r/m16
+      4913c0c04a: F3 0F B8 /r | POPCNT r32, r/m32 | RM | Valid | Valid | POPCNT on r/m32
+      647ce3dc65: F3 REX.W 0F B8 /r | POPCNT r64, r/m64 | RM | Valid | N.E. | POPCNT on r/m64
 - id: 0079f2fffc
   gist: Flags are simplified.
   how: editorial
@@ -115,13 +187,24 @@ claims:
 - id: 27acb28a94
   gist: 'Only ZF carries information: it is set exactly when the source…'
   support:
-  - {doc: sdm, at: 1694, units: [91e18d5a18, 20d2c743b9], part: Flags Affected}
+  - doc: sdm
+    at: 1694
+    units: [91e18d5a18, 20d2c743b9]
+    part: Flags Affected
+    quotes:
+      91e18d5a18: OF, SF, ZF, AF, CF, PF are all cleared.
+      20d2c743b9: ZF is set if SRC = 0, otherwise ZF is cleared.
 - id: 94bf7b644c
   gist: So popcnt rax, rbx followed by jz tests "no bits set".
   how: derived
   note: ZF is set exactly when the source is zero, so JZ after POPCNT branches when no bit was set.
   support:
-  - {doc: sdm, at: 1694, units: [20d2c743b9], part: Flags Affected}
+  - doc: sdm
+    at: 1694
+    units: [20d2c743b9]
+    part: Flags Affected
+    quotes:
+      20d2c743b9: ZF is set if SRC = 0, otherwise ZF is cleared.
 - id: 1eef235564
   gist: Compilers don't always emit it.
   how: external
@@ -138,6 +221,8 @@ claims:
     units: [57454b9f72]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for ''If LOCK prefix is used.'''
+    quotes:
+      57454b9f72: If LOCK prefix is used.
 - id: 0a5ce6bf99
   gist: popcnt rax, rdi ; rax = number of 1 bits in rdi popcnt ecx, [rs…
   how: illustrative

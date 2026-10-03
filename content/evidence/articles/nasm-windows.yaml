@@ -34,8 +34,14 @@ claims:
 - id: 3d98aa09a3
   gist: Remember that Windows uses a different calling convention from…
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [f0eb39dfdd, 7dbddec935], part: Calling convention
-      defaults}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [f0eb39dfdd, 7dbddec935]
+    part: Calling convention defaults
+    quotes:
+      f0eb39dfdd: Integer arguments are passed in registers RCX, RDX, R8, and R9.
+      7dbddec935: The caller must always allocate sufficient space to store four register parameters,
+        even if the callee doesn't take that many parameters.
 - id: c49d3d6735
   gist: 'Assemble: nasm -f win64 hello_win.asm -o hello_win.obj.'
   how: run
@@ -47,7 +53,13 @@ claims:
   ref: tests/asm/run.sh
   note: Built with NASM and MinGW-w64 and run under Wine by `make verify-asm`; not run on real Windows.
   support:
-  - {doc: wikibooks, at: NASM Syntax, units: [69cbd67295, 11673176f2], part: NASM Syntax}
+  - doc: wikibooks
+    at: NASM Syntax
+    units: [69cbd67295, 11673176f2]
+    part: NASM Syntax
+    quotes:
+      69cbd67295: Win32/64 object files
+      11673176f2: COFF
 - id: a5a27d1d28
   gist: 'Link: see the two programs below.'
   how: editorial
@@ -80,8 +92,24 @@ claims:
   note: The shadow space is 4 x 8 = 32 bytes owned by the callee; the extra 8 realigns rsp to a multiple
     of 16 before the call.
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [7dbddec935], part: Calling convention defaults}
-  - {doc: msstack, at: Stack allocation, units: [fa4bffc063, bb6e937918], part: Stack allocation}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [7dbddec935]
+    part: Calling convention defaults
+    quotes:
+      7dbddec935: The caller must always allocate sufficient space to store four register parameters,
+        even if the callee doesn't take that many parameters.
+  - doc: msstack
+    at: Stack allocation
+    units: [fa4bffc063, bb6e937918]
+    part: Stack allocation
+    quotes:
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
+      bb6e937918: Even if the called function has fewer than 4 parameters, these 4 stack locations are
+        effectively owned by the called function, and may be used by the called function for other purposes
+        besides saving parameter register values.
 - id: f79c7c4c79
   gist: This version calls three functions from kernel32.dll directly.
   how: run
@@ -127,14 +155,35 @@ claims:
   note: WriteFile takes five arguments (Windows API documentation, not indexed); the ABI puts the first
     four in registers and the rest after the shadow store. The program runs under Wine.
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
-  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [4587ba77ca]
+    part: Calling convention defaults
+    quotes:
+      4587ba77ca: Any parameters beyond the first four must be stored on the stack after the shadow store
+        before the call.
+  - doc: msx64
+    at: Parameter passing
+    units: [d7665e1c32]
+    part: Parameter passing
+    quotes:
+      d7665e1c32: Integer valued arguments in the leftmost four positions are passed in left-to-right
+        order in RCX, RDX, R8, and R9, respectively.
 - id: ff94a9510e
   gist: 'That is why the program reserves 40 bytes: 32 + 8, which also k…'
   how: derived
   note: 32 bytes of shadow space plus 8 for the fifth argument keeps rsp a multiple of 16 at the call.
   support:
-  - {doc: msstack, at: Stack allocation, units: [146e48eea7, fa4bffc063], part: Stack allocation}
+  - doc: msstack
+    at: Stack allocation
+    units: [146e48eea7, fa4bffc063]
+    part: Stack allocation
+    quotes:
+      146e48eea7: The parameter area is always at the bottom of the stack (even if alloca is used), so
+        that it will always be adjacent to the return address during any function call.
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
 - id: 4e45926dfa
   gist: Names carry no decoration on x64.
   how: run
@@ -144,8 +193,12 @@ claims:
 - id: fd2a7e5443
   gist: Older 32-bit examples import _GetStdHandle@4; here it is just G…
   support:
-  - {doc: wikibooks, at: Hello World (Using only Win32 system calls), units: [51d9203e87], part: Hello
-      World (Using only Win32 system calls)}
+  - doc: wikibooks
+    at: Hello World (Using only Win32 system calls)
+    units: [51d9203e87]
+    part: Hello World (Using only Win32 system calls)
+    quotes:
+      51d9203e87: extern _GetStdHandle@4 extern _WriteConsoleA@20 extern _ExitProcess@4
 - id: 9dc749ff51
   gist: 13, 10 is the Windows line ending (carriage return, line feed).
   how: external
@@ -160,17 +213,46 @@ claims:
   note: The Wikibooks example is the 32-bit form (-f win32, @N names, push); that it fails in a win64
     object follows from the x64 ABI above.
   support:
-  - {doc: wikibooks, at: Hello World (Using only Win32 system calls), units: [dca7bc73aa, 51d9203e87,
-      2df9762fec], part: Hello World (Using only Win32 system calls)}
+  - doc: wikibooks
+    at: Hello World (Using only Win32 system calls)
+    units: [dca7bc73aa, 51d9203e87, 2df9762fec]
+    part: Hello World (Using only Win32 system calls)
+    quotes:
+      dca7bc73aa: $ nasm -f win32 -g helloWorldWin32.asm $ ld -e _start helloWorldwin32.obj -lkernel32
+        -o helloWorldWin32.exe
+      51d9203e87: extern _GetStdHandle@4 extern _WriteConsoleA@20 extern _ExitProcess@4
+      2df9762fec: '; ; HANDLE WINAPI GetStdHandle( _In_ DWORD nStdHandle ) ; ; push dword -11 ; Arg1:
+        request handle for standard output call _GetStdHandle@4 ; Result: in eax'
 - id: 6fbcb835fe
   gist: 'No shadow space: callees may write to those 32 bytes and overwr…'
   support:
-  - {doc: msstack, at: Stack allocation, units: [bb6e937918, 05a680551a], part: Stack allocation}
+  - doc: msstack
+    at: Stack allocation
+    units: [bb6e937918, 05a680551a]
+    part: Stack allocation
+    quotes:
+      bb6e937918: Even if the called function has fewer than 4 parameters, these 4 stack locations are
+        effectively owned by the called function, and may be used by the called function for other purposes
+        besides saving parameter register values.
+      05a680551a: Thus the caller may not save information in this region of stack across a function call.
 - id: 579c0b65e3
   gist: 'Misaligned stack at a call: it must be a multiple of 16.'
   support:
-  - {doc: msstack, at: Stack allocation, units: [fa4bffc063], part: Stack allocation}
-  - {doc: msx64, at: Unwindability, units: [5a04ae41cd], part: Unwindability}
+  - doc: msstack
+    at: Stack allocation
+    units: [fa4bffc063]
+    part: Stack allocation
+    quotes:
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
+  - doc: msx64
+    at: Unwindability
+    units: [5a04ae41cd]
+    part: Unwindability
+    quotes:
+      5a04ae41cd: The stack pointer must remain 16-byte aligned in any region of code that isn't part
+        of an epilog or prolog, except within leaf functions.
 - id: 2e275f3ede
   gist: 'Related: the same on Linux.'
   how: editorial

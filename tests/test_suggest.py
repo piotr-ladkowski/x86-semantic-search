@@ -142,3 +142,11 @@ def test_the_pool_lists_a_repeated_sentence_once():
 
     pool = sg.build_pool(Reg(), ["sdm:10-11"])  # type: ignore[arg-type]
     assert len(pool) == 1
+
+
+def test_suggestions_carry_a_quote_of_the_sentence_unless_it_is_pseudocode():
+    prose = sentence("The instruction counts the bits.")
+    assert sg.Candidate(0.9, "similar", prose).support().quotes == {prose.loc.unit.id: prose.text}
+    unit = Unit("0123456789", "Count := 0;", "code", 10, "Operation", 0)
+    code = sg.PoolUnit("sdm", 10, Located(Paragraph(0, "Operation", 10, [unit]), unit))
+    assert sg.Candidate(0.9, "similar", code).support().quotes == {}

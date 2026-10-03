@@ -6,58 +6,142 @@ claims:
 - id: 56c06e6a50
   gist: Adds the source to the destination, stores the sum in the desti…
   support:
-  - {doc: sdm, at: 718, units: [03b2224b2b], part: Description}
-  - {doc: sdm, at: 719, units: [0647a2eb37], part: Flags Affected}
+  - doc: sdm
+    at: 718
+    units: [03b2224b2b]
+    part: Description
+    quotes:
+      03b2224b2b: Adds the destination operand (first operand) and the source operand (second operand)
+        and then stores the result in the destination operand.
+  - doc: sdm
+    at: 719
+    units: [0647a2eb37]
+    part: Flags Affected
+    quotes:
+      0647a2eb37: The OF, SF, ZF, AF, CF, and PF flags are set according to the result.
 - id: de53356593
   gist: ADD r/m64, r64 is encoded as REX.W + 01 /r.
   support:
-  - {doc: sdm, at: 718, units: [ce7e0e728b], part: Opcode table, by: match}
+  - doc: sdm
+    at: 718
+    units: [ce7e0e728b]
+    part: Opcode table
+    by: match
+    quotes:
+      ce7e0e728b: REX.W + 01 /r | ADD r/m64, r64 | MR | Valid | N.E. | Add r64 to r/m64.
 - id: 737606c632
   gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W; t…
   support:
-  - {doc: sdm, at: 718, units: [56a61a1639, 91ecc0f5dd, 1fad0b15d3, ce7e0e728b], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [56a61a1639, 91ecc0f5dd, 1fad0b15d3, ce7e0e728b]
+    part: Opcode table
+    quotes:
+      56a61a1639: 00 /r | ADD r/m8[1], r8[1] | MR | Valid | Valid | Add r8 to r/m8.
+      91ecc0f5dd: 01 /r | ADD r/m16, r16 | MR | Valid | Valid | Add r16 to r/m16.
+      1fad0b15d3: 01 /r | ADD r/m32, r32 | MR | Valid | Valid | Add r32 to r/m32.
+      ce7e0e728b: REX.W + 01 /r | ADD r/m64, r64 | MR | Valid | N.E. | Add r64 to r/m64.
 - id: c9da7041ca
   gist: ADD r64, r/m64 is encoded as REX.W + 03 /r.
   support:
-  - {doc: sdm, at: 718, units: [ab57005c3c], part: Opcode table, by: match}
+  - doc: sdm
+    at: 718
+    units: [ab57005c3c]
+    part: Opcode table
+    by: match
+    quotes:
+      ab57005c3c: REX.W + 03 /r | ADD r64, r/m64 | RM | Valid | N.E. | Add r/m64 to r64.
 - id: 4085666be0
   gist: ADD r/m64, imm8 is encoded as REX.W + 83 /0 ib.
   support:
-  - {doc: sdm, at: 718, units: [2b36a43a20], part: Opcode table, by: match}
+  - doc: sdm
+    at: 718
+    units: [2b36a43a20]
+    part: Opcode table
+    by: match
+    quotes:
+      2b36a43a20: REX.W + 83 /0 ib | ADD r/m64, imm8 | MI | Valid | N.E. | Add sign-extended imm8 to r/m64.
 - id: 51e483d20e
   gist: imm8 is sign-extended to 64 bits.
   support:
-  - {doc: sdm, at: 718, units: [2b36a43a20, 44d92f8adc], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [2b36a43a20, 44d92f8adc]
+    part: Opcode table
+    quotes:
+      2b36a43a20: REX.W + 83 /0 ib | ADD r/m64, imm8 | MI | Valid | N.E. | Add sign-extended imm8 to r/m64.
+      44d92f8adc: When an immediate value is used as an operand, it is sign-extended to the length of
+        the destination operand format.
 - id: c5cc3ae6ac
   gist: ADD r/m64, imm32 is encoded as REX.W + 81 /0 id.
   support:
-  - {doc: sdm, at: 718, units: [5f900f4185], part: Opcode table, by: match}
+  - doc: sdm
+    at: 718
+    units: [5f900f4185]
+    part: Opcode table
+    by: match
+    quotes:
+      5f900f4185: REX.W + 81 /0 id | ADD r/m64, imm32 | MI | Valid | N.E. | Add imm32 sign-extended to
+        64-bits to r/m64.
 - id: 735d1e8ccd
   gist: imm32 is sign-extended to 64 bits.
   support:
-  - {doc: sdm, at: 718, units: [5f900f4185], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [5f900f4185]
+    part: Opcode table
+    quotes:
+      5f900f4185: REX.W + 81 /0 id | ADD r/m64, imm32 | MI | Valid | N.E. | Add imm32 sign-extended to
+        64-bits to r/m64.
 - id: c4d834de74
   gist: There is no imm64 form.
   how: derived
   note: The opcode table lists immediates of 8, 16 and 32 bits only; the 64-bit rows take an imm32 that
     is sign-extended.
   support:
-  - {doc: sdm, at: 718, units: [5f900f4185, 4f0b9483da], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [5f900f4185, 4f0b9483da]
+    part: Opcode table
+    quotes:
+      5f900f4185: REX.W + 81 /0 id | ADD r/m64, imm32 | MI | Valid | N.E. | Add imm32 sign-extended to
+        64-bits to r/m64.
+      4f0b9483da: REX.W + 05 id | ADD RAX, imm32 | I | Valid | N.E. | Add imm32 sign-extended to 64-bits
+        to RAX.
 - id: 6e1174b90c
   gist: ADD RAX, imm32 is encoded as REX.W + 05 id.
   support:
-  - {doc: sdm, at: 718, units: [4f0b9483da], part: Opcode table, by: match}
+  - doc: sdm
+    at: 718
+    units: [4f0b9483da]
+    part: Opcode table
+    by: match
+    quotes:
+      4f0b9483da: REX.W + 05 id | ADD RAX, imm32 | I | Valid | N.E. | Add imm32 sign-extended to 64-bits
+        to RAX.
 - id: dde1c70266
   gist: Short encoding for the accumulator.
   how: derived
   note: The accumulator row (05 id, operand encoding I) has no ModRM byte, which the general 81 /0 id
     form needs.
   support:
-  - {doc: sdm, at: 718, units: [4f0b9483da, 4a4d92ec2a], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [4f0b9483da, 4a4d92ec2a]
+    part: Opcode table
+    quotes:
+      4f0b9483da: REX.W + 05 id | ADD RAX, imm32 | I | Valid | N.E. | Add imm32 sign-extended to 64-bits
+        to RAX.
+      4a4d92ec2a: I | AL/AX/EAX/RAX | imm8/16/32 | N/A | N/A
 - id: 2e16fbec7c
   gist: 'Flags modified: OF, SF, ZF, AF, CF, PF.'
   support:
-  - {doc: sdm, at: 719, units: [0647a2eb37], part: Flags Affected}
+  - doc: sdm
+    at: 719
+    units: [0647a2eb37]
+    part: Flags Affected
+    quotes:
+      0647a2eb37: The OF, SF, ZF, AF, CF, and PF flags are set according to the result.
 - id: 59aebe1b25
   gist: CF = unsigned carry out of the top bit; OF = signed overflow; Z…
   support:
@@ -66,11 +150,33 @@ claims:
     units: [cdf1356938, 426ef97feb, de682806f5, 8d996b02f3]
     part: 3.4.3.1 Status Flags
     note: Definitions of the status flags (Vol. 1, 3.4.3.1).
-  - {doc: sdm, at: 718, units: [5a4b7e4216, 7af48abefd], part: Description}
+    quotes:
+      cdf1356938: CF (bit 0) Carry flag — Set if an arithmetic operation generates a carry or a borrow
+        out of the most-significant bit of the result; cleared otherwise.
+      426ef97feb: OF (bit 11) Overflow flag — Set if the integer result is too large a positive number
+        or too small a negative number (excluding the sign-bit) to fit in the destination operand; cleared
+        otherwise.
+      de682806f5: ZF (bit 6) Zero flag — Set if the result is zero; cleared otherwise.
+      8d996b02f3: SF (bit 7) Sign flag — Set equal to the most-significant bit of the result, which is
+        the sign bit of a signed integer.
+  - doc: sdm
+    at: 718
+    units: [5a4b7e4216, 7af48abefd]
+    part: Description
+    quotes:
+      5a4b7e4216: It evaluates the result for both signed and unsigned integer operands and sets the OF
+        and CF flags to indicate a carry (overflow) in the signed or unsigned result, respectively.
+      7af48abefd: The SF flag indicates the sign of the signed result.
 - id: 6286963c1f
   gist: add dst, src computes dst = dst + src and stores the result in…
   support:
-  - {doc: sdm, at: 718, units: [03b2224b2b], part: Description}
+  - doc: sdm
+    at: 718
+    units: [03b2224b2b]
+    part: Description
+    quotes:
+      03b2224b2b: Adds the destination operand (first operand) and the source operand (second operand)
+        and then stores the result in the destination operand.
   - {doc: sdm, at: 719, units: [4d448cdc5a], part: Operation}
 - id: 3c4e04138a
   gist: The same instruction serves signed and unsigned integers, becau…
@@ -78,12 +184,31 @@ claims:
   note: The SDM says the result is evaluated for both signed and unsigned operands; that the bit patterns
     are the same is a property of two's-complement addition.
   support:
-  - {doc: sdm, at: 718, units: [5a4b7e4216, e72aee63aa], part: Description}
+  - doc: sdm
+    at: 718
+    units: [5a4b7e4216, e72aee63aa]
+    part: Description
+    quotes:
+      5a4b7e4216: It evaluates the result for both signed and unsigned integer operands and sets the OF
+        and CF flags to indicate a carry (overflow) in the signed or unsigned result, respectively.
+      e72aee63aa: The ADD instruction performs integer addition.
 - id: 9507b9e1bc
   gist: 'The flags report what happened: CF signals an unsigned overflow…'
   support:
-  - {doc: sdm, at: 718, units: [5a4b7e4216, 7af48abefd], part: Description}
-  - {doc: sdm, at: 82, units: [de682806f5], part: 3.4.3.1 Status Flags}
+  - doc: sdm
+    at: 718
+    units: [5a4b7e4216, 7af48abefd]
+    part: Description
+    quotes:
+      5a4b7e4216: It evaluates the result for both signed and unsigned integer operands and sets the OF
+        and CF flags to indicate a carry (overflow) in the signed or unsigned result, respectively.
+      7af48abefd: The SF flag indicates the sign of the signed result.
+  - doc: sdm
+    at: 82
+    units: [de682806f5]
+    part: 3.4.3.1 Status Flags
+    quotes:
+      de682806f5: ZF (bit 6) Zero flag — Set if the result is zero; cleared otherwise.
 - id: '7230107333'
   gist: 'Adding two integers, or a constant to a register: add rax, 8.'
   how: editorial
@@ -93,11 +218,23 @@ claims:
   how: derived
   note: The destination may be a memory location, so a variable in memory can be updated in place.
   support:
-  - {doc: sdm, at: 718, units: [e12e3877a3], part: Description}
+  - doc: sdm
+    at: 718
+    units: [e12e3877a3]
+    part: Description
+    quotes:
+      e12e3877a3: The destination operand can be a register or a memory location; the source operand can
+        be an immediate, a register, or a memory location.
 - id: e7642570ba
   gist: Add the lock prefix to make it atomic.
   support:
-  - {doc: sdm, at: 718, units: [7618c9e8a1], part: Description}
+  - doc: sdm
+    at: 718
+    units: [7618c9e8a1]
+    part: Description
+    quotes:
+      7618c9e8a1: This instruction can be used with a LOCK prefix to allow the instruction to be executed
+        atomically.
 - id: b2f8977247
   gist: 'Multi-word arithmetic: add the low halves, then adc the high ha…'
   support:
@@ -106,6 +243,9 @@ claims:
     units: [76ced98ecc]
     part: Description
     note: From the ADC entry.
+    quotes:
+      76ced98ecc: The ADC instruction is usually executed as part of a multibyte or multiword addition
+        in which an ADD instruction is followed by an ADC instruction.
 - id: b1ead95111
   gist: If you only need a sum in a different register, or must not dis…
   how: derived
@@ -116,29 +256,61 @@ claims:
     units: [f42cf0785e]
     part: Description
     note: From the LEA entry.
+    quotes:
+      f42cf0785e: Computes the effective address of the second operand (the source operand) and stores
+        it in the first operand (destination operand).
   - doc: sdm
     at: 1252
     units: [71f8e7976e]
     part: Flags Affected
     note: 'LEA: Flags Affected is None.'
+    quotes:
+      71f8e7976e: None.
 - id: 16631dc74c
   gist: At most one memory operand.
   support:
-  - {doc: sdm, at: 718, units: [afd25ca2b2], part: Description}
+  - doc: sdm
+    at: 718
+    units: [afd25ca2b2]
+    part: Description
+    quotes:
+      afd25ca2b2: (However, two memory operands cannot be used in one instruction.)
 - id: 4ca9af2bf8
   gist: The destination can be a register or memory; the source can be…
   support:
-  - {doc: sdm, at: 718, units: [e12e3877a3, afd25ca2b2], part: Description}
+  - doc: sdm
+    at: 718
+    units: [e12e3877a3, afd25ca2b2]
+    part: Description
+    quotes:
+      e12e3877a3: The destination operand can be a register or a memory location; the source operand can
+        be an immediate, a register, or a memory location.
+      afd25ca2b2: (However, two memory operands cannot be used in one instruction.)
 - id: e71791be0d
   gist: Immediates are sign-extended.
   support:
-  - {doc: sdm, at: 718, units: [44d92f8adc], part: Description}
+  - doc: sdm
+    at: 718
+    units: [44d92f8adc]
+    part: Description
+    quotes:
+      44d92f8adc: When an immediate value is used as an operand, it is sign-extended to the length of
+        the destination operand format.
 - id: ae1ca3f37c
   gist: The 64-bit forms take only a 32-bit immediate.
   how: derived
   note: The 64-bit rows list an imm32 (or imm8) operand, sign-extended; none lists a 64-bit immediate.
   support:
-  - {doc: sdm, at: 718, units: [5f900f4185, 4f0b9483da, 2b36a43a20], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [5f900f4185, 4f0b9483da, 2b36a43a20]
+    part: Opcode table
+    quotes:
+      5f900f4185: REX.W + 81 /0 id | ADD r/m64, imm32 | MI | Valid | N.E. | Add imm32 sign-extended to
+        64-bits to r/m64.
+      4f0b9483da: REX.W + 05 id | ADD RAX, imm32 | I | Valid | N.E. | Add imm32 sign-extended to 64-bits
+        to RAX.
+      2b36a43a20: REX.W + 83 /0 ib | ADD r/m64, imm8 | MI | Valid | N.E. | Add sign-extended imm8 to r/m64.
 - id: 191bde729d
   gist: To add a larger constant, mov it into a register first.
   how: editorial
@@ -151,6 +323,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 87dfcca300
   gist: add eax, ebx clears bits 63:32 of rax; 8- and 16-bit adds leave…
   support:
@@ -159,6 +334,11 @@ claims:
     units: [f25a5adc20, b4a4d677a2]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for operand sizes in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
+      b4a4d677a2: The upper 56 bits or 48 bits (respectively) of the destination general-purpose register
+        are not modified by the operation.
 - id: b4d7aaca1f
   gist: add reg, 1 is not inc reg.
   how: derived
@@ -170,15 +350,26 @@ claims:
     units: [1bbdaea7df, 5de9c5cfd9]
     part: Description
     note: From the INC entry.
+    quotes:
+      1bbdaea7df: Adds 1 to the destination operand, while preserving the state of the CF flag.
+      5de9c5cfd9: (Use a ADD instruction with an immediate operand of 1 to perform an increment operation
+        that does updates the CF flag.)
 - id: 7eb480f65e
   gist: add updates CF; inc leaves CF unchanged.
   support:
-  - {doc: sdm, at: 719, units: [0647a2eb37], part: Flags Affected}
+  - doc: sdm
+    at: 719
+    units: [0647a2eb37]
+    part: Flags Affected
+    quotes:
+      0647a2eb37: The OF, SF, ZF, AF, CF, and PF flags are set according to the result.
   - doc: sdm
     at: 1161
     units: [056a03066d]
     part: Flags Affected
     note: 'INC: the CF flag is not affected.'
+    quotes:
+      056a03066d: The CF flag is not affected.
 - id: 6594e4bee7
   gist: lock add needs a memory destination.
   support:
@@ -187,6 +378,8 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
 - id: fd7a914af1
   gist: 'With a register destination the lock prefix raises #UD.'
   support:
@@ -195,6 +388,8 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
 - id: 2f158831be
   gist: High-byte registers.
   how: editorial
@@ -202,7 +397,13 @@ claims:
 - id: 70babe0293
   gist: With any REX prefix, ah/bh/ch/dh cannot be encoded; the same bi…
   support:
-  - {doc: sdm, at: 718, units: [06b14e969c], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [06b14e969c]
+    part: Opcode table
+    quotes:
+      06b14e969c: 'NOTES: [1] With a REX prefix in 64-bit mode, attempts to access AH, BH, CH, or DH will
+        instead access SPL, DIL, BPL, or SIL, respectively.'
 - id: d424e1c9aa
   gist: add rax, rbx ; rax += rbx add rax, 16 ; imm8 form, sign-extende…
   how: illustrative

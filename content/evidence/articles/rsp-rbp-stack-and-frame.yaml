@@ -15,19 +15,55 @@ claims:
     units: [3ec780b89b]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+    quotes:
+      3ec780b89b: ESP — Stack pointer (in the SS segment).
 - id: 7f912b94ef
   gist: push and pop use it, call pushes the return address through it,…
   support:
-  - {doc: sdm, at: 1811, units: [fcafc8633c], part: Description}
-  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
-  - {doc: sdm, at: 826, units: [ca50a95fdd], part: Description}
-  - {doc: sdm, at: 1858, units: [d61d3da693], part: Description}
+  - doc: sdm
+    at: 1811
+    units: [fcafc8633c]
+    part: Description
+    quotes:
+      fcafc8633c: Decrements the stack pointer and then stores the source operand on the top of the stack.
+  - doc: sdm
+    at: 1687
+    units: [3f9c78822c]
+    part: Description
+    quotes:
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    quotes:
+      ca50a95fdd: When executing a near call, the processor pushes the value of the EIP register (which
+        contains the offset of the instruction following the CALL instruction) on the stack (for use later
+        as a return-instruction pointer).
+  - doc: sdm
+    at: 1858
+    units: [d61d3da693]
+    part: Description
+    quotes:
+      d61d3da693: Transfers program control to a return address located on the top of the stack.
 - id: 34624685fd
   gist: The stack grows toward lower addresses, rsp always points at th…
   support:
   - {doc: sdm, at: 1812, units: [5d5aafdf3e], part: Operation}
-  - {doc: sysv, at: 17, units: [aa76c68bc8], part: 3.2.2 The Stack Frame}
-  - {doc: sdm, at: 189, units: [551ddb799d], part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode}
+  - doc: sysv
+    at: 17
+    units: [aa76c68bc8]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      aa76c68bc8: This stack grows downwards from high addresses.
+  - doc: sdm
+    at: 189
+    units: [551ddb799d]
+    part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
+    quotes:
+      551ddb799d: In 64-bit mode, the stack pointer size is 64 bits and cannot be overridden by an instruction
+        prefix.
 - id: babc24afe6
   gist: push x | rsp -= 8, then store
   support:
@@ -39,42 +75,102 @@ claims:
 - id: a9b36d9ab9
   gist: call f | push the address of the next instruction, jump to f
   support:
-  - {doc: sdm, at: 826, units: [ca50a95fdd], part: Description}
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    quotes:
+      ca50a95fdd: When executing a near call, the processor pushes the value of the EIP register (which
+        contains the offset of the instruction following the CALL instruction) on the stack (for use later
+        as a return-instruction pointer).
 - id: 96169ac667
   gist: ret | pop the return address into rip
   support:
-  - {doc: sdm, at: 1858, units: [d61d3da693, bb4b7ed7cb], part: Description}
+  - doc: sdm
+    at: 1858
+    units: [d61d3da693, bb4b7ed7cb]
+    part: Description
+    quotes:
+      d61d3da693: Transfers program control to a return address located on the top of the stack.
+      bb4b7ed7cb: The address is usually placed on the stack by a CALL instruction, and the return is
+        made to the instruction that follows the CALL instruction.
 - id: 9a336aa0ba
   gist: leave | rsp = rbp, then pop rbp
   support:
-  - {doc: sdm, at: 1254, units: [72f3eafd14, 445289b062, 042b2a0d11], part: Description}
+  - doc: sdm
+    at: 1254
+    units: [72f3eafd14, 445289b062, 042b2a0d11]
+    part: Description
+    quotes:
+      72f3eafd14: The LEAVE instruction copies the frame pointer (in the EBP register) into the stack
+        pointer register (ESP), which releases the stack space allocated to the stack frame.
+      445289b062: The old frame pointer (the frame pointer for the calling procedure that was saved by
+        the ENTER instruction) is then popped from the stack into the EBP register, restoring the calling
+        procedure's stack frame.
 - id: 9d3cc4b32c
   gist: Because call pushed 8 bytes, a function sees [rsp] = its return…
   how: derived
   note: CALL pushes the return address, so it is at [rsp] when the callee starts.
   support:
-  - {doc: sdm, at: 826, units: [ca50a95fdd], part: Description}
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    quotes:
+      ca50a95fdd: When executing a near call, the processor pushes the value of the EIP register (which
+        contains the offset of the instruction following the CALL instruction) on the stack (for use later
+        as a return-instruction pointer).
   - {doc: sdm, at: 1812, units: [5d5aafdf3e], part: Operation}
 - id: c4e2f63602
   gist: Its first stack argument (if any) is above that.
   how: derived
   note: Figure 3.3 puts memory argument 0 directly above the return address.
   support:
-  - {doc: sysv, at: 17, units: [c71b6badcd], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [c71b6badcd]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      c71b6badcd: Previous 16(%rbp) memory argument eightbyte 0 8(%rbp) return address 0(%rbp) previous
+        %rbp value -8(%rbp) unspecified Current ...
 - id: eeefa7159b
   gist: Nothing in the hardware forces rbp to hold a frame pointer, exc…
   how: derived
   note: ENTER and LEAVE are the instructions that use RBP as a frame pointer; the SDM names it only 'a
     pointer to data on the stack'.
   support:
-  - {doc: sdm, at: 999, units: [0750a41da1, bee77f7189], part: Description}
-  - {doc: sdm, at: 1254, units: [72f3eafd14], part: Description}
+  - doc: sdm
+    at: 999
+    units: [0750a41da1, bee77f7189]
+    part: Description
+    quotes:
+      0750a41da1: If the nesting level is 0, the processor pushes the frame pointer from the BP/EBP/RBP
+        register onto the stack, copies the current stack pointer from the SP/ESP/RSP register into the
+        BP/EBP/RBP register, and loads the SP/ESP/RSP register with the current stack-pointer value minus
+        the value in the size operand.
+      bee77f7189: The ENTER and companion LEAVE instructions are provided to support block structured
+        languages.
+  - doc: sdm
+    at: 1254
+    units: [72f3eafd14]
+    part: Description
+    quotes:
+      72f3eafd14: The LEAVE instruction copies the frame pointer (in the EBP register) into the stack
+        pointer register (ESP), which releases the stack space allocated to the stack frame.
 - id: 3603becf32
   gist: 'The convention is useful: with rbp fixed at a known place in th…'
   how: derived
   note: Figure 3.3 addresses arguments above and locals below %rbp.
   support:
-  - {doc: sysv, at: 17, units: [c71b6badcd, 0dd3d6c499], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [c71b6badcd, 0dd3d6c499]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      c71b6badcd: Previous 16(%rbp) memory argument eightbyte 0 8(%rbp) return address 0(%rbp) previous
+        %rbp value -8(%rbp) unspecified Current ...
+      0dd3d6c499: 7The conventional use of %rbp as a frame pointer for the stack frame may be avoided
+        by using %rsp (the stack pointer) to index into the stack frame.
 - id: 5abb3ea721
   gist: 'The standard shape:'
   how: editorial
@@ -87,7 +183,15 @@ claims:
 - id: 9eddd808b0
   gist: Compilers often leave the frame pointer out and address locals…
   support:
-  - {doc: sysv, at: 17, units: [0dd3d6c499, 1e89065c4e], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [0dd3d6c499, 1e89065c4e]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      0dd3d6c499: 7The conventional use of %rbp as a frame pointer for the stack frame may be avoided
+        by using %rsp (the stack pointer) to index into the stack frame.
+      1e89065c4e: This technique saves two instructions in the prologue and epilogue and makes one additional
+        general-purpose register (%rbp) available.
 - id: f6aab73005
   gist: Both are legal; the debugger-friendly choice is to keep it.
   how: editorial
@@ -98,23 +202,63 @@ claims:
   note: Both ABI documents require 16-byte alignment; that the hardware does not is a statement about
     absence.
   support:
-  - {doc: sysv, at: 17, units: [d1956c1de1, 7dfd811182], part: 3.2.2 The Stack Frame}
-  - {doc: msx64, at: Unwindability, units: [5a04ae41cd], part: Unwindability}
-  - {doc: msstack, at: Stack allocation, units: [fa4bffc063], part: Stack allocation}
+  - doc: sysv
+    at: 17
+    units: [d1956c1de1, 7dfd811182]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      d1956c1de1: The end of the input argument area shall be aligned on a 16 (32, if __m256 is passed
+        on stack) byte boundary.
+      7dfd811182: In other words, the value (%rsp + 8) is always a multiple of 16 (32) when control is
+        transferred to the function entry point.
+  - doc: msx64
+    at: Unwindability
+    units: [5a04ae41cd]
+    part: Unwindability
+    quotes:
+      5a04ae41cd: The stack pointer must remain 16-byte aligned in any region of code that isn't part
+        of an epilog or prolog, except within leaf functions.
+  - doc: msstack
+    at: Stack allocation
+    units: [fa4bffc063]
+    part: Stack allocation
+    quotes:
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
 - id: f2e81b0ff0
   gist: Since call pushes 8 bytes, that means rsp is 8 modulo 16 when a…
   how: derived
   note: The ABI makes (%rsp + 8) a multiple of 16 at entry; a push rbp (8 bytes) restores alignment, as
     frame.asm does.
   support:
-  - {doc: sysv, at: 17, units: [7dfd811182], part: 3.2.2 The Stack Frame}
-  - {doc: sdm, at: 826, units: [ca50a95fdd], part: Description}
+  - doc: sysv
+    at: 17
+    units: [7dfd811182]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      7dfd811182: In other words, the value (%rsp + 8) is always a multiple of 16 (32) when control is
+        transferred to the function entry point.
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    quotes:
+      ca50a95fdd: When executing a near call, the processor pushes the value of the EIP register (which
+        contains the offset of the instruction following the CALL instruction) on the stack (for use later
+        as a return-instruction pointer).
 - id: 1282707dfd
   gist: Library code is entitled to rely on it.
   how: derived
   note: The ABI promises the alignment to every callee.
   support:
-  - {doc: sysv, at: 17, units: [d1956c1de1], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [d1956c1de1]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      d1956c1de1: The end of the input argument area shall be aligned on a 16 (32, if __m256 is passed
+        on stack) byte boundary.
 - id: 268f32c342
   gist: On Linux a call to printf with a floating-point argument and a…
   how: external
@@ -123,38 +267,103 @@ claims:
 - id: 29664c0cbe
   gist: 'Linux (System V): the 128 bytes just below rsp are the red zone…'
   support:
-  - {doc: sysv, at: 17, units: [1c525edb6e, 0c37f534ac], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [1c525edb6e, 0c37f534ac]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      1c525edb6e: The 128-byte area beyond the location pointed to by %rsp is considered to be reserved
+        and shall not be modified by signal or interrupt handlers.8 Therefore, functions may use this
+        area for temporary data that is not needed across function calls.
+      0c37f534ac: This area is known as the red zone.
 - id: 742657320d
   gist: Do not use it in a function that makes calls, since the call ov…
   how: derived
   note: The red zone is for data not needed across function calls, and a call pushes its return address
     just below rsp.
   support:
-  - {doc: sysv, at: 17, units: [1c525edb6e], part: 3.2.2 The Stack Frame}
-  - {doc: sdm, at: 826, units: [ca50a95fdd], part: Description}
+  - doc: sysv
+    at: 17
+    units: [1c525edb6e]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      1c525edb6e: The 128-byte area beyond the location pointed to by %rsp is considered to be reserved
+        and shall not be modified by signal or interrupt handlers.8 Therefore, functions may use this
+        area for temporary data that is not needed across function calls.
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    quotes:
+      ca50a95fdd: When executing a near call, the processor pushes the value of the EIP register (which
+        contains the offset of the instruction following the CALL instruction) on the stack (for use later
+        as a return-instruction pointer).
 - id: 29e4303b4c
   gist: 'Windows: there is no red zone.'
   how: derived
   note: Memory beyond RSP is volatile, which excludes any red zone.
   support:
-  - {doc: msstack, at: In this article, units: [88224d0aec], part: In this article}
+  - doc: msstack
+    at: In this article
+    units: [88224d0aec]
+    part: In this article
+    quotes:
+      88224d0aec: 'All memory beyond the current address of RSP is considered volatile: The OS, or a debugger,
+        may overwrite this memory during a user debug session, or an interrupt handler.'
 - id: 51973df282
   gist: Everything below rsp may be overwritten at any moment, so reser…
   support:
-  - {doc: msstack, at: In this article, units: [88224d0aec, 28e4ac6eec], part: In this article}
+  - doc: msstack
+    at: In this article
+    units: [88224d0aec, 28e4ac6eec]
+    part: In this article
+    quotes:
+      88224d0aec: 'All memory beyond the current address of RSP is considered volatile: The OS, or a debugger,
+        may overwrite this memory during a user debug session, or an interrupt handler.'
+      28e4ac6eec: Thus, RSP must always be set before attempting to read or write values to a stack frame.
 - id: 2264409fd9
   gist: push rsp stores the value rsp had before the push, and pop rsp…
   support:
-  - {doc: sdm, at: 1812, units: [77679c2641, eb86a8cf27], part: Description}
-  - {doc: sdm, at: 1688, units: [bbdd976a13], part: Description}
+  - doc: sdm
+    at: 1812
+    units: [77679c2641, eb86a8cf27]
+    part: Description
+    quotes:
+      77679c2641: The PUSH ESP instruction pushes the value of the ESP register as it existed before the
+        instruction was executed.
+      eb86a8cf27: (This is also true for Intel 64 architecture, real-address and virtual- 8086 modes of
+        IA-32 architecture.)
+  - doc: sdm
+    at: 1688
+    units: [bbdd976a13]
+    part: Description
+    quotes:
+      bbdd976a13: The POP ESP instruction increments the stack pointer (ESP) before data at the old top
+        of stack is written into the destination.
 - id: a8e6125a93
   gist: Unbalanced push/pop pairs shift every later [rsp + n] reference…
   how: derived
   note: PUSH and POP move RSP, and RET pops whatever is at [rsp].
   support:
-  - {doc: sdm, at: 1811, units: [fcafc8633c], part: Description}
-  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
-  - {doc: sdm, at: 1858, units: [d61d3da693], part: Description}
+  - doc: sdm
+    at: 1811
+    units: [fcafc8633c]
+    part: Description
+    quotes:
+      fcafc8633c: Decrements the stack pointer and then stores the source operand on the top of the stack.
+  - doc: sdm
+    at: 1687
+    units: [3f9c78822c]
+    part: Description
+    quotes:
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
+  - doc: sdm
+    at: 1858
+    units: [d61d3da693]
+    part: Description
+    quotes:
+      d61d3da693: Transfers program control to a return address located on the top of the stack.
 - id: 67107ada54
   gist: lea rsp, [rsp + n] and add rsp, n both release stack space; lea…
   how: derived
@@ -165,11 +374,15 @@ claims:
     units: [71f8e7976e]
     part: Flags Affected
     note: 'From the LEA entry: Flags Affected is None.'
+    quotes:
+      71f8e7976e: None.
   - doc: sdm
     at: 719
     units: [0647a2eb37]
     part: Flags Affected
     note: 'From the ADD entry: the flags are set.'
+    quotes:
+      0647a2eb37: The OF, SF, ZF, AF, CF, and PF flags are set according to the result.
 - id: 732076f2fe
   gist: 'Related: Calling convention on Linux and on Windows.'
   how: editorial

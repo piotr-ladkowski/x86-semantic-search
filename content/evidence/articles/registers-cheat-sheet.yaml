@@ -15,6 +15,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: 6fd6bc1ee2
   gist: rax | eax | ax | al | ah
   support:
@@ -23,6 +31,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: b3b4e40502
   gist: rbx | ebx | bx | bl | bh
   support:
@@ -31,6 +47,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: fd8756c79a
   gist: rcx | ecx | cx | cl | ch
   support:
@@ -39,6 +63,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: 7fea399651
   gist: rdx | edx | dx | dl | dh
   support:
@@ -47,6 +79,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: 05775e3075
   gist: rsi | esi | si | sil | -
   support:
@@ -55,6 +95,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: 680f6b7f38
   gist: rdi | edi | di | dil | -
   support:
@@ -63,6 +111,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: fde0302ae6
   gist: rbp | ebp | bp | bpl | -
   support:
@@ -71,6 +127,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: fbd47c7ff3
   gist: rsp | esp | sp | spl | -
   support:
@@ -79,6 +143,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: e4c947b9cf
   gist: r8 ... r15 | r8d ... r15d | r8w ... r15w | r8b ... r15b | -
   support:
@@ -87,6 +159,14 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: cb46919e65
   gist: 'Three rules that catch people out:'
   how: editorial
@@ -94,8 +174,16 @@ claims:
 - id: f87fe3b9fb
   gist: Writing a 32-bit name clears the upper 32 bits; writing an 8- o…
   support:
-  - {doc: sdm, at: 79, units: [f25a5adc20, c377e3471d, b4a4d677a2], part: 3.4.1.1 General-Purpose Registers
-      in 64-Bit Mode}
+  - doc: sdm
+    at: 79
+    units: [f25a5adc20, c377e3471d, b4a4d677a2]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
+      c377e3471d: 8-bit and 16-bit operands generate an 8-bit or 16-bit result.
+      b4a4d677a2: The upper 56 bits or 48 bits (respectively) of the destination general-purpose register
+        are not modified by the operation.
 - id: '3387013738'
   gist: See Why writing EAX clears the top half of RAX.
   how: editorial
@@ -108,13 +196,41 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
-  - {doc: sdm, at: 78, units: [002f1010c3], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
-  - {doc: sdm, at: 79, units: [2d4f0c0c2e], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
+  - doc: sdm
+    at: 78
+    units: [002f1010c3]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    quotes:
+      002f1010c3: REX prefixes are used to generate 64-bit operand sizes or to reference registers R8-R15.
+  - doc: sdm
+    at: 79
+    units: [2d4f0c0c2e]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    quotes:
+      2d4f0c0c2e: 'The architecture enforces this limitation by changing high-byte references (AH, BH,
+        CH, DH) to low byte references (BPL, SPL, DIL, SIL: the low 8 bits for RBP, RSP, RDI, and RSI)
+        for instructions using a REX prefix.'
 - id: d68f674cca
   gist: With any REX prefix, ah, bh, ch and dh cannot be encoded (the s…
   support:
-  - {doc: sdm, at: 79, units: [2d4f0c0c2e, 7f7b184007], part: 3.4.1.1 General-Purpose Registers in 64-Bit
-      Mode}
+  - doc: sdm
+    at: 79
+    units: [2d4f0c0c2e, 7f7b184007]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    quotes:
+      2d4f0c0c2e: 'The architecture enforces this limitation by changing high-byte references (AH, BH,
+        CH, DH) to low byte references (BPL, SPL, DIL, SIL: the low 8 bits for RBP, RSP, RDI, and RSI)
+        for instructions using a REX prefix.'
+      7f7b184007: 'An instruction cannot reference legacy high-bytes (for example: AH, BH, CH, DH) and
+        one of the new byte registers at the same time (for example: the low byte of the RAX register).'
 - id: 59855376fd
   gist: 'NASM rejects it: mov ah, sil fails with "cannot use high byte r…'
   how: run
@@ -130,12 +246,30 @@ claims:
     units: [e37f252de4, 7bcae78afe, 27acf2c9c8, a5226c2221]
     part: Table
     note: 'Vol. 1, Table 3-2: addressable general-purpose registers.'
+    quotes:
+      e37f252de4: Byte Registers | AL, BL, CL, DL, AH, BH, CH, DH | AL, BL, CL, DL, DIL, SIL, BPL, SPL,
+        R8B - R15B
+      7bcae78afe: Word Registers | AX, BX, CX, DX, DI, SI, BP, SP | AX, BX, CX, DX, DI, SI, BP, SP, R8W
+        - R15W
+      27acf2c9c8: Doubleword Registers | EAX, EBX, ECX, EDX, EDI, ESI, EBP, ESP | EAX, EBX, ECX, EDX,
+        EDI, ESI, EBP, ESP, R8D - R15D
+      a5226c2221: Quadword Registers | N.A. | RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8 - R15
 - id: 1a7eb805ae
   gist: To get at bits 63:32 you shift (shr rax, 32).
   how: derived
   note: SHR moves bits toward the low end, so a shift by 32 brings bits 63:32 down.
   support:
-  - {doc: sdm, at: 1893, units: [6270709cc1, a82b35c96e], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [6270709cc1, a82b35c96e]
+    part: Description
+    quotes:
+      6270709cc1: The shift arithmetic right (SAR) and shift logical right (SHR) instructions shift the
+        bits of the destination operand to the right (toward less significant bit locations).
+      a82b35c96e: The SHR instruction clears the most significant bit (see Figure 7-8 in the Intel® 64
+        and IA-32 Architectures Software Developer's Manual, Volume 1); the SAR instruction sets or clears
+        the most significant bit to correspond to the sign (most significant bit) of the original value
+        in the destination operand.
 - id: 72e24bc735
   gist: For ordinary arithmetic, loads and stores every register is equ…
   how: editorial
@@ -153,16 +287,81 @@ claims:
     units: [9e87dd5d89]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 1429, units: [92e9ec2799], part: Description}
-  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
-  - {doc: sdm, at: 842, units: [ca770370ab], part: Description}
-  - {doc: sdm, at: 898, units: [294ba4653d], part: Description}
-  - {doc: sdm, at: 1966, units: [01b4684e50], part: Description}
-  - {doc: sdm, at: 1271, units: [d984683726], part: Description}
-  - {doc: sdm, at: 1905, units: [bd6969fe6d], part: Description}
-  - {doc: sdm, at: 2871, units: [43b4a27416], part: Description}
-  - {doc: sdm, at: 907, units: [71cb545f05], part: Description}
-  - {doc: sdm, at: 1850, units: [0dadc75f63], part: Description}
+    quotes:
+      9e87dd5d89: 'The following is a summary of special uses: • EAX — Accumulator for operands and results
+        data.'
+  - doc: sdm
+    at: 1429
+    units: [92e9ec2799]
+    part: Description
+    quotes:
+      92e9ec2799: The destination operand is an implied operand located in register AL, AX or EAX (depending
+        on the size of the operand); the source operand is located in a general-purpose register or a
+        memory location.
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
+  - doc: sdm
+    at: 842
+    units: [ca770370ab]
+    part: Description
+    quotes:
+      ca770370ab: In which case, CDQE copies the sign (bit 31) of the doubleword in the EAX register into
+        the high 32 bits of RAX.
+  - doc: sdm
+    at: 898
+    units: [294ba4653d]
+    part: Description
+    quotes:
+      294ba4653d: Compares the value in the AL, AX, EAX, or RAX register with the first operand (destination
+        operand).
+  - doc: sdm
+    at: 1966
+    units: [01b4684e50]
+    part: Description
+    quotes:
+      01b4684e50: In non-64-bit and default 64-bit mode; stores a byte, word, or doubleword from the AL,
+        AX, or EAX register (respectively) into the destination operand.
+  - doc: sdm
+    at: 1271
+    units: [d984683726]
+    part: Description
+    quotes:
+      d984683726: Loads a byte, word, or doubleword from the source operand into the AL, AX, or EAX register,
+        respectively.
+  - doc: sdm
+    at: 1905
+    units: [bd6969fe6d]
+    part: Description
+    quotes:
+      bd6969fe6d: 'In non-64-bit modes and in default 64-bit mode: this instruction compares a byte, word,
+        doubleword or quadword specified using a memory operand with the value in AL, AX, or EAX.'
+  - doc: sdm
+    at: 2871
+    units: [43b4a27416]
+    part: Description
+    quotes:
+      43b4a27416: Locates a byte entry in a table in memory, using the contents of the AL register as
+        a table index, then copies the contents of the table entry back into the AL register.
+  - doc: sdm
+    at: 907
+    units: [71cb545f05]
+    part: Description
+    quotes:
+      71cb545f05: CPUID returns processor identification and feature information in the EAX, EBX, ECX,
+        and EDX registers.1 The instruction's output is dependent on the contents of the EAX register
+        upon execution and, in some cases, ECX.
+  - doc: sdm
+    at: 1850
+    units: [0dadc75f63]
+    part: Description
+    quotes:
+      0dadc75f63: Reads the current value of the processor's time-stamp counter (a 64-bit MSR) into the
+        EDX:EAX registers.
 - id: deaae57a2d
   gist: 'rbx | Almost none in 64-bit mode: table base for xlat, low half…'
   how: derived
@@ -173,8 +372,22 @@ claims:
     units: [2cebcf9954]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 2871, units: [d5ab0f074a, 340d0309bb], part: Description}
-  - {doc: sdm, at: 900, units: [d3909f256c], part: Description}
+    quotes:
+      2cebcf9954: EBX — Pointer to data in the DS segment.
+  - doc: sdm
+    at: 2871
+    units: [d5ab0f074a, 340d0309bb]
+    part: Description
+    quotes:
+      d5ab0f074a: RBX, however, is used to specify the table's base address.
+      340d0309bb: REX.W + D7 | XLATB | ZO | Valid | N.E. | Set AL to memory byte [RBX + unsigned AL].
+  - doc: sdm
+    at: 900
+    units: [d3909f256c]
+    part: Description
+    quotes:
+      d3909f256c: If the values are equal, the 64-bit value in ECX:EBX (or 128-bit value in RCX:RBX) is
+        stored in the destination operand.
 - id: 955c1f1193
   gist: 'rcx | Counter: cl holds variable shift counts, rcx counts loop,…'
   support:
@@ -183,11 +396,41 @@ claims:
     units: [ae488c181f]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
-  - {doc: sdm, at: 1274, units: [e56f131544], part: Description}
-  - {doc: sdm, at: 1852, units: [7340ea2c83], part: Description}
-  - {doc: sdm, at: 1206, units: [1506bd42ed], part: Description}
-  - {doc: sdm, at: 1988, units: [9bff1f6ea3], part: Description}
+    quotes:
+      ae488c181f: ECX — Counter for string and loop operations.
+  - doc: sdm
+    at: 1893
+    units: [6a7744d2a3]
+    part: Description
+    quotes:
+      6a7744d2a3: The count operand can be an immediate value or the CL register.
+  - doc: sdm
+    at: 1274
+    units: [e56f131544]
+    part: Description
+    quotes:
+      e56f131544: Performs a loop operation using the RCX, ECX or CX register as a counter (depending
+        on whether address size is 64 bits, 32 bits, or 16 bits).
+  - doc: sdm
+    at: 1852
+    units: [7340ea2c83]
+    part: Description
+    quotes:
+      7340ea2c83: Thus, the default count register in 64-bit mode is RCX; REX.W has no effect on the address
+        size and the count register.
+  - doc: sdm
+    at: 1206
+    units: [1506bd42ed]
+    part: Description
+    quotes:
+      1506bd42ed: Instead, they check RCX, ECX or CX for 0.
+  - doc: sdm
+    at: 1988
+    units: [9bff1f6ea3]
+    part: Description
+    quotes:
+      9bff1f6ea3: When FRED transitions are not enabled, SYSCALL invokes the OS handler by loading RIP
+        from the IA32_LSTAR MSR (after saving the address of the instruction following SYSCALL into RCX).
 - id: 3e8273a289
   gist: 'rdx | High half of a 128-bit value: product of mul, dividend an…'
   support:
@@ -196,11 +439,43 @@ claims:
     units: [e24f8e32c9]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
-  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
-  - {doc: sdm, at: 961, units: [e69cbbabf3], part: Description}
-  - {doc: sdm, at: 907, units: [71cb545f05], part: Description}
-  - {doc: sdm, at: 1850, units: [0dadc75f63], part: Description}
+    quotes:
+      e24f8e32c9: EDX — I/O pointer.
+  - doc: sdm
+    at: 1429
+    units: [0f3291adb3]
+    part: Table
+    quotes:
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
+  - doc: sdm
+    at: 961
+    units: [e69cbbabf3]
+    part: Description
+    quotes:
+      e69cbbabf3: The CQO instruction (available in 64-bit mode only) copies the sign (bit 63) of the
+        value in the RAX register into every bit position in the RDX register.
+  - doc: sdm
+    at: 907
+    units: [71cb545f05]
+    part: Description
+    quotes:
+      71cb545f05: CPUID returns processor identification and feature information in the EAX, EBX, ECX,
+        and EDX registers.1 The instruction's output is dependent on the contents of the EAX register
+        upon execution and, in some cases, ECX.
+  - doc: sdm
+    at: 1850
+    units: [0dadc75f63]
+    part: Description
+    quotes:
+      0dadc75f63: Reads the current value of the processor's time-stamp counter (a 64-bit MSR) into the
+        EDX:EAX registers.
 - id: 00b2318dd9
   gist: rsi | Source pointer of the string instructions | movs, lods, c…
   support:
@@ -209,9 +484,30 @@ claims:
     units: [acaedd399f]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 1402, units: [708d5fe8d6], part: Description}
-  - {doc: sdm, at: 1271, units: [d984683726], part: Description}
-  - {doc: sdm, at: 885, units: [9c84ce4d33], part: Description}
+    quotes:
+      acaedd399f: ESI — Pointer to data in the segment pointed to by the DS register; source pointer for
+        string operations.
+  - doc: sdm
+    at: 1402
+    units: [708d5fe8d6]
+    part: Description
+    quotes:
+      708d5fe8d6: The address of the source operand is read from the DS:ESI or the DS:SI registers (depending
+        on the address-size attribute of the instruction, 32 or 16, respectively).
+  - doc: sdm
+    at: 1271
+    units: [d984683726]
+    part: Description
+    quotes:
+      d984683726: Loads a byte, word, or doubleword from the source operand into the AL, AX, or EAX register,
+        respectively.
+  - doc: sdm
+    at: 885
+    units: [9c84ce4d33]
+    part: Description
+    quotes:
+      9c84ce4d33: The address of the first source operand is read from DS:SI, DS:ESI or RSI (depending
+        on the address-size attribute of the instruction is 16, 32, or 64, respectively).
 - id: 58e5d1fc04
   gist: rdi | Destination pointer of the string instructions | movs, st…
   support:
@@ -220,10 +516,38 @@ claims:
     units: [b33a69ac70]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 1402, units: [868df30365], part: Description}
-  - {doc: sdm, at: 1966, units: [8427d70552], part: Description}
-  - {doc: sdm, at: 1905, units: [f19fc09c16], part: Description}
-  - {doc: sdm, at: 885, units: [9f96db01e9], part: Description}
+    quotes:
+      b33a69ac70: EDI — Pointer to data (or destination) in the segment pointed to by the ES register;
+        destination pointer for string operations.
+  - doc: sdm
+    at: 1402
+    units: [868df30365]
+    part: Description
+    quotes:
+      868df30365: The address of the destination operand is read from the ES:EDI or the ES:DI registers
+        (again depending on the address-size attribute of the instruction).
+  - doc: sdm
+    at: 1966
+    units: [8427d70552]
+    part: Description
+    quotes:
+      8427d70552: The destination operand is a memory location, the address of which is read from either
+        the ES:EDI or ES:DI register (depending on the address-size attribute of the instruction and the
+        mode of operation).
+  - doc: sdm
+    at: 1905
+    units: [f19fc09c16]
+    part: Description
+    quotes:
+      f19fc09c16: The memory operand address is read from ES:(E)DI register (depending on the address-size
+        attribute of the instruction and the current operational mode).
+  - doc: sdm
+    at: 885
+    units: [9f96db01e9]
+    part: Description
+    quotes:
+      9f96db01e9: The address of the second source operand is read from ES:DI, ES:EDI or RDI (again depending
+        on the address-size attribute of the instruction is 16, 32, or 64).
 - id: d94fec7cef
   gist: rsp | The stack pointer | push, pop, call, ret, leave
   support:
@@ -232,11 +556,42 @@ claims:
     units: [3ec780b89b]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 1811, units: [fcafc8633c], part: Description}
-  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
-  - {doc: sdm, at: 826, units: [ca50a95fdd], part: Description}
-  - {doc: sdm, at: 1858, units: [d61d3da693], part: Description}
-  - {doc: sdm, at: 1254, units: [72f3eafd14], part: Description}
+    quotes:
+      3ec780b89b: ESP — Stack pointer (in the SS segment).
+  - doc: sdm
+    at: 1811
+    units: [fcafc8633c]
+    part: Description
+    quotes:
+      fcafc8633c: Decrements the stack pointer and then stores the source operand on the top of the stack.
+  - doc: sdm
+    at: 1687
+    units: [3f9c78822c]
+    part: Description
+    quotes:
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
+  - doc: sdm
+    at: 826
+    units: [ca50a95fdd]
+    part: Description
+    quotes:
+      ca50a95fdd: When executing a near call, the processor pushes the value of the EIP register (which
+        contains the offset of the instruction following the CALL instruction) on the stack (for use later
+        as a return-instruction pointer).
+  - doc: sdm
+    at: 1858
+    units: [d61d3da693]
+    part: Description
+    quotes:
+      d61d3da693: Transfers program control to a return address located on the top of the stack.
+  - doc: sdm
+    at: 1254
+    units: [72f3eafd14]
+    part: Description
+    quotes:
+      72f3eafd14: The LEAVE instruction copies the frame pointer (in the EBP register) into the stack
+        pointer register (ESP), which releases the stack space allocated to the stack frame.
 - id: 14ce54168d
   gist: rbp | A frame pointer by convention; leave restores it, otherwi…
   support:
@@ -245,15 +600,46 @@ claims:
     units: [81e3b052df]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
-  - {doc: sdm, at: 1254, units: [72f3eafd14, 445289b062], part: Description}
-  - {doc: sdm, at: 999, units: [0750a41da1], part: Description}
+    quotes:
+      81e3b052df: EBP — Pointer to data on the stack (in the SS segment).
+  - doc: sdm
+    at: 1254
+    units: [72f3eafd14, 445289b062]
+    part: Description
+    quotes:
+      72f3eafd14: The LEAVE instruction copies the frame pointer (in the EBP register) into the stack
+        pointer register (ESP), which releases the stack space allocated to the stack frame.
+      445289b062: The old frame pointer (the frame pointer for the calling procedure that was saved by
+        the ENTER instruction) is then popped from the stack into the EBP register, restoring the calling
+        procedure's stack frame.
+  - doc: sdm
+    at: 999
+    units: [0750a41da1]
+    part: Description
+    quotes:
+      0750a41da1: If the nesting level is 0, the processor pushes the frame pointer from the BP/EBP/RBP
+        register onto the stack, copies the current stack pointer from the SP/ESP/RSP register into the
+        BP/EBP/RBP register, and loads the SP/ESP/RSP register with the current stack-pointer value minus
+        the value in the size operand.
 - id: 5c95fb6a36
   gist: r8 ... r15 | No built-in job, except that syscall saves RFLAGS…
   how: derived
   note: SYSCALL saves RFLAGS in R11; no instruction in the table names R8-R15 implicitly.
   support:
-  - {doc: sdm, at: 1988, units: [25e9784d3b], part: Description}
-  - {doc: sdm, at: 78, units: [ae8f37dbed], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
+  - doc: sdm
+    at: 1988
+    units: [25e9784d3b]
+    part: Description
+    quotes:
+      25e9784d3b: SYSCALL also saves RFLAGS into R11 and then masks RFLAGS using the IA32_FMASK MSR (MSR
+        address C0000084H); specifically, the processor clears in RFLAGS every bit corresponding to a
+        bit that is set in the IA32_FMASK MSR.
+  - doc: sdm
+    at: 78
+    units: [ae8f37dbed]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    quotes:
+      ae8f37dbed: R8D-R15D/R8-R15 represent eight new general-purpose registers.
 - id: c14f97ed45
   gist: 'Deeper dives: RCX, RAX and RDX, RSI and RDI, RSP and RBP.'
   how: editorial
@@ -264,12 +650,51 @@ claims:
   note: Each instruction writes or reads the named register implicitly; the advice to keep values out
     of them follows.
   support:
-  - {doc: sdm, at: 1429, units: [92e9ec2799], part: Description}
-  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
-  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
-  - {doc: sdm, at: 1852, units: [7340ea2c83], part: Description}
-  - {doc: sdm, at: 1988, units: [9bff1f6ea3, 25e9784d3b], part: Description}
-  - {doc: sdm, at: 1402, units: [6424b167c6], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [92e9ec2799]
+    part: Description
+    quotes:
+      92e9ec2799: The destination operand is an implied operand located in register AL, AX or EAX (depending
+        on the size of the operand); the source operand is located in a general-purpose register or a
+        memory location.
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
+  - doc: sdm
+    at: 1893
+    units: [6a7744d2a3]
+    part: Description
+    quotes:
+      6a7744d2a3: The count operand can be an immediate value or the CL register.
+  - doc: sdm
+    at: 1852
+    units: [7340ea2c83]
+    part: Description
+    quotes:
+      7340ea2c83: Thus, the default count register in 64-bit mode is RCX; REX.W has no effect on the address
+        size and the count register.
+  - doc: sdm
+    at: 1988
+    units: [9bff1f6ea3, 25e9784d3b]
+    part: Description
+    quotes:
+      9bff1f6ea3: When FRED transitions are not enabled, SYSCALL invokes the OS handler by loading RIP
+        from the IA32_LSTAR MSR (after saving the address of the instruction following SYSCALL into RCX).
+      25e9784d3b: SYSCALL also saves RFLAGS into R11 and then masks RFLAGS using the IA32_FMASK MSR (MSR
+        address C0000084H); specifically, the processor clears in RFLAGS every bit corresponding to a
+        bit that is set in the IA32_FMASK MSR.
+  - doc: sdm
+    at: 1402
+    units: [6424b167c6]
+    part: Description
+    quotes:
+      6424b167c6: The locations of the source and destination operands are always specified by the DS:(E)SI
+        and ES:(E)DI registers, which must be loaded correctly before the move string instruction is executed.
 - id: 0d27e3b961
   gist: r8-r15 and rbx are the "quiet" registers no instruction forces…
   how: editorial
@@ -280,20 +705,54 @@ claims:
   how: derived
   note: REX prefixes are what reach R8-R15 (and 64-bit operand size); the prefix is one byte.
   support:
-  - {doc: sdm, at: 78, units: [002f1010c3], part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode}
+  - doc: sdm
+    at: 78
+    units: [002f1010c3]
+    part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
+    quotes:
+      002f1010c3: REX prefixes are used to generate 64-bit operand sizes or to reference registers R8-R15.
 - id: 1c8be35fe0
   gist: The operating system's calling convention decides which registe…
   how: derived
   note: Both ABI documents split the registers into preserved and scratch.
   support:
-  - {doc: sysv, at: 16, units: [92911cf2d5, 0202d90800], part: 3.2.1 Registers and the Stack Frame}
-  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, befd0ad03e], part: Caller/callee
-      saved registers}
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5, 0202d90800]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+      0202d90800: Remaining registers "belong" to the called function.5 If a calling function wants to
+        preserve such a register value across a function call, it must save the value in its local stack
+        frame.
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1, befd0ad03e]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
+      befd0ad03e: The x64 ABI considers the registers RAX, RCX, RDX, R8, R9, R10, R11, and XMM0-XMM5 volatile.
 - id: 3bb8dcbb03
   gist: Both Linux and Windows preserve rbx, rbp, rsp and r12-r15; Wind…
   support:
-  - {doc: sysv, at: 16, units: [92911cf2d5, 9592e208d5], part: 3.2.1 Registers and the Stack Frame}
-  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1], part: Caller/callee saved registers}
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5, 9592e208d5]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+      9592e208d5: 5Note that in contrast to the Intel386 ABI, %rdi, and %rsi belong to the called function,
+        not the caller.
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
 - id: f52b59d6a0
   gist: 'Details: System V (Linux) and Microsoft x64 (Windows).'
   how: editorial

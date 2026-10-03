@@ -10,12 +10,34 @@ claims:
 - id: 09ab0932ff
   gist: The string instructions work on memory through two implicit poi…
   support:
-  - {doc: sdm, at: 1402, units: [708d5fe8d6, 868df30365, 6424b167c6], part: Description}
-  - {doc: sdm, at: 1403, units: [3dfb87b407], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [708d5fe8d6, 868df30365, 6424b167c6]
+    part: Description
+    quotes:
+      708d5fe8d6: The address of the source operand is read from the DS:ESI or the DS:SI registers (depending
+        on the address-size attribute of the instruction, 32 or 16, respectively).
+      868df30365: The address of the destination operand is read from the ES:EDI or the ES:DI registers
+        (again depending on the address-size attribute of the instruction).
+      6424b167c6: The locations of the source and destination operands are always specified by the DS:(E)SI
+        and ES:(E)DI registers, which must be loaded correctly before the move string instruction is executed.
+  - doc: sdm
+    at: 1403
+    units: [3dfb87b407]
+    part: Description
+    quotes:
+      3dfb87b407: The 64-bit addresses are specified by RSI and RDI; 32-bit address are specified by ESI
+        and EDI.
 - id: 0e8538d58d
   gist: After each element is processed, the instruction moves the poin…
   support:
-  - {doc: sdm, at: 1402, units: [151a8cbd68], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [151a8cbd68]
+    part: Description
+    quotes:
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
 - id: 7223c40fdb
   gist: These pointers are what rsi and rdi are for; for ordinary instr…
   how: derived
@@ -27,72 +49,220 @@ claims:
     units: [acaedd399f, b33a69ac70]
     part: 3.4.1 General-Purpose Registers
     note: 'Vol. 1, 3.4.1: special uses of the general-purpose registers.'
+    quotes:
+      acaedd399f: ESI — Pointer to data in the segment pointed to by the DS register; source pointer for
+        string operations.
+      b33a69ac70: EDI — Pointer to data (or destination) in the segment pointed to by the ES register;
+        destination pointer for string operations.
 - id: b9b46883a7
   gist: movs (movsb, movsw, movsd, movsq) | Copy from [rsi] to [rdi]; a…
   support:
-  - {doc: sdm, at: 1402, units: [a85c1a5cbb, 151a8cbd68, 6424b167c6], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [a85c1a5cbb, 151a8cbd68, 6424b167c6]
+    part: Description
+    quotes:
+      a85c1a5cbb: Moves the byte, word, or doubleword specified with the second operand (source operand)
+        to the location specified with the first operand (destination operand).
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+      6424b167c6: The locations of the source and destination operands are always specified by the DS:(E)SI
+        and ES:(E)DI registers, which must be loaded correctly before the move string instruction is executed.
 - id: d451c99739
   gist: stos | Store al/ax/eax/rax at [rdi]; advance rdi
   support:
-  - {doc: sdm, at: 1966, units: [01b4684e50, d9130a29c0], part: Description}
-  - {doc: sdm, at: 1967, units: [95f4efeacd], part: Description}
+  - doc: sdm
+    at: 1966
+    units: [01b4684e50, d9130a29c0]
+    part: Description
+    quotes:
+      01b4684e50: In non-64-bit and default 64-bit mode; stores a byte, word, or doubleword from the AL,
+        AX, or EAX register (respectively) into the destination operand.
+      d9130a29c0: After the byte, word, or doubleword is transferred from the register to the memory location,
+        the (E)DI register is incremented or decremented according to the setting of the DF flag in the
+        EFLAGS register.
+  - doc: sdm
+    at: 1967
+    units: [95f4efeacd]
+    part: Description
+    quotes:
+      95f4efeacd: STOSQ (and its explicit operands variant) store a quadword from the RAX register into
+        the destination addressed by RDI or EDI.
 - id: 5a7895503a
   gist: lods | Load al/ax/eax/rax from [rsi]; advance rsi
   support:
-  - {doc: sdm, at: 1271, units: [d984683726, 57f297d0a6], part: Description}
+  - doc: sdm
+    at: 1271
+    units: [d984683726, 57f297d0a6]
+    part: Description
+    quotes:
+      d984683726: Loads a byte, word, or doubleword from the source operand into the AL, AX, or EAX register,
+        respectively.
+      57f297d0a6: The source operand is a memory location, the address of which is read from the DS:ESI
+        or the DS:SI registers (depending on the address-size attribute of the instruction, 32 or 16,
+        respectively).
 - id: ed414e5748
   gist: scas | Compare al/ax/eax/rax with [rdi]; advance rdi
   support:
-  - {doc: sdm, at: 1905, units: [bd6969fe6d, f19fc09c16, 937216cddf], part: Description}
+  - doc: sdm
+    at: 1905
+    units: [bd6969fe6d, f19fc09c16, 937216cddf]
+    part: Description
+    quotes:
+      bd6969fe6d: 'In non-64-bit modes and in default 64-bit mode: this instruction compares a byte, word,
+        doubleword or quadword specified using a memory operand with the value in AL, AX, or EAX.'
+      f19fc09c16: The memory operand address is read from ES:(E)DI register (depending on the address-size
+        attribute of the instruction and the current operational mode).
+      937216cddf: AE | SCAS m8 | ZO | Valid | Valid | Compare AL with byte at ES:(E)DI or RDI, then set
+        status flags.1
 - id: 77306e6025
   gist: cmps | Compare [rsi] with [rdi]; advance both
   support:
-  - {doc: sdm, at: 885, units: [d0470b8bc2, 9c84ce4d33, 9f96db01e9], part: Description}
-  - {doc: sdm, at: 886, units: [7eabcd5a0b], part: Description}
+  - doc: sdm
+    at: 885
+    units: [d0470b8bc2, 9c84ce4d33, 9f96db01e9]
+    part: Description
+    quotes:
+      d0470b8bc2: Compares the byte, word, doubleword, or quadword specified with the first source operand
+        with the byte, word, doubleword, or quadword specified with the second source operand and sets
+        the status flags in the EFLAGS register according to the results.
+      9c84ce4d33: The address of the first source operand is read from DS:SI, DS:ESI or RSI (depending
+        on the address-size attribute of the instruction is 16, 32, or 64, respectively).
+      9f96db01e9: The address of the second source operand is read from ES:DI, ES:EDI or RDI (again depending
+        on the address-size attribute of the instruction is 16, 32, or 64).
+  - doc: sdm
+    at: 886
+    units: [7eabcd5a0b]
+    part: Description
+    quotes:
+      7eabcd5a0b: After the comparison, the (E/R)SI and (E/R)DI registers increment or decrement automatically
+        according to the setting of the DF flag in the EFLAGS register.
 - id: 0ce6ab55a9
   gist: 'Each instruction advances the pointers by the element size: 1,…'
   support:
-  - {doc: sdm, at: 1402, units: [151587af78], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [151587af78]
+    part: Description
+    quotes:
+      151587af78: The registers are incremented or decremented by 1 for byte operations, by 2 for word
+        operations, or by 4 for doubleword operations.
   - {doc: sdm, at: 1404, units: [fe15d9ed9c], part: Operation}
-  - {doc: sdm, at: 886, units: [5ffb444cf5, aaafc0377d], part: Description}
+  - doc: sdm
+    at: 886
+    units: [5ffb444cf5, aaafc0377d]
+    part: Description
+    quotes:
+      5ffb444cf5: The registers increment or decrement by 1 for byte operations, by 2 for word operations,
+        4 for doubleword operations.
+      aaafc0377d: If operand size is 64, RSI and RDI registers increment by 8 for quadword operations.
 - id: dbb61df9ad
   gist: The direction depends on the direction flag.
   support:
-  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [151a8cbd68, 521ccda726]
+    part: Description
+    quotes:
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
 - id: 9ab632a3eb
   gist: With DF = 0 (cld) the pointers move up in memory; with DF = 1 (…
   support:
-  - {doc: sdm, at: 1402, units: [521ccda726], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [521ccda726]
+    part: Description
+    quotes:
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
 - id: a51e6954f6
   gist: In 64-bit mode the pointers are rsi/rdi.
   support:
-  - {doc: sdm, at: 1403, units: [510a7058f0, 3dfb87b407], part: Description}
+  - doc: sdm
+    at: 1403
+    units: [510a7058f0, 3dfb87b407]
+    part: Description
+    quotes:
+      510a7058f0: In 64-bit mode, the instruction's default address size is 64 bits, 32-bit address size
+        is supported using the prefix 67H.
+      3dfb87b407: The 64-bit addresses are specified by RSI and RDI; 32-bit address are specified by ESI
+        and EDI.
 - id: e465cff107
   gist: A 67h prefix selects esi/edi instead, truncating the addresses.
   how: derived
   note: '''32-bit address size is supported using the prefix 67H'' with 32-bit addresses in ESI/EDI; truncation
     is the consequence.'
   support:
-  - {doc: sdm, at: 1403, units: [510a7058f0, 3dfb87b407], part: Description}
+  - doc: sdm
+    at: 1403
+    units: [510a7058f0, 3dfb87b407]
+    part: Description
+    quotes:
+      510a7058f0: In 64-bit mode, the instruction's default address size is 64 bits, 32-bit address size
+        is supported using the prefix 67H.
+      3dfb87b407: The 64-bit addresses are specified by RSI and RDI; 32-bit address are specified by ESI
+        and EDI.
 - id: 13774bad47
   gist: 'After the instruction the pointers have moved: rdi points just…'
   how: derived
   note: The pointer advances after each element, so after a store or a matching SCAS it is one element
     past.
   support:
-  - {doc: sdm, at: 1402, units: [151a8cbd68], part: Description}
-  - {doc: sdm, at: 1966, units: [d9130a29c0], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [151a8cbd68]
+    part: Description
+    quotes:
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+  - doc: sdm
+    at: 1966
+    units: [d9130a29c0]
+    part: Description
+    quotes:
+      d9130a29c0: After the byte, word, or doubleword is transferred from the register to the memory location,
+        the (E)DI register is incremented or decremented according to the setting of the DF flag in the
+        EFLAGS register.
   - {doc: sdm, at: 1857, units: [8552245e5c], part: Operation}
 - id: '9467589552'
   gist: On their own they handle one element.
   support:
-  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+  - doc: sdm
+    at: 1403
+    units: [669c777084]
+    part: Description
+    quotes:
+      669c777084: The MOVS, MOVSB, MOVSW, and MOVSD instructions can be preceded by the REP prefix (see
+        "REP—Repeat String Operation (Prefix)" for a description of the REP prefix) for block moves of
+        ECX bytes, words, or doublewords.
 - id: f6b988a1ec
   gist: Prefixing them with rep (or repe/repne for cmps and scas) repea…
   support:
-  - {doc: sdm, at: 1852, units: [66597eb95d, 06e40ebb3c], part: Description}
-  - {doc: sdm, at: 1854, units: [7b6c3d947b], part: Description}
-  - {doc: sdm, at: 1856, units: [384b91250d], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [66597eb95d, 06e40ebb3c]
+    part: Description
+    quotes:
+      66597eb95d: Repeats a string instruction the number of times specified in the count register.
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
+  - doc: sdm
+    at: 1854
+    units: [7b6c3d947b]
+    part: Description
+    quotes:
+      7b6c3d947b: The REPE (repeat while equal) and REPZ (repeat while zero) mnemonics are prefixes that
+        can be added to the CMPS and SCAS instructions.
+  - doc: sdm
+    at: 1856
+    units: [384b91250d]
+    part: Description
+    quotes:
+      384b91250d: The REPNE (repeat while not equal) and REPNZ (repeat while not zero) mnemonics are prefixes
+        that can be added to the CMPS and SCAS instructions.
 - id: d4cf08b73d
   gist: 'copy_bytes: ; void copy_bytes(void dst, const void src, size_t…'
   how: run
@@ -101,32 +271,82 @@ claims:
 - id: a8cd709911
   gist: 'Linux (System V): rdi and rsi are the 1st and 2nd argument regi…'
   support:
-  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
-  - {doc: sysv, at: 16, units: [0202d90800, 9592e208d5], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 21
+    units: [9220da18da]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      9220da18da: 2. If the class is INTEGER, the next available register of the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9 is used13.
+  - doc: sysv
+    at: 16
+    units: [0202d90800, 9592e208d5]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      0202d90800: Remaining registers "belong" to the called function.5 If a calling function wants to
+        preserve such a register value across a function call, it must save the value in its local stack
+        frame.
+      9592e208d5: 5Note that in contrast to the Intel386 ABI, %rdi, and %rsi belong to the called function,
+        not the caller.
 - id: cb6475de74
   gist: 'This lines up neatly with memcpy(dst, src, n): the arguments ar…'
   how: derived
   note: memcpy(dst, src, n) arrives in rdi, rsi, rdx; REP MOVS wants destination in rdi, source in rsi,
     count in rcx.
   support:
-  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
-  - {doc: sdm, at: 1402, units: [6424b167c6], part: Description}
+  - doc: sysv
+    at: 21
+    units: [9220da18da]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      9220da18da: 2. If the class is INTEGER, the next available register of the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9 is used13.
+  - doc: sdm
+    at: 1402
+    units: [6424b167c6]
+    part: Description
+    quotes:
+      6424b167c6: The locations of the source and destination operands are always specified by the DS:(E)SI
+        and ES:(E)DI registers, which must be loaded correctly before the move string instruction is executed.
 - id: 56fa8d8ea4
   gist: The ABI also requires DF to be clear on entry and return, so a…
   support:
-  - {doc: sysv, at: 16, units: [4929d2daf8], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 16
+    units: [4929d2daf8]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      4929d2daf8: 6 The direction flag DF in the %rFLAGS register must be clear (set to "forward" direction)
+        on function entry and return.
 - id: 4f201ec25b
   gist: 'Windows (x64): rdi and rsi are nonvolatile: a function that use…'
   support:
-  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, a0664dcfae], part: Caller/callee
-      saved registers}
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1, a0664dcfae]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
+      a0664dcfae: They must be saved and restored by a function that uses them.
 - id: 6a4bcc9d2b
   gist: The arguments arrive in rcx, rdx, r8, r9, so a Windows copy rou…
   how: derived
   note: Arguments arrive in rcx, rdx, r8, r9; RSI and RDI must be saved and restored if used.
   support:
-  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
-  - {doc: msx64, at: Caller/callee saved registers, units: [a0664dcfae], part: Caller/callee saved registers}
+  - doc: msx64
+    at: Parameter passing
+    units: [d7665e1c32]
+    part: Parameter passing
+    quotes:
+      d7665e1c32: Integer valued arguments in the leftmost four positions are passed in left-to-right
+        order in RCX, RDX, R8, and R9, respectively.
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [a0664dcfae]
+    part: Caller/callee saved registers
+    quotes:
+      a0664dcfae: They must be saved and restored by a function that uses them.
 - id: 5eaed5bd44
   gist: This is why portable assembly that uses string instructions loo…
   how: editorial

@@ -6,87 +6,243 @@ claims:
 - id: e2665576fb
   gist: Copies one element from [RSI] to [RDI] and advances both pointe…
   support:
-  - {doc: sdm, at: 1402, units: [a85c1a5cbb, 151a8cbd68], part: Description}
-  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [a85c1a5cbb, 151a8cbd68]
+    part: Description
+    quotes:
+      a85c1a5cbb: Moves the byte, word, or doubleword specified with the second operand (source operand)
+        to the location specified with the first operand (destination operand).
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+  - doc: sdm
+    at: 1403
+    units: [669c777084]
+    part: Description
+    quotes:
+      669c777084: The MOVS, MOVSB, MOVSW, and MOVSD instructions can be preceded by the REP prefix (see
+        "REP—Repeat String Operation (Prefix)" for a description of the REP prefix) for block moves of
+        ECX bytes, words, or doublewords.
 - id: 4800c110ad
   gist: Also written as MOVSB, MOVSW, MOVSD, MOVSQ.
   support:
-  - {doc: sdm, at: 1402, units: [f904f23258, 61daac68b7, 6c31a318f9, 2484e385ad], part: Opcode table}
+  - doc: sdm
+    at: 1402
+    units: [f904f23258, 61daac68b7, 6c31a318f9, 2484e385ad]
+    part: Opcode table
+    quotes:
+      f904f23258: A4 | MOVSB | ZO | Valid | Valid | For legacy mode, Move byte from address DS:(E)SI to
+        ES:(E)DI. For 64-bit mode move byte from address (R|E)SI to (R|E)DI.
+      61daac68b7: A5 | MOVSW | ZO | Valid | Valid | For legacy mode, move word from address DS:(E)SI to
+        ES:(E)DI. For 64-bit mode move word at address (R|E)SI to (R|E)DI.
+      6c31a318f9: A5 | MOVSD | ZO | Valid | Valid | For legacy mode, move dword from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move dword from address (R|E)SI to (R|E)DI.
+      2484e385ad: REX.W + A5 | MOVSQ | ZO | Valid | N.E. | Move qword from address (R|E)SI to (R|E)DI.
 - id: fc43361c5b
   gist: MOVSB (MOVS m8, m8) is encoded as A4.
   support:
-  - {doc: sdm, at: 1402, units: [a41848efca], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1402
+    units: [a41848efca]
+    part: Opcode table
+    by: match
+    quotes:
+      a41848efca: A4 | MOVS m8, m8 | ZO | Valid | Valid | For legacy mode, Move byte from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move byte from address (R|E)SI to (R|E)DI.
 - id: 2f1eb94fdb
   gist: Copy 1 byte from [rsi] to [rdi].
   support:
-  - {doc: sdm, at: 1402, units: [a41848efca, f904f23258], part: Opcode table}
+  - doc: sdm
+    at: 1402
+    units: [a41848efca, f904f23258]
+    part: Opcode table
+    quotes:
+      a41848efca: A4 | MOVS m8, m8 | ZO | Valid | Valid | For legacy mode, Move byte from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move byte from address (R|E)SI to (R|E)DI.
+      f904f23258: A4 | MOVSB | ZO | Valid | Valid | For legacy mode, Move byte from address DS:(E)SI to
+        ES:(E)DI. For 64-bit mode move byte from address (R|E)SI to (R|E)DI.
 - id: e50e2987e0
   gist: MOVSD (MOVS m32, m32) is encoded as A5.
   support:
-  - {doc: sdm, at: 1402, units: [e69ddf0e8a], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1402
+    units: [e69ddf0e8a]
+    part: Opcode table
+    by: match
+    quotes:
+      e69ddf0e8a: A5 | MOVS m32, m32 | ZO | Valid | Valid | For legacy mode, move dword from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move dword from address (R|E)SI to (R|E)DI.
 - id: 1db0d603ae
   gist: Copy 4 bytes.
   support:
-  - {doc: sdm, at: 1402, units: [e69ddf0e8a, 6c31a318f9], part: Opcode table}
+  - doc: sdm
+    at: 1402
+    units: [e69ddf0e8a, 6c31a318f9]
+    part: Opcode table
+    quotes:
+      e69ddf0e8a: A5 | MOVS m32, m32 | ZO | Valid | Valid | For legacy mode, move dword from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move dword from address (R|E)SI to (R|E)DI.
+      6c31a318f9: A5 | MOVSD | ZO | Valid | Valid | For legacy mode, move dword from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move dword from address (R|E)SI to (R|E)DI.
 - id: bf37569637
   gist: MOVSW (2 bytes) is the same opcode with the 66h prefix.
   how: derived
   note: MOVSW and MOVSD share opcode A5; the operand-size prefix selects 16 bits.
   support:
-  - {doc: sdm, at: 1402, units: [c6efd20f6b, 61daac68b7, e69ddf0e8a], part: Opcode table}
+  - doc: sdm
+    at: 1402
+    units: [c6efd20f6b, 61daac68b7, e69ddf0e8a]
+    part: Opcode table
+    quotes:
+      c6efd20f6b: A5 | MOVS m16, m16 | ZO | Valid | Valid | For legacy mode, move word from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move word at address (R|E)SI to (R|E)DI.
+      61daac68b7: A5 | MOVSW | ZO | Valid | Valid | For legacy mode, move word from address DS:(E)SI to
+        ES:(E)DI. For 64-bit mode move word at address (R|E)SI to (R|E)DI.
+      e69ddf0e8a: A5 | MOVS m32, m32 | ZO | Valid | Valid | For legacy mode, move dword from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move dword from address (R|E)SI to (R|E)DI.
 - id: 9678a9e9c8
   gist: MOVSQ (MOVS m64, m64) is encoded as REX.W + A5.
   support:
-  - {doc: sdm, at: 1402, units: [237cf183b4], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1402
+    units: [237cf183b4]
+    part: Opcode table
+    by: match
+    quotes:
+      237cf183b4: REX.W + A5 | MOVS m64, m64 | ZO | Valid | N.E. | Move qword from address (R|E)SI to
+        (R|E)DI.
 - id: d408d5851f
   gist: Copy 8 bytes.
   support:
-  - {doc: sdm, at: 1402, units: [237cf183b4, 2484e385ad], part: Opcode table}
+  - doc: sdm
+    at: 1402
+    units: [237cf183b4, 2484e385ad]
+    part: Opcode table
+    quotes:
+      237cf183b4: REX.W + A5 | MOVS m64, m64 | ZO | Valid | N.E. | Move qword from address (R|E)SI to
+        (R|E)DI.
+      2484e385ad: REX.W + A5 | MOVSQ | ZO | Valid | N.E. | Move qword from address (R|E)SI to (R|E)DI.
 - id: 6da199390e
   gist: No flags are affected.
   support:
-  - {doc: sdm, at: 1404, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1404
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 9786419a17
   gist: DF (the direction flag) is read, not changed.
   support:
-  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
-  - {doc: sdm, at: 1404, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1402
+    units: [151a8cbd68, 521ccda726]
+    part: Description
+    quotes:
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
+  - doc: sdm
+    at: 1404
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 12bc247c9e
   gist: movs copies one element from the memory at [rsi] to the memory…
   support:
-  - {doc: sdm, at: 1402, units: [359ee1eccc, 151a8cbd68, 521ccda726, 151587af78], part: Description}
-  - {doc: sdm, at: 1403, units: [3dfb87b407], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [359ee1eccc, 151a8cbd68, 521ccda726, 151587af78]
+    part: Description
+    quotes:
+      359ee1eccc: Both the source and destination operands are located in memory.
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
+      151587af78: The registers are incremented or decremented by 1 for byte operations, by 2 for word
+        operations, or by 4 for doubleword operations.
+  - doc: sdm
+    at: 1403
+    units: [3dfb87b407]
+    part: Description
+    quotes:
+      3dfb87b407: The 64-bit addresses are specified by RSI and RDI; 32-bit address are specified by ESI
+        and EDI.
 - id: c827cb169e
   gist: 'The suffix chooses the size: movsb 1 byte, movsw 2, movsd 4, mo…'
   support:
-  - {doc: sdm, at: 1402, units: [74f75d4e22, 151587af78, 2484e385ad], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [74f75d4e22, 151587af78, 2484e385ad]
+    part: Description
+    quotes:
+      74f75d4e22: 'The size of the source and destination operands is selected with the mnemonic: MOVSB
+        (byte move), MOVSW (word move), or MOVSD (doubleword move).'
+      151587af78: The registers are incremented or decremented by 1 for byte operations, by 2 for word
+        operations, or by 4 for doubleword operations.
+      2484e385ad: REX.W + A5 | MOVSQ | ZO | Valid | N.E. | Move qword from address (R|E)SI to (R|E)DI.
 - id: a168e4e480
   gist: It is the only common instruction that moves memory to memory.
   how: derived
   note: Both operands of MOVS are in memory; MOV's forms have at most one.
   support:
-  - {doc: sdm, at: 1402, units: [359ee1eccc], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [359ee1eccc]
+    part: Description
+    quotes:
+      359ee1eccc: Both the source and destination operands are located in memory.
   - doc: sdm
     at: 1318
     units: [8f92bd08d9, d31eea6db8]
     part: Operand encoding
     note: 'From the MOV entry: its forms have one r/m operand.'
+    quotes:
+      8f92bd08d9: MR | ModRM:r/m (w) | ModRM:reg (r) | N/A | N/A
+      d31eea6db8: RM | ModRM:reg (w) | ModRM:r/m (r) | N/A | N/A
 - id: 7d61eedb7a
   gist: On its own it copies a single element; with the rep prefix and…
   support:
-  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+  - doc: sdm
+    at: 1403
+    units: [669c777084]
+    part: Description
+    quotes:
+      669c777084: The MOVS, MOVSB, MOVSW, and MOVSD instructions can be preceded by the REP prefix (see
+        "REP—Repeat String Operation (Prefix)" for a description of the REP prefix) for block moves of
+        ECX bytes, words, or doublewords.
 - id: 6c730d4071
   gist: 'Copying a buffer: set rsi (source), rdi (destination) and rcx (…'
   how: derived
   note: Source and destination come from RSI and RDI; REP repeats by the count register.
   support:
-  - {doc: sdm, at: 1402, units: [6424b167c6], part: Description}
-  - {doc: sdm, at: 1403, units: [669c777084], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [6424b167c6]
+    part: Description
+    quotes:
+      6424b167c6: The locations of the source and destination operands are always specified by the DS:(E)SI
+        and ES:(E)DI registers, which must be loaded correctly before the move string instruction is executed.
+  - doc: sdm
+    at: 1403
+    units: [669c777084]
+    part: Description
+    quotes:
+      669c777084: The MOVS, MOVSB, MOVSW, and MOVSD instructions can be preceded by the REP prefix (see
+        "REP—Repeat String Operation (Prefix)" for a description of the REP prefix) for block moves of
+        ECX bytes, words, or doublewords.
   - doc: sdm
     at: 1852
     units: [20668b35cf, 06e40ebb3c]
     part: Opcode table
     note: From the REP entry.
+    quotes:
+      20668b35cf: F3 A4 | REP MOVS m8, m8 | ZO | Valid | Valid | Move (count) bytes from (src) to (dest).
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
 - id: edc2c2debb
   gist: 'Copying in larger units: rep movsq moves 8 bytes per repetition…'
   how: derived
@@ -97,13 +253,24 @@ claims:
     units: [0c64d483ab, 06e40ebb3c]
     part: Opcode table
     note: From the REP entry.
+    quotes:
+      0c64d483ab: F3 REX.W A5 | REP MOVS m64, m64 | ZO | Valid | N.E. | Move (count) quadwords from (src)
+        to (dest).
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
   - {doc: sdm, at: 1404, units: [fe15d9ed9c], part: Operation}
 - id: 05af02f995
   gist: Moving data backwards (overlapping buffers) by setting DF with…
   how: derived
   note: DF = 1 makes the pointers decrement.
   support:
-  - {doc: sdm, at: 1402, units: [521ccda726], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [521ccda726]
+    part: Description
+    quotes:
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
 - id: c4e7645b39
   gist: The registers are fixed.
   how: editorial
@@ -111,11 +278,27 @@ claims:
 - id: 116e07028e
   gist: The source is always rsi and the destination always rdi; where…
   support:
-  - {doc: sdm, at: 1402, units: [e110fe19a2, 42da7b21c8, 6424b167c6], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [e110fe19a2, 42da7b21c8, 6424b167c6]
+    part: Description
+    quotes:
+      e110fe19a2: The explicit-operands form (specified with the MOVS mnemonic) allows the source and
+        destination operands to be specified explicitly.
+      42da7b21c8: This explicit-operands form is provided to allow documentation; however, note that the
+        documentation provided by this form can be misleading.
+      6424b167c6: The locations of the source and destination operands are always specified by the DS:(E)SI
+        and ES:(E)DI registers, which must be loaded correctly before the move string instruction is executed.
 - id: 13c3f59f69
   gist: 'The SDM warns that this form can be misleading: the addresses a…'
   support:
-  - {doc: sdm, at: 1402, units: [42da7b21c8], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [42da7b21c8]
+    part: Description
+    quotes:
+      42da7b21c8: This explicit-operands form is provided to allow documentation; however, note that the
+        documentation provided by this form can be misleading.
 - id: 4c10629fdb
   gist: rcx counts elements, not bytes.
   how: derived
@@ -126,18 +309,32 @@ claims:
     units: [06e40ebb3c]
     part: Description
     note: 'From the REP entry: the count register is decremented per repetition.'
+    quotes:
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
   - {doc: sdm, at: 1853, units: [db6803bf6f], part: Operation}
 - id: 3b8950745f
   gist: rep movsq with rcx = 8 copies 64 bytes.
   how: derived
   note: 8 repetitions of 8 bytes.
   support:
-  - {doc: sdm, at: 1402, units: [237cf183b4], part: Opcode table}
+  - doc: sdm
+    at: 1402
+    units: [237cf183b4]
+    part: Opcode table
+    quotes:
+      237cf183b4: REX.W + A5 | MOVS m64, m64 | ZO | Valid | N.E. | Move qword from address (R|E)SI to
+        (R|E)DI.
   - doc: sdm
     at: 1852
     units: [0c64d483ab, 06e40ebb3c]
     part: Opcode table
     note: From the REP entry.
+    quotes:
+      0c64d483ab: F3 REX.W A5 | REP MOVS m64, m64 | ZO | Valid | N.E. | Move (count) quadwords from (src)
+        to (dest).
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
 - id: 7d55aa68ba
   gist: Overlap needs the right direction.
   how: editorial
@@ -148,14 +345,30 @@ claims:
   ref: tests/asm/regs.asm
   note: copy_bytes on "abcdef" (4 bytes from offset 0 to offset 2) gives "ababab" in `make verify-asm`.
   support:
-  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [151a8cbd68, 521ccda726]
+    part: Description
+    quotes:
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
 - id: 918aa41d56
   gist: Copy backwards instead, starting at the last element with DF =…
   how: run
   ref: tests/asm/regs.asm
   note: copy_backward on "abcdef" gives "ababcd" in `make verify-asm`.
   support:
-  - {doc: sdm, at: 1402, units: [151a8cbd68, 521ccda726], part: Description}
+  - doc: sdm
+    at: 1402
+    units: [151a8cbd68, 521ccda726]
+    part: Description
+    quotes:
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
 - id: f3cb3069c2
   gist: Restore DF with cld afterwards; the System V ABI requires it cl…
   how: derived
@@ -166,7 +379,16 @@ claims:
     units: [4929d2daf8]
     part: 3.2.1 Registers and the Stack Frame
     note: 'System V ABI 3.2.1: DF must be clear on function entry and return.'
-  - {doc: sdm, at: 1402, units: [521ccda726], part: Description}
+    quotes:
+      4929d2daf8: 6 The direction flag DF in the %rFLAGS register must be clear (set to "forward" direction)
+        on function entry and return.
+  - doc: sdm
+    at: 1402
+    units: [521ccda726]
+    part: Description
+    quotes:
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
 - id: eda58ae357
   gist: movsd is ambiguous.
   how: editorial
@@ -174,12 +396,21 @@ claims:
 - id: fe49d176d4
   gist: With no operands it is this string instruction; with xmm operan…
   support:
-  - {doc: sdm, at: 1402, units: [6c31a318f9], part: Opcode table}
+  - doc: sdm
+    at: 1402
+    units: [6c31a318f9]
+    part: Opcode table
+    quotes:
+      6c31a318f9: A5 | MOVSD | ZO | Valid | Valid | For legacy mode, move dword from address DS:(E)SI
+        to ES:(E)DI. For 64-bit mode move dword from address (R|E)SI to (R|E)DI.
   - doc: sdm
     at: 1393
     units: [16ad2ce5ce]
     part: Opcode table
     note: From the SSE2 MOVSD entry.
+    quotes:
+      16ad2ce5ce: F2 0F 10 /r MOVSD xmm1, xmm2 | A | V/V | SSE2 | Move scalar double precision floating-point
+        value from xmm2 to xmm1 register.
 - id: fd4a019142
   gist: Faults.
   how: editorial
@@ -187,7 +418,13 @@ claims:
 - id: 2cdc2e0f1f
   gist: 'A non-canonical address raises #GP(0) and an unmapped page a pa…'
   support:
-  - {doc: sdm, at: 1405, units: [33920ea836, 9bf63f56fc], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1405
+    units: [33920ea836, 9bf63f56fc]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      33920ea836: '#GP(0) If the memory address is in a non-canonical form.'
+      9bf63f56fc: '#PF(fault-code) If a page fault occurs.'
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -196,14 +433,27 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 6a8d2aa4f2
   gist: Alignment checking (#AC) applies at privilege level 3 if enable…
   support:
-  - {doc: sdm, at: 1405, units: [50f5a60140], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1405
+    units: [50f5a60140]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      50f5a60140: '#AC(0) If alignment checking is enabled and an unaligned memory reference is made while
+        the current privilege level is 3.'
 - id: 46be064fa9
   gist: It never changes the flags.
   support:
-  - {doc: sdm, at: 1404, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1404
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: fcfc46ecd5
   gist: 'copy_bytes: ; void copy_bytes(void dst, const void src, size_t…'
   how: run

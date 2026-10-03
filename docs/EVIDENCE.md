@@ -30,15 +30,24 @@ deliberately does not count examples and advice, so a page of opinions cannot lo
 
 ## The design, and why
 
-**The ledger stores pointers, never source text.** Intel's manual, the System V ABI and Microsoft's pages are
-copyrighted, and `CLAUDE.md` forbids pasting or closely paraphrasing them. So a ledger entry is
-`(document, page or section, fingerprint of the sentence)`. The passage appears on the evidence page only
-where the reader has their own copy of the document (the git-ignored files in `docs/`, see README). On a
-deployment, which has no such files, the page shows the citations and the coverage, with *"the passage is not
-shown on this server"*. Nothing in the repository or the container image contains a sentence of a source.
+**The ledger quotes the cited sentence, and nothing more.** Each pointer is
+`(document, page or section, fingerprint of the sentence)` plus a short attributed quotation of that one
+sentence or table row (`quotes`, keyed by fingerprint). The owner decided (2026-10-03) that a short quotation
+used to show the evidence for a statement is acceptable under the right of quotation. The limits that keep it a
+quotation and not a reproduction are enforced by code and by `docx86 evidence check`:
 
-If the owner decides that short quotes are acceptable (a policy and legal call, not a technical one), the
-only change needed is an optional `quote` field on `Support` and rendering it when the document is absent.
+- only a **sentence or a table row**, at most `MAX_QUOTE` (400) characters; the median is 87;
+- **never pseudocode** (the SDM's *Operation* blocks) and never a long run-on table or figure: those are cited
+  by document and page only, and the page says so;
+- always shown with its **document, page and heading** (and the licence for Wikibooks);
+- the **surrounding text** (the neighbouring sentences of the paragraph) is *not* stored. It is rendered only
+  from a copy of the document on the reader's machine (the git-ignored files in `docs/`, see README).
+
+A quote is verified against its own fingerprint, so it cannot differ from the sentence it claims to be, and
+`check --no-sources` can verify every quote without any document. Page text itself (instruction pages and
+articles) stays original: the rule against pasting or closely paraphrasing source prose still applies to it.
+Not a lawyer's opinion: if the policy changes, delete the `quotes:` keys (`docx86 evidence quote` re-adds them) and
+the pages fall back to pointers.
 
 **Claims are identified by the fingerprint of their wording.** `textunits.digest` lower-cases, drops everything
 but letters and digits and hashes the result (10 hex characters). So evidence survives reformatting
@@ -83,6 +92,8 @@ claims:
   - doc: sdm                      # sdm | sysv | msx64 | msstack | wikibooks
     at: 1695                      # PDF page where the sentence STARTS; for web documents, a section title
     units: [3054813a7d]           # fingerprints of the cited sentences / rows
+    quotes:                       # the cited sentences themselves (see "The design"); filled by `evidence quote`
+      3054813a7d: '#UD If CPUID.01H:ECX.POPCNT[23] = 0.'
     part: 64-Bit Mode Exceptions  # display hint; also picks the occurrence when the SDM repeats a sentence
     note: The #UD condition names the CPUID bit.
     # by: llm                     # default; auto | match | llm | human
@@ -170,6 +181,7 @@ docx86 evidence status [slug]          coverage of every page, or the claims of 
 docx86 evidence show <slug> [--only STATE ...]    claims with the passages they cite (needs the documents for text)
 docx86 evidence find <doc> [page|section] [--grep T] [--full]   citable sentences with fingerprints
 docx86 evidence cite <slug> <claim> --doc D --at P (--unit ID,.. | --grep T) [--part X] [--by llm|human] [--note N]
+docx86 evidence quote <slug>|--all [--refresh]   store a short quotation of every cited sentence (needs the documents)
 docx86 evidence mark <slug> <claim>... --as derived|run|illustrative|editorial|external [--note N] [--ref F]
 docx86 evidence retarget <slug> <stale-id> <claim>     carry a reworded claim's evidence onto its new text
 docx86 evidence prune [slug]           drop the evidence of claims that no longer exist
@@ -191,7 +203,7 @@ lexically only).
 | `GET /evidence` | Overview: every page's coverage, the states explained. |
 | `GET /instructions/{name}/evidence`, `/articles/{slug}/evidence` | The claims of a page with their sources. `?state=traced` (any state name) filters. Aliases redirect like the page. |
 | `GET /api/evidence` | JSON totals and per-page counts. |
-| `GET /api/evidence/{instructions\|articles}/{slug}` | JSON: every claim with state, `how`, `note`, supports and `where`; includes the cited passage text **only** on a machine that has the document. |
+| `GET /api/evidence/{instructions\|articles}/{slug}` | JSON: every claim with state, `how`, `note`, supports with their `quotes` and `where`; the surrounding `passage` text **only** on a machine that has the document. |
 
 The pages need no JavaScript. They are read-only; nothing a visitor does changes a ledger.
 

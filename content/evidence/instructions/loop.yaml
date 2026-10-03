@@ -6,50 +6,129 @@ claims:
 - id: 074abc71a8
   gist: Decrements RCX and jumps to a nearby label while it is not zero…
   support:
-  - {doc: sdm, at: 1274, units: [e56f131544, ba50f7f285, 0883627735, 85076631a8], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [e56f131544, ba50f7f285, 0883627735, 85076631a8]
+    part: Description
+    quotes:
+      e56f131544: Performs a loop operation using the RCX, ECX or CX register as a counter (depending
+        on whether address size is 64 bits, 32 bits, or 16 bits).
+      ba50f7f285: Each time the LOOP instruction is executed, the count register is decremented, then
+        checked for 0.
+      0883627735: If the count is not zero, a near jump is performed to the destination (target) operand,
+        which is presumably the instruction at the beginning of the loop.
+      85076631a8: Some forms of the loop instruction (LOOPcc) also accept the ZF flag as a condition for
+        terminating the loop before the count reaches zero.
 - id: fd59e2192c
   gist: Also written as LOOPE, LOOPZ, LOOPNE, LOOPNZ.
   support:
-  - {doc: sdm, at: 1274, units: [4c8b7a55bb, '7918710104', 31de0e563f, d5505ad786], part: Opcode table}
+  - doc: sdm
+    at: 1274
+    units: [4c8b7a55bb, '7918710104', 31de0e563f, d5505ad786]
+    part: Opcode table
+    quotes:
+      4c8b7a55bb: E1 cb | LOOPE rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0 and
+        ZF = 1.
+      '7918710104': E0 cb | LOOPNE rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0
+        and ZF = 0.
 - id: cb0a2c005c
   gist: LOOP rel8 is encoded as E2 cb.
   support:
-  - {doc: sdm, at: 1274, units: [f23d95e661], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1274
+    units: [f23d95e661]
+    part: Opcode table
+    by: match
+    quotes:
+      f23d95e661: E2 cb | LOOP rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0.
 - id: 7996b2ec72
   gist: rcx -= 1; jump if rcx != 0.
   support:
-  - {doc: sdm, at: 1274, units: [f23d95e661, ba50f7f285], part: Opcode table}
+  - doc: sdm
+    at: 1274
+    units: [f23d95e661, ba50f7f285]
+    part: Opcode table
+    quotes:
+      f23d95e661: E2 cb | LOOP rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0.
+      ba50f7f285: Each time the LOOP instruction is executed, the count register is decremented, then
+        checked for 0.
 - id: 1e658e97c4
   gist: The target must lie within -128..+127 bytes of the next instruc…
   how: derived
   note: The offset is a signed byte, -128 to +127, relative to the instruction pointer ('the next instruction'
     is the usual base).
   support:
-  - {doc: sdm, at: 1274, units: [2f189ab937, 1f1940a9c5, b9a439db72], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [2f189ab937, 1f1940a9c5, b9a439db72]
+    part: Description
+    quotes:
+      2f189ab937: This offset is generally specified as a label in assembly code, but at the machine code
+        level, it is encoded as a signed, 8-bit immediate value, which is added to the instruction pointer.
+      1f1940a9c5: Offsets of –128 to +127 are allowed with this instruction.
+      b9a439db72: The target instruction is specified with a relative offset (a signed offset relative
+        to the current value of the instruction pointer in the IP/EIP/RIP register).
 - id: 00a620ec2a
   gist: LOOPE rel8 is encoded as E1 cb.
   support:
-  - {doc: sdm, at: 1274, units: [4c8b7a55bb], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1274
+    units: [4c8b7a55bb]
+    part: Opcode table
+    by: match
+    quotes:
+      4c8b7a55bb: E1 cb | LOOPE rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0 and
+        ZF = 1.
 - id: 1dd667a67e
   gist: Also LOOPZ. rcx -= 1; jump if rcx != 0 and ZF = 1.
   support:
-  - {doc: sdm, at: 1274, units: [4c8b7a55bb, 31de0e563f, 9aba3b3ad6], part: Opcode table}
+  - doc: sdm
+    at: 1274
+    units: [4c8b7a55bb, 31de0e563f, 9aba3b3ad6]
+    part: Opcode table
+    quotes:
+      4c8b7a55bb: E1 cb | LOOPE rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0 and
+        ZF = 1.
 - id: b18de3b756
   gist: LOOPNE rel8 is encoded as E0 cb.
   support:
-  - {doc: sdm, at: 1274, units: ['7918710104'], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1274
+    units: ['7918710104']
+    part: Opcode table
+    by: match
+    quotes:
+      '7918710104': E0 cb | LOOPNE rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0
+        and ZF = 0.
 - id: 51c7430b5b
   gist: Also LOOPNZ. rcx -= 1; jump if rcx != 0 and ZF = 0.
   support:
-  - {doc: sdm, at: 1274, units: ['7918710104', d5505ad786, 9f5dc2f7f7], part: Opcode table}
+  - doc: sdm
+    at: 1274
+    units: ['7918710104', d5505ad786, 9f5dc2f7f7]
+    part: Opcode table
+    quotes:
+      '7918710104': E0 cb | LOOPNE rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0
+        and ZF = 0.
 - id: 70f7c63d67
   gist: 'Flags read: ZF.'
   support:
-  - {doc: sdm, at: 1274, units: [85076631a8], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [85076631a8]
+    part: Description
+    quotes:
+      85076631a8: Some forms of the loop instruction (LOOPcc) also accept the ZF flag as a condition for
+        terminating the loop before the count reaches zero.
 - id: a904fc46f9
   gist: No flags are modified.
   support:
-  - {doc: sdm, at: 1275, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1275
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: c8e8d68eea
   gist: LOOPE/LOOPZ read ZF (continue while ZF = 1); LOOPNE/LOOPNZ read…
   support:
@@ -58,28 +137,72 @@ claims:
   gist: LOOP itself ignores the flags.
   support:
   - {doc: sdm, at: 1274, units: [6100bab053], part: Operation}
-  - {doc: sdm, at: 1275, units: [1cf86079d9], part: Description}
+  - doc: sdm
+    at: 1275
+    units: [1cf86079d9]
+    part: Description
+    quotes:
+      1cf86079d9: IF (Count ≠ 0)
 - id: 39ab63e376
   gist: loop label subtracts 1 from the counter register rcx and then,…
   support:
-  - {doc: sdm, at: 1274, units: [ba50f7f285, 0883627735, e56f131544], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [ba50f7f285, 0883627735, e56f131544]
+    part: Description
+    quotes:
+      ba50f7f285: Each time the LOOP instruction is executed, the count register is decremented, then
+        checked for 0.
+      0883627735: If the count is not zero, a near jump is performed to the destination (target) operand,
+        which is presumably the instruction at the beginning of the loop.
+      e56f131544: Performs a loop operation using the RCX, ECX or CX register as a counter (depending
+        on whether address size is 64 bits, 32 bits, or 16 bits).
 - id: 91cc555d7e
   gist: When rcx reaches zero execution falls through to the next instr…
   support:
-  - {doc: sdm, at: 1274, units: [cb1b6111eb], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [cb1b6111eb]
+    part: Description
+    quotes:
+      cb1b6111eb: If the count is 0, the loop is terminated and program execution continues with the instruction
+        following the LOOP instruction.
 - id: b039f28453
   gist: It does the counting and the branching in one instruction and c…
   support:
-  - {doc: sdm, at: 1274, units: [ba50f7f285], part: Description}
-  - {doc: sdm, at: 1275, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1274
+    units: [ba50f7f285]
+    part: Description
+    quotes:
+      ba50f7f285: Each time the LOOP instruction is executed, the count register is decremented, then
+        checked for 0.
+  - doc: sdm
+    at: 1275
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: ddd579b50a
   gist: 'loope/loopz and loopne/loopnz add a second condition: they keep…'
   support:
-  - {doc: sdm, at: 1274, units: [85076631a8, 9aba3b3ad6, 9f5dc2f7f7], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [85076631a8, 9aba3b3ad6, 9f5dc2f7f7]
+    part: Description
+    quotes:
+      85076631a8: Some forms of the loop instruction (LOOPcc) also accept the ZF flag as a condition for
+        terminating the loop before the count reaches zero.
 - id: f490d7bc36
   gist: They only read ZF; something else inside the loop body must set…
   support:
-  - {doc: sdm, at: 1274, units: [d9fdceb6b0], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [d9fdceb6b0]
+    part: Description
+    quotes:
+      d9fdceb6b0: Here, the LOOPcc instruction itself does not affect the state of the ZF flag; the ZF
+        flag is changed by other instructions in the loop.
 - id: 82c8e0e807
   gist: 'Running a block a known number of times: put the count in rcx,…'
   how: editorial
@@ -89,7 +212,15 @@ claims:
   how: derived
   note: LOOPNE ends when the count reaches zero or ZF is set.
   support:
-  - {doc: sdm, at: 1274, units: [85076631a8, '7918710104'], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [85076631a8, '7918710104']
+    part: Description
+    quotes:
+      85076631a8: Some forms of the loop instruction (LOOPcc) also accept the ZF flag as a condition for
+        terminating the loop before the count reaches zero.
+      '7918710104': E0 cb | LOOPNE rel8 | D | Valid | Valid | Decrement count; jump short if count ≠ 0
+        and ZF = 0.
 - id: d6bba1de46
   gist: If you also need the flags from the decrement, a dec rcx / jnz…
   how: derived
@@ -100,23 +231,47 @@ claims:
     units: [7912fbaba8]
     part: Flags Affected
     note: 'From the DEC entry: DEC sets OF, SF, ZF, AF, PF.'
+    quotes:
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
   - doc: sdm
     at: 1203
     units: [adb6b698eb]
     part: Opcode table
     note: 'From the Jcc entry: JNZ.'
+    quotes:
+      adb6b698eb: 75 cb | JNZ rel8 | D | Valid | Valid | Jump short if not zero (ZF=0).
 - id: 91b92e05f0
   gist: The counter is rcx in 64-bit mode (ecx only if you add a 67h ad…
   support:
-  - {doc: sdm, at: 1274, units: [e56f131544, 982791d096], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [e56f131544, 982791d096]
+    part: Description
+    quotes:
+      e56f131544: Performs a loop operation using the RCX, ECX or CX register as a counter (depending
+        on whether address size is 64 bits, 32 bits, or 16 bits).
+      982791d096: Note that the LOOP instruction ignores REX.W; but 64-bit address size can be over-ridden
+        using a 67H prefix.
 - id: 37dca575dd
   gist: loop ignores REX.W, so there is no separate 64-bit form to choo…
   support:
-  - {doc: sdm, at: 1274, units: [982791d096], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [982791d096]
+    part: Description
+    quotes:
+      982791d096: Note that the LOOP instruction ignores REX.W; but 64-bit address size can be over-ridden
+        using a 67H prefix.
 - id: 9cf9056c38
   gist: It decrements first, then tests.
   support:
-  - {doc: sdm, at: 1274, units: [ba50f7f285], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [ba50f7f285]
+    part: Description
+    quotes:
+      ba50f7f285: Each time the LOOP instruction is executed, the count register is decremented, then
+        checked for 0.
 - id: b8f78228b8
   gist: Entering the loop with rcx = 0 wraps it to all ones, so the bod…
   how: derived
@@ -128,6 +283,8 @@ claims:
     units: [91321adf4a]
     part: Description
     note: 'From the Jcc entry: a loop entered with a zero count.'
+    quotes:
+      91321adf4a: This would cause the loop to execute 264, 232 or 64K times (not zero times).
 - id: a0f9a04421
   gist: Check for zero first (see jrcxz in jcc).
   support:
@@ -136,6 +293,11 @@ claims:
     units: [3f56e86b1f, 77626ba505]
     part: Description
     note: From the Jcc entry (JRCXZ).
+    quotes:
+      3f56e86b1f: They can be used to prevent an instruction sequence from entering a loop when RCX, ECX
+        or CX is 0.
+      77626ba505: These instructions are useful when used at the beginning of a loop that terminates with
+        a conditional loop instruction (such as LOOPNE).
 - id: e6dfdf6d48
   gist: Short range only.
   how: editorial
@@ -143,13 +305,25 @@ claims:
 - id: 9b49167706
   gist: 'The target is an 8-bit signed offset: -128 to +127 bytes from t…'
   support:
-  - {doc: sdm, at: 1274, units: [2f189ab937, 1f1940a9c5], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [2f189ab937, 1f1940a9c5]
+    part: Description
+    quotes:
+      2f189ab937: This offset is generally specified as a label in assembly code, but at the machine code
+        level, it is encoded as a signed, 8-bit immediate value, which is added to the instruction pointer.
+      1f1940a9c5: Offsets of –128 to +127 are allowed with this instruction.
 - id: 3b911b7c95
   gist: A loop body longer than that cannot use loop; use dec rcx and j…
   how: derived
   note: Offsets beyond -128..+127 are not allowed; DEC and JNZ are the alternative.
   support:
-  - {doc: sdm, at: 1274, units: [1f1940a9c5], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [1f1940a9c5]
+    part: Description
+    quotes:
+      1f1940a9c5: Offsets of –128 to +127 are allowed with this instruction.
 - id: b17cc5d91c
   gist: Mind the flags inside the body.
   how: editorial
@@ -157,7 +331,13 @@ claims:
 - id: c1cd39067f
   gist: loope/loopne use the ZF left by the last flag-setting instructi…
   support:
-  - {doc: sdm, at: 1274, units: [d9fdceb6b0], part: Description}
+  - doc: sdm
+    at: 1274
+    units: [d9fdceb6b0]
+    part: Description
+    quotes:
+      d9fdceb6b0: Here, the LOOPcc instruction itself does not affect the state of the ZF flag; the ZF
+        flag is changed by other instructions in the loop.
 - id: 00c806caa6
   gist: Use lea instead of add/inc for pointer stepping there, because…
   how: derived
@@ -168,20 +348,32 @@ claims:
     units: [71f8e7976e]
     part: Flags Affected
     note: 'From the LEA entry: Flags Affected is None.'
+    quotes:
+      71f8e7976e: None.
   - doc: sdm
     at: 719
     units: [0647a2eb37]
     part: Flags Affected
     note: 'From the ADD entry: flags are set.'
+    quotes:
+      0647a2eb37: The OF, SF, ZF, AF, CF, and PF flags are set according to the result.
   - doc: sdm
     at: 1161
     units: [7912fbaba8]
     part: Flags Affected
     note: From the INC entry.
+    quotes:
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
 - id: 6d01f0731d
   gist: 'A non-canonical target raises #GP(0), and a lock prefix is inva…'
   support:
-  - {doc: sdm, at: 1276, units: [6e241b8bc2, 2166ae34ad], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1276
+    units: [6e241b8bc2, 2166ae34ad]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      6e241b8bc2: '#GP(0) If the offset being jumped to is in a non-canonical form.'
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 103a9025e0
   gist: 'mov ecx, 10 ; writes rcx (upper half zeroed): the body runs 10…'
   how: illustrative

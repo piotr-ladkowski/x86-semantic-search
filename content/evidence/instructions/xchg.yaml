@@ -6,47 +6,113 @@ claims:
 - id: a69b11e815
   gist: Swaps the contents of two operands; with a memory operand the s…
   support:
-  - {doc: sdm, at: 2865, units: [ca83ccf7cb, 44ce533a52], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [ca83ccf7cb, 44ce533a52]
+    part: Description
+    quotes:
+      ca83ccf7cb: Exchanges the contents of the destination (first) and source (second) operands.
+      44ce533a52: If a memory operand is referenced, the processor's locking protocol is automatically
+        implemented for the duration of the exchange operation, regardless of the presence or absence
+        of the LOCK prefix or of the value of the IOPL.
 - id: 1582c21e9d
   gist: XCHG r/m64, r64 is encoded as REX.W + 87 /r.
   support:
-  - {doc: sdm, at: 2865, units: [707f56e07c], part: Opcode table, by: match}
+  - doc: sdm
+    at: 2865
+    units: [707f56e07c]
+    part: Opcode table
+    by: match
+    quotes:
+      707f56e07c: REX.W + 87 /r | XCHG r/m64, r64 | MR | Valid | N.E. | Exchange r64 with quadword from
+        r/m64.
 - id: fe3c0fef87
   gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W; t…
   support:
-  - {doc: sdm, at: 2865, units: [b03f173310, c115d16c32, 8f79d1c080, 707f56e07c], part: Opcode table}
+  - doc: sdm
+    at: 2865
+    units: [b03f173310, c115d16c32, 8f79d1c080, 707f56e07c]
+    part: Opcode table
+    quotes:
+      b03f173310: 86 /r | XCHG r/m8[1], r8[1] | MR | Valid | Valid | Exchange r8 (byte register) with
+        byte from r/m8.
+      c115d16c32: 87 /r | XCHG r/m16, r16 | MR | Valid | Valid | Exchange r16 with word from r/m16.
+      8f79d1c080: 87 /r | XCHG r/m32, r32 | MR | Valid | Valid | Exchange r32 with doubleword from r/m32.
+      707f56e07c: REX.W + 87 /r | XCHG r/m64, r64 | MR | Valid | N.E. | Exchange r64 with quadword from
+        r/m64.
 - id: 091dcc7275
   gist: XCHG r64, r/m64 is encoded as REX.W + 87 /r.
   support:
-  - {doc: sdm, at: 2865, units: [ea13f8c0e2], part: Opcode table, by: match}
+  - doc: sdm
+    at: 2865
+    units: [ea13f8c0e2]
+    part: Opcode table
+    by: match
+    quotes:
+      ea13f8c0e2: REX.W + 87 /r | XCHG r64, r/m64 | RM | Valid | N.E. | Exchange quadword from r/m64 with
+        r64.
 - id: 4864ac9e5a
   gist: XCHG RAX, r64 is encoded as REX.W + 90+ rd.
   support:
-  - {doc: sdm, at: 2865, units: [10dbbaa128], part: Opcode table, by: match}
+  - doc: sdm
+    at: 2865
+    units: [10dbbaa128]
+    part: Opcode table
+    by: match
+    quotes:
+      10dbbaa128: REX.W + 90+rd | XCHG RAX, r64 | O | Valid | N.E. | Exchange r64 with RAX.
 - id: cb71aebd2f
   gist: Short form for exchanging with the accumulator.
   how: derived
   note: The 90+rd rows (operand encoding O) have no ModRM byte, unlike the 87 /r rows.
   support:
-  - {doc: sdm, at: 2865, units: [10dbbaa128, 978eaeea73, 707f56e07c], part: Opcode table}
+  - doc: sdm
+    at: 2865
+    units: [10dbbaa128, 978eaeea73, 707f56e07c]
+    part: Opcode table
+    quotes:
+      10dbbaa128: REX.W + 90+rd | XCHG RAX, r64 | O | Valid | N.E. | Exchange r64 with RAX.
+      978eaeea73: O | AX/EAX/RAX (r, w) | opcode + rd (r, w) | N/A | N/A
+      707f56e07c: REX.W + 87 /r | XCHG r/m64, r64 | MR | Valid | N.E. | Exchange r64 with quadword from
+        r/m64.
 - id: 6da199390e
   gist: No flags are affected.
   support:
-  - {doc: sdm, at: 2866, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 2866
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 7443a3d1d7
   gist: xchg a, b swaps the contents of its two operands in one instruc…
   support:
-  - {doc: sdm, at: 2865, units: [ca83ccf7cb], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [ca83ccf7cb]
+    part: Description
+    quotes:
+      ca83ccf7cb: Exchanges the contents of the destination (first) and source (second) operands.
 - id: 43673e5035
   gist: The operands can be two registers, or a register and a memory l…
   support:
-  - {doc: sdm, at: 2865, units: [3ded2d78a8], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [3ded2d78a8]
+    part: Description
+    quotes:
+      3ded2d78a8: The operands can be two general-purpose registers or a register and a memory location.
 - id: 4eca061148
   gist: No temporary register is needed.
   how: derived
   note: One instruction exchanges both operands' contents.
   support:
-  - {doc: sdm, at: 2865, units: [ca83ccf7cb], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [ca83ccf7cb]
+    part: Description
+    quotes:
+      ca83ccf7cb: Exchanges the contents of the destination (first) and source (second) operands.
 - id: '7735743173'
   gist: 'Swapping two registers: xchg rax, rbx.'
   how: editorial
@@ -54,34 +120,83 @@ claims:
 - id: '3264639983'
   gist: An atomic swap with memory, the basis of simple spinlocks and f…
   support:
-  - {doc: sdm, at: 2865, units: [44ce533a52, 4cae271e38], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [44ce533a52, 4cae271e38]
+    part: Description
+    quotes:
+      44ce533a52: If a memory operand is referenced, the processor's locking protocol is automatically
+        implemented for the duration of the exchange operation, regardless of the presence or absence
+        of the LOCK prefix or of the value of the IOPL.
+      4cae271e38: This instruction is useful for implementing semaphores or similar data structures for
+        process synchronization.
 - id: ea6e0fcbe2
   gist: Swapping the two bytes of a 16-bit value (xchg al, ah), which t…
   support:
-  - {doc: sdm, at: 2865, units: [745740d535], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [745740d535]
+    part: Description
+    quotes:
+      745740d535: The XCHG instruction can also be used instead of the BSWAP instruction for 16-bit operands.
 - id: c9d273ab54
   gist: A memory operand makes it atomic.
   support:
-  - {doc: sdm, at: 2865, units: [44ce533a52], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [44ce533a52]
+    part: Description
+    quotes:
+      44ce533a52: If a memory operand is referenced, the processor's locking protocol is automatically
+        implemented for the duration of the exchange operation, regardless of the presence or absence
+        of the LOCK prefix or of the value of the IOPL.
 - id: 9f6684beda
   gist: The locking protocol is applied automatically, with or without…
   support:
-  - {doc: sdm, at: 2865, units: [44ce533a52], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [44ce533a52]
+    part: Description
+    quotes:
+      44ce533a52: If a memory operand is referenced, the processor's locking protocol is automatically
+        implemented for the duration of the exchange operation, regardless of the presence or absence
+        of the LOCK prefix or of the value of the IOPL.
 - id: 696a728bbf
   gist: That gives you an atomic swap for free, but it also means an xc…
   how: derived
   note: The locking protocol (bus locking) is applied for the exchange; 'not a plain load and store' is
     the consequence.
   support:
-  - {doc: sdm, at: 2865, units: [44ce533a52, 37b5cf9bb5], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [44ce533a52, 37b5cf9bb5]
+    part: Description
+    quotes:
+      44ce533a52: If a memory operand is referenced, the processor's locking protocol is automatically
+        implemented for the duration of the exchange operation, regardless of the presence or absence
+        of the LOCK prefix or of the value of the IOPL.
+      37b5cf9bb5: (See "Bus Locking" in Chapter 9 of the Intel® 64 and IA-32 Architectures Software Developer's
+        Manual, Volume 3A, for more information on bus locking.)
 - id: 4f2a2478f6
   gist: xchg eax, eax is the NOP.
   support:
-  - {doc: sdm, at: 2865, units: [fa9a0d145c], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [fa9a0d145c]
+    part: Description
+    quotes:
+      fa9a0d145c: XCHG (E)AX, (E)AX (encoded instruction byte is 90H) is an alias for NOP regardless of
+        data size prefixes, including REX.W.
 - id: e2def52377
   gist: The one-byte 90 encoding is defined as nop regardless of operan…
   support:
-  - {doc: sdm, at: 2865, units: [fa9a0d145c], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [fa9a0d145c]
+    part: Description
+    quotes:
+      fa9a0d145c: XCHG (E)AX, (E)AX (encoded instruction byte is 90H) is an alias for NOP regardless of
+        data size prefixes, including REX.W.
   - doc: sdm
     at: 1449
     units: [98d2106df1]
@@ -92,6 +207,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: ea0528de46
   gist: (Other 32-bit exchanges zero-extend both registers as usual.)
   how: derived
@@ -102,7 +220,16 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
-  - {doc: sdm, at: 2865, units: [65879f1979, 61ad7789f7], part: Opcode table}
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
+  - doc: sdm
+    at: 2865
+    units: [65879f1979, 61ad7789f7]
+    part: Opcode table
+    quotes:
+      65879f1979: 90+rd | XCHG EAX, r32 | O | Valid | Valid | Exchange r32 with EAX.
+      61ad7789f7: 90+rd | XCHG r32, EAX | O | Valid | Valid | Exchange EAX with r32.
 - id: ab09fc2c1f
   gist: A lock prefix with two register operands is invalid (#UD); lock…
   support:
@@ -111,15 +238,34 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: '#UD for a LOCK prefix with a destination that is not memory.'
-  - {doc: sdm, at: 2865, units: [44ce533a52], part: Description}
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
+  - doc: sdm
+    at: 2865
+    units: [44ce533a52]
+    part: Description
+    quotes:
+      44ce533a52: If a memory operand is referenced, the processor's locking protocol is automatically
+        implemented for the duration of the exchange operation, regardless of the presence or absence
+        of the LOCK prefix or of the value of the IOPL.
 - id: 16631dc74c
   gist: At most one memory operand.
   support:
-  - {doc: sdm, at: 2865, units: [3ded2d78a8], part: Description}
+  - doc: sdm
+    at: 2865
+    units: [3ded2d78a8]
+    part: Description
+    quotes:
+      3ded2d78a8: The operands can be two general-purpose registers or a register and a memory location.
 - id: bc59e97081
   gist: It does not change the flags.
   support:
-  - {doc: sdm, at: 2866, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 2866
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: ecec7651c7
   gist: 'xchg rax, rbx ; swap two registers xchg [rdi], rax ; atomic: ra…'
   how: illustrative

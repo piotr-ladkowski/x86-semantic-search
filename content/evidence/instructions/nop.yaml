@@ -6,15 +6,33 @@ claims:
 - id: '4929347947'
   gist: Does nothing except occupy one or more bytes in the instruction…
   support:
-  - {doc: sdm, at: 1449, units: [777fd356e2, b06b91a9b1], part: Description}
+  - doc: sdm
+    at: 1449
+    units: [777fd356e2, b06b91a9b1]
+    part: Description
+    quotes:
+      777fd356e2: This instruction performs no operation.
+      b06b91a9b1: It is a one-byte or multi-byte NOP that takes up space in the instruction stream but
+        does not impact machine context, except for the EIP register.
 - id: 36da571250
   gist: NOP is encoded as 90.
   support:
-  - {doc: sdm, at: 1449, units: [164f020820], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1449
+    units: [164f020820]
+    part: Opcode table
+    by: match
+    quotes:
+      164f020820: NP 90 | NOP | ZO | Valid | Valid | One byte no-operation instruction.
 - id: c9cf013c74
   gist: One byte.
   support:
-  - {doc: sdm, at: 1449, units: [164f020820], part: Opcode table}
+  - doc: sdm
+    at: 1449
+    units: [164f020820]
+    part: Opcode table
+    quotes:
+      164f020820: NP 90 | NOP | ZO | Valid | Valid | One byte no-operation instruction.
 - id: 228c3d29f1
   gist: This is the encoding of XCHG (E)AX, (E)AX, treated as a NOP.
   support:
@@ -24,34 +42,78 @@ claims:
     units: [fa9a0d145c]
     part: Description
     note: From the XCHG entry.
+    quotes:
+      fa9a0d145c: XCHG (E)AX, (E)AX (encoded instruction byte is 90H) is an alias for NOP regardless of
+        data size prefixes, including REX.W.
 - id: 7fd54ebada
   gist: NOP r/m32 is encoded as 0F 1F /0.
   support:
-  - {doc: sdm, at: 1449, units: [a532278e50], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1449
+    units: [a532278e50]
+    part: Opcode table
+    by: match
+    quotes:
+      a532278e50: NP 0F 1F /0 | NOP r/m32 | M | Valid | Valid | Multi-byte no-operation instruction.
 - id: e221e9cc80
   gist: Multi-byte NOP (also r/m16).
   support:
-  - {doc: sdm, at: 1449, units: [9efc07e23a, a532278e50], part: Opcode table}
+  - doc: sdm
+    at: 1449
+    units: [9efc07e23a, a532278e50]
+    part: Opcode table
+    quotes:
+      9efc07e23a: NP 0F 1F /0 | NOP r/m16 | M | Valid | Valid | Multi-byte no-operation instruction.
+      a532278e50: NP 0F 1F /0 | NOP r/m32 | M | Valid | Valid | Multi-byte no-operation instruction.
 - id: f1710dbb0b
   gist: Reads and writes nothing and issues no memory access, whatever…
   support:
-  - {doc: sdm, at: 1449, units: [82fa88aa00], part: Description}
+  - doc: sdm
+    at: 1449
+    units: [82fa88aa00]
+    part: Description
+    quotes:
+      82fa88aa00: The multi-byte NOP instruction does not alter the content of a register and will not
+        issue a memory operation.
 - id: 6da199390e
   gist: No flags are affected.
   support:
-  - {doc: sdm, at: 1449, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1449
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: ec0034de00
   gist: nop performs no operation.
   support:
-  - {doc: sdm, at: 1449, units: [777fd356e2], part: Description}
+  - doc: sdm
+    at: 1449
+    units: [777fd356e2]
+    part: Description
+    quotes:
+      777fd356e2: This instruction performs no operation.
 - id: 578eaa3632
   gist: It changes no register, flag or memory; the only state that mov…
   support:
-  - {doc: sdm, at: 1449, units: [b06b91a9b1, 71f8e7976e], part: Description}
+  - doc: sdm
+    at: 1449
+    units: [b06b91a9b1, 71f8e7976e]
+    part: Description
+    quotes:
+      b06b91a9b1: It is a one-byte or multi-byte NOP that takes up space in the instruction stream but
+        does not impact machine context, except for the EIP register.
+      71f8e7976e: None.
 - id: 75e23734a4
   gist: It exists to take up space in the instruction stream.
   support:
-  - {doc: sdm, at: 1449, units: [b06b91a9b1], part: Description}
+  - doc: sdm
+    at: 1449
+    units: [b06b91a9b1]
+    part: Description
+    quotes:
+      b06b91a9b1: It is a one-byte or multi-byte NOP that takes up space in the instruction stream but
+        does not impact machine context, except for the EIP register.
 - id: 9dcc4c988c
   gist: Padding code so the next instruction or loop starts on an align…
   how: editorial
@@ -76,11 +138,19 @@ claims:
     units: [fa9a0d145c]
     part: Description
     note: From the XCHG entry.
+    quotes:
+      fa9a0d145c: XCHG (E)AX, (E)AX (encoded instruction byte is 90H) is an alias for NOP regardless of
+        data size prefixes, including REX.W.
   - {doc: sdm, at: 1449, units: [98d2106df1], part: Operation}
 - id: c04c6598e9
   gist: Longer paddings use the multi-byte form, 0F 1F /0, for which th…
   support:
-  - {doc: sdm, at: 1449, units: [9efc07e23a, 87cea4e591, 9f94e6eeef], part: Opcode table}
+  - doc: sdm
+    at: 1449
+    units: [9efc07e23a, 87cea4e591, 9f94e6eeef]
+    part: Opcode table
+    quotes:
+      9efc07e23a: NP 0F 1F /0 | NOP r/m16 | M | Valid | Valid | Multi-byte no-operation instruction.
 - id: b477c408ca
   gist: It issues no memory operation, so its "memory" operand is never…
   support:
@@ -89,6 +159,10 @@ claims:
     units: [82fa88aa00, 2166ae34ad]
     part: Description
     note: The exceptions are listed for all operating modes.
+    quotes:
+      82fa88aa00: The multi-byte NOP instruction does not alter the content of a register and will not
+        issue a memory operation.
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -97,6 +171,8 @@ claims:
     units: [2166ae34ad]
     part: Exceptions (All Operating Modes)
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: fa19c721f0
   gist: Recommended byte sequences (from the SDM) for the common length…
   support:
@@ -104,7 +180,12 @@ claims:
 - id: 3a2dc677d8
   gist: 1 | 90
   support:
-  - {doc: sdm, at: 1449, units: [164f020820], part: Opcode table}
+  - doc: sdm
+    at: 1449
+    units: [164f020820]
+    part: Opcode table
+    quotes:
+      164f020820: NP 90 | NOP | ZO | Valid | Valid | One byte no-operation instruction.
 - id: 62fb589399
   gist: 2 | 66 90
   support:
@@ -113,6 +194,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: 723c05dc6c
   gist: 3 | 0F 1F 00
   support:
@@ -121,6 +204,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: 9d46c5b719
   gist: 4 | 0F 1F 40 00
   support:
@@ -129,6 +214,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: ce8188ca38
   gist: 5 | 0F 1F 44 00 00
   support:
@@ -137,6 +224,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: 738a1894d4
   gist: 6 | 66 0F 1F 44 00 00
   support:
@@ -145,6 +234,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: f932e140d7
   gist: 7 | 0F 1F 80 00 00 00 00
   support:
@@ -153,6 +244,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: 79d64a952e
   gist: 8 | 0F 1F 84 00 00 00 00 00
   support:
@@ -161,6 +254,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: 8b143a71b5
   gist: 9 | 66 0F 1F 84 00 00 00 00 00
   support:
@@ -169,6 +264,8 @@ claims:
     units: [701e0d553d, f53e40e1c6]
     part: Table
     note: The SDM's Table 1-4; the extraction reads its columns as one row.
+    quotes:
+      f53e40e1c6: Length | Assembly | Byte Sequence
 - id: 6a891fd76e
   gist: 'nop ; 1 byte: 90 db 0x66, 0x90 ; 2 bytes: the recommended 2-byt…'
   how: illustrative

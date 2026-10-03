@@ -216,7 +216,7 @@ Multi-stage `Dockerfile` (about 640 MB):
    (stale claims, malformed ledgers). A content error fails the image build.
 3. runtime: `python:3.13-slim`, UID/GID 10001, no shell login, copies only venv + src + content + index +
    models + CSS. The reference documents (SDM, ABI, Microsoft pages), tests, Node and uv are not in it, so the evidence pages show
-   pointers but no source text there.
+   the ledger's short quotations and pointers there, but not the text around a cited sentence.
 
 Verified: the image runs with `--network none --read-only --cap-drop ALL --user 10001 --memory 512m`, becomes
 ready, serves search in about 9 ms, uses about 256 MiB, and logs no warnings.

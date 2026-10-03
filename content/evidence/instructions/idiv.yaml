@@ -6,61 +6,148 @@ claims:
 - id: fde21f5809
   gist: Divides the signed value in RDX:RAX by the operand; the quotien…
   support:
-  - {doc: sdm, at: 1152, units: [c21055875c, a8bc623d9d, f2ca4ac2a6], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [c21055875c, a8bc623d9d, f2ca4ac2a6]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
+      a8bc623d9d: RAX contains a 64-bit quotient; RDX contains a 64-bit remainder.
+      f2ca4ac2a6: REX.W + F7 /7 | IDIV r/m64 | M | Valid | N.E. | Signed divide RDX:RAX by r/m64, with
+        result stored in RAX := Quotient, RDX := Remainder.
 - id: dd8e8fe301
   gist: IDIV r/m64 is encoded as REX.W + F7 /7.
   support:
-  - {doc: sdm, at: 1152, units: [f2ca4ac2a6], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1152
+    units: [f2ca4ac2a6]
+    part: Opcode table
+    by: match
+    quotes:
+      f2ca4ac2a6: REX.W + F7 /7 | IDIV r/m64 | M | Valid | N.E. | Signed divide RDX:RAX by r/m64, with
+        result stored in RAX := Quotient, RDX := Remainder.
 - id: 4c59730686
   gist: RAX := quotient, RDX := remainder of RDX:RAX / r/m64.
   support:
-  - {doc: sdm, at: 1152, units: [f2ca4ac2a6, c21055875c], part: Opcode table}
+  - doc: sdm
+    at: 1152
+    units: [f2ca4ac2a6, c21055875c]
+    part: Opcode table
+    quotes:
+      f2ca4ac2a6: REX.W + F7 /7 | IDIV r/m64 | M | Valid | N.E. | Signed divide RDX:RAX by r/m64, with
+        result stored in RAX := Quotient, RDX := Remainder.
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
 - id: 674b0c9d83
   gist: The 32-bit form (F7 /7) divides EDX:EAX; the 8-bit form divides…
   support:
-  - {doc: sdm, at: 1152, units: [879f756f9f, 73f2b67dd1], part: Opcode table}
+  - doc: sdm
+    at: 1152
+    units: [879f756f9f, 73f2b67dd1]
+    part: Opcode table
+    quotes:
+      879f756f9f: F7 /7 | IDIV r/m32 | M | Valid | Valid | Signed divide EDX:EAX by r/m32, with result
+        stored in EAX := Quotient, EDX := Remainder.
+      73f2b67dd1: 'F6 /7 | IDIV r/m8[1] | M | Valid | Valid | Signed divide AX by r/m8, with result stored
+        in: AL := Quotient, AH := Remainder.'
 - id: 9eca3a426c
   gist: 'Flags undefined: CF, OF, SF, ZF, AF, PF.'
   support:
-  - {doc: sdm, at: 1154, units: [647ea3465f], part: Flags Affected}
+  - doc: sdm
+    at: 1154
+    units: [647ea3465f]
+    part: Flags Affected
+    quotes:
+      647ea3465f: The CF, OF, SF, ZF, AF, and PF flags are undefined.
 - id: 03450b5210
   gist: All six status flags are undefined afterwards.
   support:
-  - {doc: sdm, at: 1154, units: [647ea3465f], part: Flags Affected}
+  - doc: sdm
+    at: 1154
+    units: [647ea3465f]
+    part: Flags Affected
+    quotes:
+      647ea3465f: The CF, OF, SF, ZF, AF, and PF flags are undefined.
 - id: ce56ab9354
   gist: 'Errors are reported by the #DE exception, not by a flag.'
   support:
-  - {doc: sdm, at: 1152, units: [52f0f81ad4], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [52f0f81ad4]
+    part: Description
+    quotes:
+      52f0f81ad4: 'Overflow is indicated with the #DE (divide error) exception rather than with the CF
+        flag.'
 - id: 7138d31820
   gist: idiv src divides the signed 128-bit value in rdx:rax by src (a…
   support:
-  - {doc: sdm, at: 1152, units: [c21055875c, f2ca4ac2a6], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [c21055875c, f2ca4ac2a6]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
+      f2ca4ac2a6: REX.W + F7 /7 | IDIV r/m64 | M | Valid | N.E. | Signed divide RDX:RAX by r/m64, with
+        result stored in RAX := Quotient, RDX := Remainder.
 - id: 94958925af
   gist: The quotient is stored in rax and the remainder in rdx.
   support:
-  - {doc: sdm, at: 1152, units: [a8bc623d9d], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [a8bc623d9d]
+    part: Description
+    quotes:
+      a8bc623d9d: RAX contains a 64-bit quotient; RDX contains a 64-bit remainder.
 - id: 627ad2755b
   gist: The quotient is truncated toward zero, so a non-zero remainder…
   how: derived
   note: The SDM gives rounding toward zero and the example -9 / 4 = -2 remainder -1; the sign rule and
     the -7 / 2 case follow. divmod(-7, 2) = (-3, -1) is checked by `make verify-asm`.
   support:
-  - {doc: sdm, at: 1152, units: [9348f48605], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [9348f48605]
+    part: Description
+    quotes:
+      9348f48605: Non-integral results are truncated (chopped) towards 0.
   - doc: sdm
     at: 1893
     units: [3467acd4bc, 7fcb0b7723]
     part: Description
     note: From the shift entry, which compares SAR with IDIV.
+    quotes:
+      3467acd4bc: The quotient from the IDIV instruction is rounded toward zero, whereas the "quotient"
+        of the SAR instruction is rounded toward negative infinity.
+      7fcb0b7723: For example, when the IDIV instruction is used to divide -9 by 4, the result is -2 with
+        a remainder of -1.
 - id: 5e8fa35b14
   gist: Signed integer division and modulo in one step.
   support:
-  - {doc: sdm, at: 1152, units: [157883f6c4, c21055875c], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [157883f6c4, c21055875c]
+    part: Description
+    quotes:
+      157883f6c4: Divides the (signed) value in the AX, DX:AX, or EDX:EAX (dividend) by the source operand
+        (divisor) and stores the result in the AX (AH:AL), DX:AX, or EDX:EAX registers.
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
 - id: 28a448ce89
   gist: Dividing a signed value wider than 64 bits by a 64-bit divisor.
   how: derived
   note: The dividend is the 128-bit signed RDX:RAX.
   support:
-  - {doc: sdm, at: 1152, units: [c21055875c, f2ca4ac2a6], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [c21055875c, f2ca4ac2a6]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
+      f2ca4ac2a6: REX.W + F7 /7 | IDIV r/m64 | M | Valid | N.E. | Signed divide RDX:RAX by r/m64, with
+        result stored in RAX := Quotient, RDX := Remainder.
 - id: 792a33aad6
   gist: Sign-extend the dividend, do not zero it.
   support:
@@ -69,6 +156,11 @@ claims:
     units: [e69cbbabf3, 4e45cbb2ec]
     part: Description
     note: From the CWD/CDQ/CQO entry.
+    quotes:
+      e69cbbabf3: The CQO instruction (available in 64-bit mode only) copies the sign (bit 63) of the
+        value in the RAX register into every bit position in the RDX register.
+      4e45cbb2ec: The CQO instruction can be used to produce a double quadword dividend from a quadword
+        before a quadword division.
 - id: e77bd92bde
   gist: Put the value in rax and run cqo to copy its sign into rdx.
   support:
@@ -77,22 +169,42 @@ claims:
     units: [e69cbbabf3, 4e45cbb2ec]
     part: Description
     note: From the CWD/CDQ/CQO entry.
+    quotes:
+      e69cbbabf3: The CQO instruction (available in 64-bit mode only) copies the sign (bit 63) of the
+        value in the RAX register into every bit position in the RDX register.
+      4e45cbb2ec: The CQO instruction can be used to produce a double quadword dividend from a quadword
+        before a quadword division.
 - id: 66cdd596f6
   gist: Zeroing rdx with xor edx, edx turns a negative dividend into a…
   how: derived
   note: xor edx, edx makes the upper half of the dividend zero, so a negative rax is read as a large positive
     128-bit value.
   support:
-  - {doc: sdm, at: 1152, units: [c21055875c], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [c21055875c]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
   - doc: sdm
     at: 79
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: db7e0ceaea
   gist: '#DE (divide error) is raised when the divisor is zero or when t…'
   support:
-  - {doc: sdm, at: 1154, units: [899e87f561, 602f8497c6], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1154
+    units: [899e87f561, 602f8497c6]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      899e87f561: '#DE If the source operand (divisor) is 0.'
+      602f8497c6: If the quotient is too large for the designated register.
 - id: ae70bad29e
   gist: The classic case is the most negative 64-bit number divided by…
   how: derived
@@ -106,13 +218,29 @@ claims:
 - id: ee4ddef765
   gist: rax and rdx hold the dividend and results, and rdx is overwritt…
   support:
-  - {doc: sdm, at: 1152, units: [c21055875c, a8bc623d9d], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [c21055875c, a8bc623d9d]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
+      a8bc623d9d: RAX contains a 64-bit quotient; RDX contains a 64-bit remainder.
 - id: c38d1db92d
   gist: No immediate divisor.
   how: derived
   note: The source operand is a register or memory; no row has an immediate.
   support:
-  - {doc: sdm, at: 1152, units: [73f2b67dd1, f2ca4ac2a6, dce6a5353a], part: Opcode table}
+  - doc: sdm
+    at: 1152
+    units: [73f2b67dd1, f2ca4ac2a6, dce6a5353a]
+    part: Opcode table
+    quotes:
+      73f2b67dd1: 'F6 /7 | IDIV r/m8[1] | M | Valid | Valid | Signed divide AX by r/m8, with result stored
+        in: AL := Quotient, AH := Remainder.'
+      f2ca4ac2a6: REX.W + F7 /7 | IDIV r/m64 | M | Valid | N.E. | Signed divide RDX:RAX by r/m64, with
+        result stored in RAX := Quotient, RDX := Remainder.
+      dce6a5353a: The source operand can be a general-purpose register or a memory location.
 - id: 622ba0843d
   gist: Load constants into a register.
   how: editorial
@@ -120,7 +248,12 @@ claims:
 - id: 1e784c8335
   gist: Flags are undefined, so do not branch on them after idiv.
   support:
-  - {doc: sdm, at: 1154, units: [647ea3465f], part: Flags Affected}
+  - doc: sdm
+    at: 1154
+    units: [647ea3465f]
+    part: Flags Affected
+    quotes:
+      647ea3465f: The CF, OF, SF, ZF, AF, and PF flags are undefined.
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -129,6 +262,8 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 1372dd127c
   gist: mov rax, -7 cqo ; rdx:rax = -7 sign-extended to 128 bits mov rc…
   how: illustrative

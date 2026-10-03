@@ -64,7 +64,8 @@ The schema in `src/docx86/models.py` is the content contract; `tests/test_docs.p
 - **Verify against the SDM, never from memory.** Every page's flags, forms, operand-size behaviour and CPUID
   requirement must be checked against the SDM text via `docx86 sdm show`. Anything not in the SDM goes in
   `extra_sources` or is cut.
-- **Never paste or closely paraphrase SDM prose or pseudocode** (copyright). Write original summaries.
+- **Never paste or closely paraphrase SDM prose or pseudocode into a page** (copyright). Write original summaries.
+  (The one exception is the short attributed quotation in the evidence ledger, below.)
 - **Code in articles must be tested.** Any `nasm` listing of 5+ lines in an article has to exist in `tests/asm/` (run
   `make verify-asm`); `make test` enforces it. Conventions and tooling claims need a primary source or a real run, not
   just Wikibooks. State what was *not* run (for example real Windows).
@@ -74,9 +75,11 @@ The schema in `src/docx86/models.py` is the content contract; `tests/test_docs.p
   `make evidence` fails after you reword a checked sentence. Re-read the source, then fix the ledger (`cite`
   again, or change the `id`). Never write `by: human`; record what you actually read as `llm`, and leave a
   claim open rather than citing a sentence that does not say it.
-- **The evidence ledger holds pointers only, never source text** (copyright, same rule as SDM prose). Do not add a
-  `quote` field or paste a sentence of a source into `note`; the passage is rendered from the reader's own
-  copy of the document in `docs/`.
+- **The evidence ledger may quote the cited sentence, and only that** (owner decision 2026-10-03, right of
+  quotation): one sentence or table row, at most 400 characters, with its document and page, never *Operation*
+  pseudocode or long tables. `docx86 evidence cite` and `evidence quote` add quotes from the local document and
+  `check` verifies them. Do not paste source prose into `note`, the page text or anywhere else, and do not quote
+  the neighbouring sentences: the surroundings are rendered from the reader's own copy in `docs/`.
 - **Generated files:** `content/README.md`, the block between `<!-- progress:start/end -->` in `README.md`,
   `index/`, `src/docx86/static/app.css`. Regenerate with `make progress` / `make index` / `make css`.
   After adding or changing a page, run `make progress` (the test suite fails on stale progress files).

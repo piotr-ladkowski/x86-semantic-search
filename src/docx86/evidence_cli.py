@@ -165,7 +165,15 @@ def cmd_cite(args: argparse.Namespace, settings: Settings) -> int:
     entry = ev.Entry(
         id=view.claim.id,
         support=[
-            ev.Support(doc=args.doc, at=at, units=wanted, part=part, by=args.by, note=args.note)
+            ev.Support(
+                doc=args.doc,
+                at=at,
+                units=wanted,
+                part=part,
+                by=args.by,
+                note=args.note,
+                quotes={u: known[u].unit.text for u in wanted if ev.quotable(known[u].unit)},
+            )
         ],
     )
     ledger = ev.record(page, [entry])
@@ -173,6 +181,28 @@ def cmd_cite(args: argparse.Namespace, settings: Settings) -> int:
     print(f"{page.slug} claim {view.claim.id}: cited {len(wanted)} sentence(s) of {args.doc} {at}")
     for u in wanted:
         print("  ► " + textwrap.shorten(known[u].unit.text, 200, placeholder="…"))
+    return 0
+
+
+def cmd_quote(args: argparse.Namespace, settings: Settings) -> int:
+    """Store a short quotation of every cited sentence (read from the local documents)."""
+    _content, store, registry = _setup(settings)
+    if not args.all and not args.slug:
+        sys.exit("give a page slug, or --all")
+    pages = store.pages() if args.all else [_page(store, args.slug, args.kind)]
+    missing = sorted({s.id for s in registry.all() if not s.available})
+    total = 0
+    for page in pages:
+        if not page.ledger_exists:
+            continue
+        ledger, changed = ev.attach_quotes(page, registry, refresh=args.refresh)
+        if changed:
+            ev.save(page, ledger)
+            print(f"{page.slug}: {changed} quote(s) stored")
+        total += changed
+    print(f"{total} quote(s) stored or updated")
+    if missing:
+        print("Not available here, so their sentences could not be quoted: " + ", ".join(missing))
     return 0
 
 
@@ -329,7 +359,7 @@ def cmd_check(args: argparse.Namespace, settings: Settings) -> int:
         f"{'FAILED' if rep.problems else 'OK'}: {total} claims on {len(store.pages())} pages, "
         f"{grounded} grounded in sources, {t['suggested']} suggested only, "
         f"{t['unverified']} open; {rep.resolved} source pointers confirmed, "
-        f"{rep.unchecked} not looked up here"
+        f"{rep.unchecked} not looked up here; {rep.quotes_ok} stored quotes match their sentences"
     )
     return 1 if rep.problems else 0
 
@@ -372,6 +402,13 @@ def register(sub: argparse._SubParsersAction) -> None:
     a.add_argument("--note", help="why this passage supports the claim, if not obvious")
     kind(a)
     a.set_defaults(func=cmd_cite)
+
+    a = actions.add_parser("quote", help="store a short quotation of each cited sentence")
+    a.add_argument("slug", nargs="?")
+    a.add_argument("--all", action="store_true", help="every page that has a ledger")
+    a.add_argument("--refresh", action="store_true", help="replace quotes that are already stored")
+    kind(a)
+    a.set_defaults(func=cmd_quote)
 
     a = actions.add_parser("mark", help="classify claims that have no source passage")
     a.add_argument("slug")

@@ -6,248 +6,564 @@ claims:
 - id: b925c338bd
   gist: Jumps to a nearby label if the status flags satisfy a condition…
   support:
-  - {doc: sdm, at: 1206, units: [fd60402f41, 00d87191a6, 1506bd42ed], part: Description}
-  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
+  - doc: sdm
+    at: 1206
+    units: [fd60402f41, 00d87191a6, 1506bd42ed]
+    part: Description
+    quotes:
+      fd60402f41: Checks the state of one or more of the status flags in the EFLAGS register (CF, OF,
+        PF, SF, and ZF) and, if the flags are in the specified state (condition), performs a jump to the
+        target instruction specified by the destination operand.
+      00d87191a6: If the condition is not satisfied, the jump is not performed and execution continues
+        with the instruction following the Jcc instruction.
+      1506bd42ed: Instead, they check RCX, ECX or CX for 0.
+  - doc: sdm
+    at: 1203
+    units: [51993a71f0]
+    part: Opcode table
+    quotes:
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
 - id: d60814beb8
   gist: Also written as JA, JAE, JB, JBE, JC, JE, JG, JGE, JL, JLE, JNA…
   support:
-  - {doc: sdm, at: 1203, units: [aa86466ea7, 758f9a92ff, a397db1da2, 53ab55a43e, d19359c7c2, e937db03ed,
-      4c0eb334fa, bc666b5231, 4d1db289db, '2657576261', 44bed4ba22, 580fdbfe31, d50bfbf244, 2a852212b9,
-      46d4e9929c, 18b1475313, 204bac4f79, a0cc797ec1, '9402861489', b5f4d31f9e, 2c8f24d0d5, 07c86d0488,
-      45051362d0, adb6b698eb, 87549eb7ac, 74d9a52aa6, 3bef961500, a31cbb3332, 21faaea01d, 642ef68320,
-      51993a71f0, 5d08b26831], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [aa86466ea7, 758f9a92ff, a397db1da2, 53ab55a43e, d19359c7c2, e937db03ed, 4c0eb334fa, bc666b5231,
+      4d1db289db, '2657576261', 44bed4ba22, 580fdbfe31, d50bfbf244, 2a852212b9, 46d4e9929c, 18b1475313,
+      204bac4f79, a0cc797ec1, '9402861489', b5f4d31f9e, 2c8f24d0d5, 07c86d0488, 45051362d0, adb6b698eb,
+      87549eb7ac, 74d9a52aa6, 3bef961500, a31cbb3332, 21faaea01d, 642ef68320, 51993a71f0, 5d08b26831]
+    part: Opcode table
+    quotes:
+      aa86466ea7: 77 cb | JA rel8 | D | Valid | Valid | Jump short if above (CF=0 and ZF=0).
+      758f9a92ff: 73 cb | JAE rel8 | D | Valid | Valid | Jump short if above or equal (CF=0).
+      a397db1da2: 72 cb | JB rel8 | D | Valid | Valid | Jump short if below (CF=1).
+      53ab55a43e: 76 cb | JBE rel8 | D | Valid | Valid | Jump short if below or equal (CF=1 or ZF=1).
+      d19359c7c2: 72 cb | JC rel8 | D | Valid | Valid | Jump short if carry (CF=1).
+      e937db03ed: 74 cb | JE rel8 | D | Valid | Valid | Jump short if equal (ZF=1).
+      4c0eb334fa: 7F cb | JG rel8 | D | Valid | Valid | Jump short if greater (ZF=0 and SF=OF).
+      bc666b5231: 7D cb | JGE rel8 | D | Valid | Valid | Jump short if greater or equal (SF=OF).
+      4d1db289db: 7C cb | JL rel8 | D | Valid | Valid | Jump short if less (SF≠ OF).
+      '2657576261': 7E cb | JLE rel8 | D | Valid | Valid | Jump short if less or equal (ZF=1 or SF≠ OF).
+      44bed4ba22: 76 cb | JNA rel8 | D | Valid | Valid | Jump short if not above (CF=1 or ZF=1).
+      580fdbfe31: 72 cb | JNAE rel8 | D | Valid | Valid | Jump short if not above or equal (CF=1).
+      d50bfbf244: 73 cb | JNB rel8 | D | Valid | Valid | Jump short if not below (CF=0).
+      2a852212b9: 77 cb | JNBE rel8 | D | Valid | Valid | Jump short if not below or equal (CF=0 and ZF=0).
+      46d4e9929c: 73 cb | JNC rel8 | D | Valid | Valid | Jump short if not carry (CF=0).
+      18b1475313: 75 cb | JNE rel8 | D | Valid | Valid | Jump short if not equal (ZF=0).
+      204bac4f79: 7E cb | JNG rel8 | D | Valid | Valid | Jump short if not greater (ZF=1 or SF≠ OF).
+      a0cc797ec1: 7C cb | JNGE rel8 | D | Valid | Valid | Jump short if not greater or equal (SF≠ OF).
+      '9402861489': 7D cb | JNL rel8 | D | Valid | Valid | Jump short if not less (SF=OF).
+      b5f4d31f9e: 7F cb | JNLE rel8 | D | Valid | Valid | Jump short if not less or equal (ZF=0 and SF=OF).
+      2c8f24d0d5: 71 cb | JNO rel8 | D | Valid | Valid | Jump short if not overflow (OF=0).
+      07c86d0488: 7B cb | JNP rel8 | D | Valid | Valid | Jump short if not parity (PF=0).
+      45051362d0: 79 cb | JNS rel8 | D | Valid | Valid | Jump short if not sign (SF=0).
+      adb6b698eb: 75 cb | JNZ rel8 | D | Valid | Valid | Jump short if not zero (ZF=0).
+      87549eb7ac: 70 cb | JO rel8 | D | Valid | Valid | Jump short if overflow (OF=1).
+      74d9a52aa6: 7A cb | JP rel8 | D | Valid | Valid | Jump short if parity (PF=1).
+      3bef961500: 7A cb | JPE rel8 | D | Valid | Valid | Jump short if parity even (PF=1).
+      a31cbb3332: 7B cb | JPO rel8 | D | Valid | Valid | Jump short if parity odd (PF=0).
+      21faaea01d: 78 cb | JS rel8 | D | Valid | Valid | Jump short if sign (SF=1).
+      642ef68320: 74 cb | JZ rel8 | D | Valid | Valid | Jump short if zero (ZF = 1).
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
+      5d08b26831: E3 cb | JECXZ rel8 | D | Valid | Valid | Jump short if ECX register is 0.
 - id: 02533dfeee
   gist: Jcc rel8 is encoded as 70+cc cb (70-7F).
   how: derived
   note: 'The rel8 rows run from 70 (JO) to 7F (JG): the condition code is added to 70.'
   support:
-  - {doc: sdm, at: 1203, units: [87549eb7ac, 21faaea01d], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [87549eb7ac, 21faaea01d]
+    part: Opcode table
+    quotes:
+      87549eb7ac: 70 cb | JO rel8 | D | Valid | Valid | Jump short if overflow (OF=1).
+      21faaea01d: 78 cb | JS rel8 | D | Valid | Valid | Jump short if sign (SF=1).
 - id: f4b7bdadc3
   gist: 'Short form: target within -128..+127 bytes of the next instruct…'
   support:
-  - {doc: sdm, at: 1206, units: [71278983c9, e52fae348e], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [71278983c9, e52fae348e]
+    part: Description
+    quotes:
+      71278983c9: A relative offset (rel8, rel16, or rel32) is generally specified as a label in assembly
+        code, but at the machine code level, it is encoded as a signed, 8-bit or 32-bit immediate value,
+        which is added to the instruction pointer.
+      e52fae348e: Instruction coding is most efficient for offsets of –128 to +127.
 - id: e0dd317bbe
   gist: Jcc rel32 is encoded as 0F 80+cc cd (0F 80-0F 8F).
   how: derived
   note: 'The rel32 rows run from 0F 80 (JO) to 0F 8F (JG): the condition code is added to 0F 80.'
   support:
-  - {doc: sdm, at: 1205, units: [cd7dc81584, cb774f5233], part: Opcode table}
-  - {doc: sdm, at: 1204, units: [c1e813782f], part: Opcode table}
+  - doc: sdm
+    at: 1205
+    units: [cd7dc81584, cb774f5233]
+    part: Opcode table
+    quotes:
+      cd7dc81584: 0F 80 cd | JO rel32 | D | Valid | Valid | Jump near if overflow (OF=1).
+      cb774f5233: 0F 88 cd | JS rel32 | D | Valid | Valid | Jump near if sign (SF=1).
+  - doc: sdm
+    at: 1204
+    units: [c1e813782f]
+    part: Opcode table
+    quotes:
+      c1e813782f: 0F 84 cd | JZ rel32 | D | Valid | Valid | Jump near if 0 (ZF=1).
 - id: 478537ccbe
   gist: 'Near form: signed 32-bit offset, reaching +-2 GiB.'
   how: derived
   note: A signed 32-bit offset reaches about 2 GiB either way (the range is derived).
   support:
-  - {doc: sdm, at: 1206, units: [71278983c9, 459ee5f48a], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [71278983c9, 459ee5f48a]
+    part: Description
+    quotes:
+      71278983c9: A relative offset (rel8, rel16, or rel32) is generally specified as a label in assembly
+        code, but at the machine code level, it is encoded as a signed, 8-bit or 32-bit immediate value,
+        which is added to the instruction pointer.
+      459ee5f48a: JMP Near is RIP = RIP + 32-bit offset sign extended to 64 bits.
 - id: 2ef436a64b
   gist: JRCXZ rel8 is encoded as E3 cb.
   support:
-  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1203
+    units: [51993a71f0]
+    part: Opcode table
+    by: match
+    quotes:
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
 - id: 0687b601e5
   gist: Jump if RCX = 0.
   support:
-  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [51993a71f0]
+    part: Opcode table
+    quotes:
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
 - id: 9c615d406c
   gist: Short form only.
   how: derived
   note: Only the rel8 row exists for JRCXZ.
   support:
-  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [51993a71f0]
+    part: Opcode table
+    quotes:
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
 - id: 8ddaaecd00
   gist: JECXZ (tests ECX) is the same opcode with a 67h prefix.
   how: derived
   note: JECXZ and JRCXZ share E3 cb; the register checked follows the address-size attribute, which the
     67H prefix changes.
   support:
-  - {doc: sdm, at: 1203, units: [5d08b26831, 51993a71f0], part: Opcode table}
-  - {doc: sdm, at: 1206, units: [3934d4906e], part: Description}
+  - doc: sdm
+    at: 1203
+    units: [5d08b26831, 51993a71f0]
+    part: Opcode table
+    quotes:
+      5d08b26831: E3 cb | JECXZ rel8 | D | Valid | Valid | Jump short if ECX register is 0.
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
+  - doc: sdm
+    at: 1206
+    units: [3934d4906e]
+    part: Description
+    quotes:
+      3934d4906e: The register checked is determined by the address-size attribute.
 - id: a2ef410a52
   gist: 'Flags read: CF, ZF, SF, OF, PF.'
   support:
-  - {doc: sdm, at: 1206, units: [fd60402f41], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [fd60402f41]
+    part: Description
+    quotes:
+      fd60402f41: Checks the state of one or more of the status flags in the EFLAGS register (CF, OF,
+        PF, SF, and ZF) and, if the flags are in the specified state (condition), performs a jump to the
+        target instruction specified by the destination operand.
 - id: a904fc46f9
   gist: No flags are modified.
   support:
-  - {doc: sdm, at: 1207, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1207
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 09d226ec07
   gist: Which flags are read depends on the condition; JRCXZ reads no f…
   support:
-  - {doc: sdm, at: 1206, units: [bcfa07befd, fd60402f41], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [bcfa07befd, fd60402f41]
+    part: Description
+    quotes:
+      bcfa07befd: The JRCXZ, JECXZ, and JCXZ instructions differ from other Jcc instructions because they
+        do not check status flags.
+      fd60402f41: Checks the state of one or more of the status flags in the EFLAGS register (CF, OF,
+        PF, SF, and ZF) and, if the flags are in the specified state (condition), performs a jump to the
+        target instruction specified by the destination operand.
 - id: 2fb174284a
   gist: jcc label is a family of instructions that jump to label when t…
   support:
-  - {doc: sdm, at: 1206, units: [fd60402f41, 00d87191a6], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [fd60402f41, 00d87191a6]
+    part: Description
+    quotes:
+      fd60402f41: Checks the state of one or more of the status flags in the EFLAGS register (CF, OF,
+        PF, SF, and ZF) and, if the flags are in the specified state (condition), performs a jump to the
+        target instruction specified by the destination operand.
+      00d87191a6: If the condition is not satisfied, the jump is not performed and execution continues
+        with the instruction following the Jcc instruction.
 - id: 5bc8ca0027
   gist: The letters after j name the condition.
   how: derived
   note: Each mnemonic is j plus the condition (o, s, b, ...) in the opcode table.
   support:
-  - {doc: sdm, at: 1206, units: [a7feb8c5ba], part: Description}
-  - {doc: sdm, at: 1203, units: [87549eb7ac, 21faaea01d, a397db1da2], part: Opcode table}
+  - doc: sdm
+    at: 1206
+    units: [a7feb8c5ba]
+    part: Description
+    quotes:
+      a7feb8c5ba: A condition code (cc) is associated with each instruction to indicate the condition
+        being tested for.
+  - doc: sdm
+    at: 1203
+    units: [87549eb7ac, 21faaea01d, a397db1da2]
+    part: Opcode table
+    quotes:
+      87549eb7ac: 70 cb | JO rel8 | D | Valid | Valid | Jump short if overflow (OF=1).
+      21faaea01d: 78 cb | JS rel8 | D | Valid | Valid | Jump short if sign (SF=1).
+      a397db1da2: 72 cb | JB rel8 | D | Valid | Valid | Jump short if below (CF=1).
 - id: 9e591b01b2
   gist: They read the flags left by an earlier instruction (usually cmp…
   support:
-  - {doc: sdm, at: 1206, units: [fd60402f41], part: Description}
-  - {doc: sdm, at: 1207, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1206
+    units: [fd60402f41]
+    part: Description
+    quotes:
+      fd60402f41: Checks the state of one or more of the status flags in the EFLAGS register (CF, OF,
+        PF, SF, and ZF) and, if the flags are in the specified state (condition), performs a jump to the
+        target instruction specified by the destination operand.
+  - doc: sdm
+    at: 1207
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
   - doc: sdm
     at: 865
     units: [9fc1e3da9d]
     part: Description
     note: From the CMP entry.
+    quotes:
+      9fc1e3da9d: The condition codes used by the Jcc, CMOVcc, and SETcc instructions are based on the
+        results of a CMP instruction.
 - id: 0fd65ccb37
   gist: The SDM uses greater/less for signed numbers and above/below fo…
   support:
-  - {doc: sdm, at: 1206, units: [4eda31ba2e], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [4eda31ba2e]
+    part: Description
+    quotes:
+      4eda31ba2e: The terms "less" and "greater" are used for comparisons of signed integers and the terms
+        "above" and "below" are used for unsigned integers.
 - id: ca0a78c9ec
   gist: Several names are synonyms for one opcode (je = jz, jb = jc = j…
   support:
-  - {doc: sdm, at: 1206, units: [e941c52d19, 894d6f882a], part: Description}
-  - {doc: sdm, at: 1203, units: [e937db03ed, 642ef68320, d19359c7c2, a397db1da2, 580fdbfe31], part: Opcode
-      table}
+  - doc: sdm
+    at: 1206
+    units: [e941c52d19, 894d6f882a]
+    part: Description
+    quotes:
+      e941c52d19: Because a particular state of the status flags can sometimes be interpreted in two ways,
+        two mnemonics are defined for some opcodes.
+      894d6f882a: For example, the JA (jump if above) instruction and the JNBE (jump if not below or equal)
+        instruction are alternate mnemonics for the opcode 77H.
+  - doc: sdm
+    at: 1203
+    units: [e937db03ed, 642ef68320, d19359c7c2, a397db1da2, 580fdbfe31]
+    part: Opcode table
+    quotes:
+      e937db03ed: 74 cb | JE rel8 | D | Valid | Valid | Jump short if equal (ZF=1).
+      642ef68320: 74 cb | JZ rel8 | D | Valid | Valid | Jump short if zero (ZF = 1).
+      d19359c7c2: 72 cb | JC rel8 | D | Valid | Valid | Jump short if carry (CF=1).
+      a397db1da2: 72 cb | JB rel8 | D | Valid | Valid | Jump short if below (CF=1).
+      580fdbfe31: 72 cb | JNAE rel8 | D | Valid | Valid | Jump short if not above or equal (CF=1).
 - id: 1e5648e15c
   gist: equal / zero | JE, JZ | ZF = 1 | a = b
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [e937db03ed, 642ef68320], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [e937db03ed, 642ef68320]
+    part: Opcode table
+    quotes:
+      e937db03ed: 74 cb | JE rel8 | D | Valid | Valid | Jump short if equal (ZF=1).
+      642ef68320: 74 cb | JZ rel8 | D | Valid | Valid | Jump short if zero (ZF = 1).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: c85af40ffb
   gist: not equal / not zero | JNE, JNZ | ZF = 0 | a != b
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [18b1475313, adb6b698eb], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [18b1475313, adb6b698eb]
+    part: Opcode table
+    quotes:
+      18b1475313: 75 cb | JNE rel8 | D | Valid | Valid | Jump short if not equal (ZF=0).
+      adb6b698eb: 75 cb | JNZ rel8 | D | Valid | Valid | Jump short if not zero (ZF=0).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: 25b52b83ef
   gist: above | JA, JNBE | CF = 0 and ZF = 0 | a > b, unsigned
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [aa86466ea7, 2a852212b9], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [aa86466ea7, 2a852212b9]
+    part: Opcode table
+    quotes:
+      aa86466ea7: 77 cb | JA rel8 | D | Valid | Valid | Jump short if above (CF=0 and ZF=0).
+      2a852212b9: 77 cb | JNBE rel8 | D | Valid | Valid | Jump short if not below or equal (CF=0 and ZF=0).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: 5e993fefb8
   gist: above or equal | JAE, JNB, JNC | CF = 0 | a >= b, unsigned
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [758f9a92ff, d50bfbf244, 46d4e9929c], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [758f9a92ff, d50bfbf244, 46d4e9929c]
+    part: Opcode table
+    quotes:
+      758f9a92ff: 73 cb | JAE rel8 | D | Valid | Valid | Jump short if above or equal (CF=0).
+      d50bfbf244: 73 cb | JNB rel8 | D | Valid | Valid | Jump short if not below (CF=0).
+      46d4e9929c: 73 cb | JNC rel8 | D | Valid | Valid | Jump short if not carry (CF=0).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: 07b281373e
   gist: below | JB, JNAE, JC | CF = 1 | a < b, unsigned
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [a397db1da2, 580fdbfe31, d19359c7c2], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [a397db1da2, 580fdbfe31, d19359c7c2]
+    part: Opcode table
+    quotes:
+      a397db1da2: 72 cb | JB rel8 | D | Valid | Valid | Jump short if below (CF=1).
+      580fdbfe31: 72 cb | JNAE rel8 | D | Valid | Valid | Jump short if not above or equal (CF=1).
+      d19359c7c2: 72 cb | JC rel8 | D | Valid | Valid | Jump short if carry (CF=1).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: f0a153cd17
   gist: below or equal | JBE, JNA | CF = 1 or ZF = 1 | a <= b, unsigned
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [53ab55a43e, 44bed4ba22], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [53ab55a43e, 44bed4ba22]
+    part: Opcode table
+    quotes:
+      53ab55a43e: 76 cb | JBE rel8 | D | Valid | Valid | Jump short if below or equal (CF=1 or ZF=1).
+      44bed4ba22: 76 cb | JNA rel8 | D | Valid | Valid | Jump short if not above (CF=1 or ZF=1).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: cc4d285b35
   gist: greater | JG, JNLE | ZF = 0 and SF = OF | a > b, signed
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [4c0eb334fa, b5f4d31f9e], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [4c0eb334fa, b5f4d31f9e]
+    part: Opcode table
+    quotes:
+      4c0eb334fa: 7F cb | JG rel8 | D | Valid | Valid | Jump short if greater (ZF=0 and SF=OF).
+      b5f4d31f9e: 7F cb | JNLE rel8 | D | Valid | Valid | Jump short if not less or equal (ZF=0 and SF=OF).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: 962cd39f1a
   gist: greater or equal | JGE, JNL | SF = OF | a >= b, signed
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [bc666b5231, '9402861489'], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [bc666b5231, '9402861489']
+    part: Opcode table
+    quotes:
+      bc666b5231: 7D cb | JGE rel8 | D | Valid | Valid | Jump short if greater or equal (SF=OF).
+      '9402861489': 7D cb | JNL rel8 | D | Valid | Valid | Jump short if not less (SF=OF).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: a0c3d83b5c
   gist: less | JL, JNGE | SF != OF | a < b, signed
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: [4d1db289db, a0cc797ec1], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [4d1db289db, a0cc797ec1]
+    part: Opcode table
+    quotes:
+      4d1db289db: 7C cb | JL rel8 | D | Valid | Valid | Jump short if less (SF≠ OF).
+      a0cc797ec1: 7C cb | JNGE rel8 | D | Valid | Valid | Jump short if not greater or equal (SF≠ OF).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: 1d2794107d
   gist: less or equal | JLE, JNG | ZF = 1 or SF != OF | a <= b, signed
   how: derived
   note: The flag conditions are the Jcc opcode rows; the 'after cmp a, b' reading follows from CMP computing
     a - b.
   support:
-  - {doc: sdm, at: 1203, units: ['2657576261', 204bac4f79], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: ['2657576261', 204bac4f79]
+    part: Opcode table
+    quotes:
+      '2657576261': 7E cb | JLE rel8 | D | Valid | Valid | Jump short if less or equal (ZF=1 or SF≠ OF).
+      204bac4f79: 7E cb | JNG rel8 | D | Valid | Valid | Jump short if not greater (ZF=1 or SF≠ OF).
   - doc: sdm
     at: 865
     units: [3bb9b063e1]
     part: Description
     note: 'From the CMP entry: CMP subtracts and sets the flags as SUB does.'
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: 32cd8ddd05
   gist: overflow / no overflow | JO / JNO | OF = 1 / OF = 0
   support:
-  - {doc: sdm, at: 1203, units: [87549eb7ac, 2c8f24d0d5], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [87549eb7ac, 2c8f24d0d5]
+    part: Opcode table
+    quotes:
+      87549eb7ac: 70 cb | JO rel8 | D | Valid | Valid | Jump short if overflow (OF=1).
+      2c8f24d0d5: 71 cb | JNO rel8 | D | Valid | Valid | Jump short if not overflow (OF=0).
 - id: 8c23290b42
   gist: sign / no sign | JS / JNS | SF = 1 / SF = 0 | result negative /…
   how: derived
   note: SF is the sign of the result, so 'result negative' is SF = 1.
   support:
-  - {doc: sdm, at: 1203, units: [21faaea01d, 45051362d0], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [21faaea01d, 45051362d0]
+    part: Opcode table
+    quotes:
+      21faaea01d: 78 cb | JS rel8 | D | Valid | Valid | Jump short if sign (SF=1).
+      45051362d0: 79 cb | JNS rel8 | D | Valid | Valid | Jump short if not sign (SF=0).
   - doc: sdm
     at: 82
     units: [8d996b02f3]
     part: 3.4.3.1 Status Flags
     note: Status flags (Vol. 1, 3.4.3.1).
+    quotes:
+      8d996b02f3: SF (bit 7) Sign flag — Set equal to the most-significant bit of the result, which is
+        the sign bit of a signed integer.
 - id: 439ea7e205
   gist: parity even / odd | JP, JPE / JNP, JPO | PF = 1 / PF = 0
   support:
-  - {doc: sdm, at: 1203, units: [74d9a52aa6, 3bef961500, 07c86d0488, a31cbb3332], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [74d9a52aa6, 3bef961500, 07c86d0488, a31cbb3332]
+    part: Opcode table
+    quotes:
+      74d9a52aa6: 7A cb | JP rel8 | D | Valid | Valid | Jump short if parity (PF=1).
+      3bef961500: 7A cb | JPE rel8 | D | Valid | Valid | Jump short if parity even (PF=1).
+      07c86d0488: 7B cb | JNP rel8 | D | Valid | Valid | Jump short if not parity (PF=0).
+      a31cbb3332: 7B cb | JPO rel8 | D | Valid | Valid | Jump short if parity odd (PF=0).
 - id: 7c453e16ca
   gist: RCX is zero | JRCXZ | RCX = 0 (no flags)
   support:
-  - {doc: sdm, at: 1203, units: [51993a71f0], part: Opcode table}
-  - {doc: sdm, at: 1206, units: [bcfa07befd], part: Description}
+  - doc: sdm
+    at: 1203
+    units: [51993a71f0]
+    part: Opcode table
+    quotes:
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
+  - doc: sdm
+    at: 1206
+    units: [bcfa07befd]
+    part: Description
+    quotes:
+      bcfa07befd: The JRCXZ, JECXZ, and JCXZ instructions differ from other Jcc instructions because they
+        do not check status flags.
 - id: 73ba9621be
   gist: Right after cmp or test to choose between two paths, or to buil…
   how: editorial
@@ -257,30 +573,59 @@ claims:
   how: derived
   note: The entry recommends JRCXZ at the start of a loop to avoid entering it with a zero count.
   support:
-  - {doc: sdm, at: 1206, units: [77626ba505, 3f56e86b1f], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [77626ba505, 3f56e86b1f]
+    part: Description
+    quotes:
+      77626ba505: These instructions are useful when used at the beginning of a loop that terminates with
+        a conditional loop instruction (such as LOOPNE).
+      3f56e86b1f: They can be used to prevent an instruction sequence from entering a loop when RCX, ECX
+        or CX is 0.
 - id: d1208375eb
   gist: Choose the signed (jl, jg) or unsigned (jb, ja) family accordin…
   how: derived
   note: Signed and unsigned conditions are separate mnemonics reading the same flags.
   support:
-  - {doc: sdm, at: 1206, units: [4eda31ba2e], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [4eda31ba2e]
+    part: Description
+    quotes:
+      4eda31ba2e: The terms "less" and "greater" are used for comparisons of signed integers and the terms
+        "above" and "below" are used for unsigned integers.
   - doc: sdm
     at: 865
     units: [9fc1e3da9d]
     part: Description
     note: From the CMP entry.
+    quotes:
+      9fc1e3da9d: The condition codes used by the Jcc, CMOVcc, and SETcc instructions are based on the
+        results of a CMP instruction.
 - id: 249f221e09
   gist: Signed versus unsigned is your choice, not the CPU's.
   how: derived
   note: The CPU only sets flags; the choice of mnemonic carries the interpretation.
   support:
-  - {doc: sdm, at: 1206, units: [4eda31ba2e], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [4eda31ba2e]
+    part: Description
+    quotes:
+      4eda31ba2e: The terms "less" and "greater" are used for comparisons of signed integers and the terms
+        "above" and "below" are used for unsigned integers.
 - id: b62fbdf616
   gist: After cmp rax, rbx, jl and jb test different flags and give dif…
   how: derived
   note: JL tests SF != OF, JB tests CF = 1, which differ when the top bit is involved.
   support:
-  - {doc: sdm, at: 1203, units: [4d1db289db, a397db1da2], part: Opcode table}
+  - doc: sdm
+    at: 1203
+    units: [4d1db289db, a397db1da2]
+    part: Opcode table
+    quotes:
+      4d1db289db: 7C cb | JL rel8 | D | Valid | Valid | Jump short if less (SF≠ OF).
+      a397db1da2: 72 cb | JB rel8 | D | Valid | Valid | Jump short if below (CF=1).
 - id: cd059c3830
   gist: Pick the family that matches the type of your data.
   how: editorial
@@ -295,14 +640,36 @@ claims:
   note: An 8-bit signed offset spans -128 to +127; 'from the next instruction' is the usual reading of
     the offset's base.
   support:
-  - {doc: sdm, at: 1206, units: [71278983c9, e52fae348e, 812a3aa9fc], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [71278983c9, e52fae348e, 812a3aa9fc]
+    part: Description
+    quotes:
+      71278983c9: A relative offset (rel8, rel16, or rel32) is generally specified as a label in assembly
+        code, but at the machine code level, it is encoded as a signed, 8-bit or 32-bit immediate value,
+        which is added to the instruction pointer.
+      e52fae348e: Instruction coding is most efficient for offsets of –128 to +127.
+      812a3aa9fc: The target instruction is specified with a relative offset (a signed offset relative
+        to the current value of the instruction pointer in the EIP register).
 - id: 1db83466f0
   gist: Farther targets need the near form (0F 8x cd), which assemblers…
   how: derived
   note: The 0F 8x rows take a 32-bit offset; which form to use is the assembler's decision.
   support:
-  - {doc: sdm, at: 1205, units: [cd7dc81584], part: Opcode table}
-  - {doc: sdm, at: 1206, units: [71278983c9], part: Description}
+  - doc: sdm
+    at: 1205
+    units: [cd7dc81584]
+    part: Opcode table
+    quotes:
+      cd7dc81584: 0F 80 cd | JO rel32 | D | Valid | Valid | Jump near if overflow (OF=1).
+  - doc: sdm
+    at: 1206
+    units: [71278983c9]
+    part: Description
+    quotes:
+      71278983c9: A relative offset (rel8, rel16, or rel32) is generally specified as a label in assembly
+        code, but at the machine code level, it is encoded as a signed, 8-bit or 32-bit immediate value,
+        which is added to the instruction pointer.
 - id: d1f85342e1
   gist: Keep the flags intact between the test and the jump.
   how: editorial
@@ -312,17 +679,28 @@ claims:
   how: derived
   note: XOR rewrites the flags and MOV does not.
   support:
-  - {doc: sdm, at: 1206, units: [fd60402f41], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [fd60402f41]
+    part: Description
+    quotes:
+      fd60402f41: Checks the state of one or more of the status flags in the EFLAGS register (CF, OF,
+        PF, SF, and ZF) and, if the flags are in the specified state (condition), performs a jump to the
+        target instruction specified by the destination operand.
   - doc: sdm
     at: 2874
     units: [b819ee05d2]
     part: Flags Affected
     note: From the XOR entry.
+    quotes:
+      b819ee05d2: The OF and CF flags are cleared; the SF, ZF, and PF flags are set according to the result.
   - doc: sdm
     at: 1319
     units: [71f8e7976e]
     part: Flags Affected
     note: 'From the MOV entry: Flags Affected is None.'
+    quotes:
+      71f8e7976e: None.
 - id: 6cae8dedc6
   gist: jrcxz is special.
   how: editorial
@@ -332,12 +710,34 @@ claims:
   how: derived
   note: The register checked follows the address-size attribute; the 67H prefix selects the 32-bit size.
   support:
-  - {doc: sdm, at: 1206, units: [bcfa07befd, 1506bd42ed, 3934d4906e], part: Description}
-  - {doc: sdm, at: 1203, units: [51993a71f0, 5d08b26831], part: Opcode table}
+  - doc: sdm
+    at: 1206
+    units: [bcfa07befd, 1506bd42ed, 3934d4906e]
+    part: Description
+    quotes:
+      bcfa07befd: The JRCXZ, JECXZ, and JCXZ instructions differ from other Jcc instructions because they
+        do not check status flags.
+      1506bd42ed: Instead, they check RCX, ECX or CX for 0.
+      3934d4906e: The register checked is determined by the address-size attribute.
+  - doc: sdm
+    at: 1203
+    units: [51993a71f0, 5d08b26831]
+    part: Opcode table
+    quotes:
+      51993a71f0: E3 cb | JRCXZ rel8 | D | Valid | N.E. | Jump short if RCX register is 0.
+      5d08b26831: E3 cb | JECXZ rel8 | D | Valid | Valid | Jump short if ECX register is 0.
 - id: bf15d8ab7c
   gist: It is the safe guard in front of a loop or rep.
   support:
-  - {doc: sdm, at: 1206, units: [77626ba505, 3f56e86b1f], part: Description}
+  - doc: sdm
+    at: 1206
+    units: [77626ba505, 3f56e86b1f]
+    part: Description
+    quotes:
+      77626ba505: These instructions are useful when used at the beginning of a loop that terminates with
+        a conditional loop instruction (such as LOOPNE).
+      3f56e86b1f: They can be used to prevent an instruction sequence from entering a loop when RCX, ECX
+        or CX is 0.
 - id: 7d4d2c2ffe
   gist: Near jumps only.
   how: editorial
@@ -345,8 +745,18 @@ claims:
 - id: bfe545df77
   gist: A jcc cannot jump to another code segment, and a non-canonical…
   support:
-  - {doc: sdm, at: 1206, units: [388b9f0e77], part: Description}
-  - {doc: sdm, at: 1207, units: [33920ea836], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1206
+    units: [388b9f0e77]
+    part: Description
+    quotes:
+      388b9f0e77: The Jcc instruction does not support far jumps (jumps to other code segments).
+  - doc: sdm
+    at: 1207
+    units: [33920ea836]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      33920ea836: '#GP(0) If the memory address is in a non-canonical form.'
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -355,10 +765,17 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 1e0252202c
   gist: It never modifies the flags.
   support:
-  - {doc: sdm, at: 1207, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1207
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: f7a8f5b949
   gist: cmp rax, rbx jl .signed_less ; taken if rax < rbx as signed num…
   how: illustrative

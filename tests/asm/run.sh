@@ -22,6 +22,10 @@ for f in regs sysv frame partial; do nasm -f elf64 $f.asm -o $f.o || fail=1; don
 gcc -O1 test_linux.c regs.o sysv.o frame.o partial.o -o test_linux
 check "linux register/ABI functions" "$(cat expected_linux.txt)" "$(./test_linux)"
 
+# ---- CPU exceptions as Linux reports them (docs: the "CPU exceptions" article) -----------------------
+nasm -f elf64 exceptions.asm -o exceptions.o && gcc -O1 test_exceptions.c exceptions.o -o test_exceptions
+check "linux: CPU exceptions arrive as these signals" "$(cat expected_exceptions.txt)" "$(./test_exceptions 2>&1)"
+
 # ---- statements the NASM-on-Linux article makes about tools and mistakes ----------------------------
 contains() {  # contains <name> <needle> <haystack>
     case "$3" in *"$2"*) echo "ok    $1" ;; *) echo "FAIL  $1"; echo "   expected to contain: $2"; echo "   actual:   $3"; fail=1 ;; esac

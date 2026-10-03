@@ -12,59 +12,164 @@ claims:
   how: derived
   note: The quadword MUL row has a 128-bit destination; the quadword DIV row a 128-bit dividend.
   support:
-  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
-  - {doc: sdm, at: 968, units: [8af6e4fb9c], part: Table}
+  - doc: sdm
+    at: 1429
+    units: [0f3291adb3]
+    part: Table
+    quotes:
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
+  - doc: sdm
+    at: 968
+    units: [8af6e4fb9c]
+    part: Table
+    quotes:
+      8af6e4fb9c: Doublequadword/ quadword | RDX:RAX | r/m64 | RAX | RDX | 264 − 1
 - id: 936168b7d1
   gist: 'The classic instructions solve both by fixing the registers: ra…'
   support:
-  - {doc: sdm, at: 1429, units: [92e9ec2799, 0f3291adb3], part: Description}
-  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [92e9ec2799, 0f3291adb3]
+    part: Description
+    quotes:
+      92e9ec2799: The destination operand is an implied operand located in register AL, AX or EAX (depending
+        on the size of the operand); the source operand is located in a general-purpose register or a
+        memory location.
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
 - id: 39329f838d
   gist: 'That is why mul rbx takes a single operand: the other multiplic…'
   support:
-  - {doc: sdm, at: 1429, units: [92e9ec2799, 4850ff1b96, 15c63c03d3], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [92e9ec2799, 4850ff1b96, 15c63c03d3]
+    part: Description
+    quotes:
+      92e9ec2799: The destination operand is an implied operand located in register AL, AX or EAX (depending
+        on the size of the operand); the source operand is located in a general-purpose register or a
+        memory location.
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+      15c63c03d3: M | ModRM:r/m (r) | N/A | N/A | N/A
 - id: 60ba9af3f3
   gist: mul src64 (also one-operand imul) | rax and src | rdx:rax (high…
   support:
-  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table}
-  - {doc: sdm, at: 1155, units: [97b151ad0a, 07730dc140], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [4850ff1b96]
+    part: Opcode table
+    quotes:
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+  - doc: sdm
+    at: 1155
+    units: [97b151ad0a, 07730dc140]
+    part: Opcode table
+    quotes:
+      97b151ad0a: REX.W + F7 /5 | IMUL r/m64 | M | Valid | N.E. | RDX:RAX := RAX ∗ r/m64.
+      07730dc140: One-operand form — This form is identical to that used by the MUL instruction.
 - id: 6971e7e09b
   gist: mul src32 | eax and src | edx:eax (both zero-extended into rdx,…
   support:
-  - {doc: sdm, at: 1429, units: [ae4bf5a29c, ae1030617f], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [ae4bf5a29c, ae1030617f]
+    part: Opcode table
+    quotes:
+      ae4bf5a29c: F7 /4 | MUL r/m32 | M | Valid | Valid | Unsigned multiply (EDX:EAX := EAX ∗ r/m32).
+      ae1030617f: Doubleword | EAX | r/m32 | EDX:EAX
   - doc: sdm
     at: 79
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: d5b46a6a95
   gist: mul src8 | al and src | ax
   support:
-  - {doc: sdm, at: 1429, units: [89394ebe87, b624b485ad], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [89394ebe87, b624b485ad]
+    part: Opcode table
+    quotes:
+      89394ebe87: F6 /4 | MUL r/m8[1] | M | Valid | Valid | Unsigned multiply (AX := AL ∗ r/m8).
+      b624b485ad: Byte | AL | r/m8 | AX
 - id: 0eca5209a7
   gist: 'mulhi: ; unsigned long mulhi(unsigned long a, unsigned long b)…'
   how: run
   ref: tests/asm/regs.asm
   note: 'mulhi is assembled and run by `make verify-asm`: mulhi(0xFFFFFFFFFFFFFFFF, 2) = 1.'
   support:
-  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [4850ff1b96]
+    part: Opcode table
+    quotes:
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
 - id: b4eeb91c33
   gist: mul always overwrites rdx, even if you only want the low half.
   support:
-  - {doc: sdm, at: 1429, units: [e91bbaa475, 0f3291adb3], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [e91bbaa475, 0f3291adb3]
+    part: Description
+    quotes:
+      e91bbaa475: The result is stored in register AX, register pair DX:AX, or register pair EDX:EAX (depending
+        on the operand size), with the high-order bits of the product contained in register AH, DX, or
+        EDX, respectively.
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
 - id: c3aac0c234
   gist: If you do only want the low half, the two- and three-operand fo…
   support:
-  - {doc: sdm, at: 1155, units: [1c427b5098, 0527f7241f, 75fc930d10], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [1c427b5098, 0527f7241f, 75fc930d10]
+    part: Description
+    quotes:
+      1c427b5098: Two-operand form — With this form the destination operand (the first operand) is multiplied
+        by the source operand (second operand).
+      0527f7241f: Three-operand form — This form requires a destination operand (the first operand) and
+        two source operands (the second and the third operands).
+      75fc930d10: The destination operand is a general-purpose register and the source operand is an immediate
+        value, a general-purpose register, or a memory location.
 - id: 7ece88e78e
   gist: mulx (BMI2) avoids rax and the flags, but it still takes rdx as…
   support:
-  - {doc: sdm, at: 1441, units: [732fc2309f, 05061e6bf2], part: Description}
+  - doc: sdm
+    at: 1441
+    units: [732fc2309f, 05061e6bf2]
+    part: Description
+    quotes:
+      732fc2309f: Performs an unsigned multiplication of the implicit source operand (EDX/RDX) and the
+        specified source operand (the third operand) and stores the low half of the result in the second
+        destination (second operand), the high half of the result in the first destination operand (first
+        operand), without reading or writing the arithmetic flags.
+      05061e6bf2: VEX.LZ.F2.0F38.W1 F6 /r MULX r64a, r64b, r/m64 | RVM | V/N.E. | BMI2 | Unsigned multiply
+        of r/m64 with RDX without affecting arithmetic flags.
 - id: 65da7c26cd
   gist: div src and idiv src divide the 128-bit value in rdx:rax by src…
   support:
-  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
-  - {doc: sdm, at: 1152, units: [c21055875c, a8bc623d9d], part: Description}
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
+  - doc: sdm
+    at: 1152
+    units: [c21055875c, a8bc623d9d]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
+      a8bc623d9d: RAX contains a 64-bit quotient; RDX contains a 64-bit remainder.
 - id: 1d0ffc15c5
   gist: 'Two preparation rules:'
   how: editorial
@@ -74,39 +179,83 @@ claims:
   how: derived
   note: The unsigned dividend is RDX:RAX, so RDX must be zero; xor edx, edx zero-extends into rdx.
   support:
-  - {doc: sdm, at: 968, units: ['2451701361'], part: Description}
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
   - doc: sdm
     at: 79
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: c2b6001c33
   gist: 'Signed: copy the sign of rax into every bit of rdx with cqo.'
   support:
-  - {doc: sdm, at: 961, units: [e69cbbabf3, 4e45cbb2ec], part: Description}
+  - doc: sdm
+    at: 961
+    units: [e69cbbabf3, 4e45cbb2ec]
+    part: Description
+    quotes:
+      e69cbbabf3: The CQO instruction (available in 64-bit mode only) copies the sign (bit 63) of the
+        value in the RAX register into every bit position in the RDX register.
+      4e45cbb2ec: The CQO instruction can be used to produce a double quadword dividend from a quadword
+        before a quadword division.
 - id: 76891bb69a
   gist: Zeroing rdx instead would turn a negative dividend into a huge…
   how: derived
   note: A zero upper half makes the 128-bit signed dividend positive.
   support:
-  - {doc: sdm, at: 1152, units: [c21055875c], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [c21055875c]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
   - doc: sdm
     at: 79
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: c9c6e3429e
   gist: 'divmod: ; void divmod(long a, long b, long quot, long rem) mov…'
   how: run
   ref: tests/asm/regs.asm
   note: divmod(-7, 2) = -3 remainder -1 is checked by `make verify-asm`.
   support:
-  - {doc: sdm, at: 1152, units: [c21055875c], part: Description}
+  - doc: sdm
+    at: 1152
+    units: [c21055875c]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
 - id: d3f06c4bdd
   gist: 'Division raises #DE (a fault, not a flag) when the divisor is z…'
   support:
-  - {doc: sdm, at: 970, units: [899e87f561, 602f8497c6], part: 64-Bit Mode Exceptions}
-  - {doc: sdm, at: 968, units: [52f0f81ad4], part: Description}
+  - doc: sdm
+    at: 970
+    units: [899e87f561, 602f8497c6]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      899e87f561: '#DE If the source operand (divisor) is 0'
+      602f8497c6: If the quotient is too large for the designated register.
+  - doc: sdm
+    at: 968
+    units: [52f0f81ad4]
+    part: Description
+    quotes:
+      52f0f81ad4: 'Overflow is indicated with the #DE (divide error) exception rather than with the CF
+        flag.'
 - id: 4e59567718
   gist: The classic overflow is the most negative 64-bit number divided…
   how: derived
@@ -116,7 +265,13 @@ claims:
 - id: 556fc4a808
   gist: cdqe sign-extends eax into rax.
   support:
-  - {doc: sdm, at: 842, units: [ca770370ab], part: Description}
+  - doc: sdm
+    at: 842
+    units: [ca770370ab]
+    part: Description
+    quotes:
+      ca770370ab: In which case, CDQE copies the sign (bit 31) of the doubleword in the EAX register into
+        the high 32 bits of RAX.
 - id: 888a711b2b
   gist: It exists because a plain 32-bit write zero-extends.
   how: derived
@@ -127,61 +282,195 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 67b11557ae
   gist: cqo copies the sign bit of rax into all of rdx, making the 128-…
   support:
-  - {doc: sdm, at: 961, units: [e69cbbabf3, 4e45cbb2ec], part: Description}
+  - doc: sdm
+    at: 961
+    units: [e69cbbabf3, 4e45cbb2ec]
+    part: Description
+    quotes:
+      e69cbbabf3: The CQO instruction (available in 64-bit mode only) copies the sign (bit 63) of the
+        value in the RAX register into every bit position in the RDX register.
+      4e45cbb2ec: The CQO instruction can be used to produce a double quadword dividend from a quadword
+        before a quadword division.
 - id: b3317587fb
   gist: The smaller forms are cbw/cwde and cwd/cdq.
   support:
-  - {doc: sdm, at: 842, units: [7b218921fe, fd2d735dfc], part: Description}
-  - {doc: sdm, at: 961, units: [36f8c58bcb, 03f08a1acd], part: Description}
+  - doc: sdm
+    at: 842
+    units: [7b218921fe, fd2d735dfc]
+    part: Description
+    quotes:
+      7b218921fe: The CBW (convert byte to word) instruction copies the sign (bit 7) in the source operand
+        into every bit in the AH register.
+      fd2d735dfc: The CWDE (convert word to doubleword) instruction copies the sign (bit 15) of the word
+        in the AX register into the high 16 bits of the EAX register.
+  - doc: sdm
+    at: 961
+    units: [36f8c58bcb, 03f08a1acd]
+    part: Description
+    quotes:
+      36f8c58bcb: The CWD instruction copies the sign (bit 15) of the value in the AX register into every
+        bit position in the DX register.
+      03f08a1acd: The CDQ instruction copies the sign (bit 31) of the value in the EAX register into every
+        bit position in the EDX register.
 - id: 38a71ffee5
   gist: cmpxchg | The comparand; on failure the memory value is loaded…
   support:
-  - {doc: sdm, at: 898, units: [294ba4653d, b0891d676a], part: Description}
-  - {doc: sdm, at: 900, units: [c43fbaf713, 2b7e80e9f4], part: Description}
+  - doc: sdm
+    at: 898
+    units: [294ba4653d, b0891d676a]
+    part: Description
+    quotes:
+      294ba4653d: Compares the value in the AL, AX, EAX, or RAX register with the first operand (destination
+        operand).
+      b0891d676a: Otherwise, the destination operand is loaded into the AL, AX, EAX or RAX register.
+  - doc: sdm
+    at: 900
+    units: [c43fbaf713, 2b7e80e9f4]
+    part: Description
+    quotes:
+      c43fbaf713: Compares the 64-bit value in EDX:EAX (or 128-bit value in RDX:RAX if operand size is
+        128 bits) with the operand (destination operand).
+      2b7e80e9f4: Otherwise, the value in the destination operand is loaded into EDX:EAX (or RDX:RAX).
 - id: f80b46c1b8
   gist: 'stos, scas, lods | The data register: stored, compared with mem…'
   support:
-  - {doc: sdm, at: 1966, units: [01b4684e50], part: Description}
-  - {doc: sdm, at: 1905, units: [bd6969fe6d], part: Description}
-  - {doc: sdm, at: 1271, units: [d984683726], part: Description}
+  - doc: sdm
+    at: 1966
+    units: [01b4684e50]
+    part: Description
+    quotes:
+      01b4684e50: In non-64-bit and default 64-bit mode; stores a byte, word, or doubleword from the AL,
+        AX, or EAX register (respectively) into the destination operand.
+  - doc: sdm
+    at: 1905
+    units: [bd6969fe6d]
+    part: Description
+    quotes:
+      bd6969fe6d: 'In non-64-bit modes and in default 64-bit mode: this instruction compares a byte, word,
+        doubleword or quadword specified using a memory operand with the value in AL, AX, or EAX.'
+  - doc: sdm
+    at: 1271
+    units: [d984683726]
+    part: Description
+    quotes:
+      d984683726: Loads a byte, word, or doubleword from the source operand into the AL, AX, or EAX register,
+        respectively.
 - id: beeff8cdac
   gist: xlat | al is the index, and the looked-up byte replaces it.
   support:
-  - {doc: sdm, at: 2871, units: [43b4a27416], part: Description}
+  - doc: sdm
+    at: 2871
+    units: [43b4a27416]
+    part: Description
+    quotes:
+      43b4a27416: Locates a byte entry in a table in memory, using the contents of the AL register as
+        a table index, then copies the contents of the table entry back into the AL register.
 - id: c392598a91
   gist: cpuid | eax selects the leaf; results come back in eax, ebx, ec…
   support:
-  - {doc: sdm, at: 907, units: [71cb545f05], part: Description}
+  - doc: sdm
+    at: 907
+    units: [71cb545f05]
+    part: Description
+    quotes:
+      71cb545f05: CPUID returns processor identification and feature information in the EAX, EBX, ECX,
+        and EDX registers.1 The instruction's output is dependent on the contents of the EAX register
+        upon execution and, in some cases, ECX.
 - id: 9766037b38
   gist: rdtsc | The time-stamp counter returns in edx:eax.
   support:
-  - {doc: sdm, at: 1850, units: [0dadc75f63, 8e0dcd744a], part: Description}
+  - doc: sdm
+    at: 1850
+    units: [0dadc75f63, 8e0dcd744a]
+    part: Description
+    quotes:
+      0dadc75f63: Reads the current value of the processor's time-stamp counter (a 64-bit MSR) into the
+        EDX:EAX registers.
+      8e0dcd744a: The EDX register is loaded with the high-order 32 bits of the MSR and the EAX register
+        is loaded with the low-order 32 bits.
 - id: 630b354602
   gist: Several arithmetic instructions also have a dedicated accumulat…
   how: derived
   note: The accumulator rows (05 id, 2D id, 3D id; operand encoding I) have no ModRM byte, which the 81
     /n id rows need.
   support:
-  - {doc: sdm, at: 718, units: [4f0b9483da, 5f900f4185, 4a4d92ec2a], part: Opcode table}
-  - {doc: sdm, at: 1974, units: [27cb7dbe81, bc695e78e0], part: Opcode table}
-  - {doc: sdm, at: 865, units: [663f9cbda6, b6e6f8a896], part: Opcode table}
+  - doc: sdm
+    at: 718
+    units: [4f0b9483da, 5f900f4185, 4a4d92ec2a]
+    part: Opcode table
+    quotes:
+      4f0b9483da: REX.W + 05 id | ADD RAX, imm32 | I | Valid | N.E. | Add imm32 sign-extended to 64-bits
+        to RAX.
+      5f900f4185: REX.W + 81 /0 id | ADD r/m64, imm32 | MI | Valid | N.E. | Add imm32 sign-extended to
+        64-bits to r/m64.
+      4a4d92ec2a: I | AL/AX/EAX/RAX | imm8/16/32 | N/A | N/A
+  - doc: sdm
+    at: 1974
+    units: [27cb7dbe81, bc695e78e0]
+    part: Opcode table
+    quotes:
+      27cb7dbe81: REX.W + 2D id | SUB RAX, imm32 | I | Valid | N.E. | Subtract imm32 sign-extended to
+        64-bits from RAX.
+      bc695e78e0: REX.W + 81 /5 id | SUB r/m64, imm32 | MI | Valid | N.E. | Subtract imm32 sign-extended
+        to 64-bits from r/m64.
+  - doc: sdm
+    at: 865
+    units: [663f9cbda6, b6e6f8a896]
+    part: Opcode table
+    quotes:
+      663f9cbda6: REX.W + 3D id | CMP RAX, imm32 | I | Valid | N.E. | Compare imm32 sign-extended to 64-bits
+        with RAX.
+      b6e6f8a896: REX.W + 81 /7 id | CMP r/m64, imm32 | MI | Valid | N.E. | Compare imm32 sign-extended
+        to 64-bits with r/m64.
 - id: b56840f69f
   gist: Both Linux and Windows return a function's integer result in ra…
   support:
-  - {doc: sysv, at: 23, units: [0f7d542149], part: 3.2.3 Parameter Passing}
-  - {doc: msx64, at: Return values, units: [1db94555cc], part: Return values}
+  - doc: sysv
+    at: 23
+    units: [0f7d542149]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      0f7d542149: 3. If the class is INTEGER, the next available register of the sequence %rax, %rdx is
+        used.
+  - doc: msx64
+    at: Return values
+    units: [1db94555cc]
+    part: Return values
+    quotes:
+      1db94555cc: A scalar return value that can fit into 64 bits, including the __m64 type, is returned
+        through RAX.
 - id: 4171c7c25f
   gist: System V also uses rdx as the second integer return register (a…
   support:
-  - {doc: sysv, at: 22, units: [cc1bb4de50], part: 3.2.3 Parameter Passing}
-  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
+  - doc: sysv
+    at: 22
+    units: [cc1bb4de50]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      cc1bb4de50: '%rcx used to pass 4th integer argument to functions No %rdx used to pass 3rd argument
+        to functions; 2nd return register'
+  - doc: msx64
+    at: Parameter passing
+    units: [d7665e1c32]
+    part: Parameter passing
+    quotes:
+      d7665e1c32: Integer valued arguments in the leftmost four positions are passed in left-to-right
+        order in RCX, RDX, R8, and R9, respectively.
 - id: 796108500e
   gist: On Linux rax additionally holds the system call number before s…
   support:
-  - {doc: sysv, at: 125, units: [0fd82f5895], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [0fd82f5895]
+    part: Miscellaneous Remarks
+    quotes:
+      0fd82f5895: 3. The number of the syscall has to be passed in register %rax.
 - id: 356e03cf0d
   gist: 'Details in the calling-convention articles: Linux, Windows.'
   how: editorial

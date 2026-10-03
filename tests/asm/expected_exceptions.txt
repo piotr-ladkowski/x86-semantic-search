@@ -1,0 +1,21 @@
+ud2                    vector=6  err=0     SIGILL ILL_ILLOPN addr=nonzero
+lock add eax, ebx      vector=6  err=0     SIGILL ILL_ILLOPN addr=nonzero
+db 0x27 (old DAA)      vector=6  err=0     SIGILL ILL_ILLOPN addr=nonzero
+db 0xCE (INTO)         vector=6  err=0     SIGILL ILL_ILLOPN addr=nonzero
+div by zero            vector=0  err=0     SIGFPE FPE_INTDIV addr=nonzero
+div quotient too big   vector=0  err=0     SIGFPE FPE_INTDIV addr=nonzero
+idiv INT64_MIN / -1    vector=0  err=0     SIGFPE FPE_INTDIV addr=nonzero
+int3                   vector=3  err=0     SIGTRAP SI_KERNEL addr=-
+int 0x21               vector=13 err=0x10a SIGSEGV SI_KERNEL addr=-
+read [0]               vector=14 err=0x4   SIGSEGV SEGV_MAPERR addr=0
+write read-only page   vector=14 err=0x7   SIGSEGV SEGV_ACCERR addr=nonzero
+non-canonical read     vector=13 err=0     SIGSEGV SI_KERNEL addr=-
+movaps misaligned      vector=13 err=0     SIGSEGV SI_KERNEL addr=-
+hlt                    vector=13 err=0     SIGSEGV SI_KERNEL addr=-
+cli                    vector=13 err=0     SIGSEGV SI_KERNEL addr=-
+in al, dx              vector=13 err=0     SIGSEGV SI_KERNEL addr=-
+call 0                 vector=14 err=0x14  SIGSEGV SEGV_MAPERR addr=0
+push, bad rsp          vector=12 err=0     SIGBUS SI_KERNEL addr=-
+unaligned with AC set  vector=17 err=0     SIGBUS BUS_ADRALN addr=0
+ud2 (no handler)       default action: killed by SIGILL
+read [0] (no handler)  default action: killed by SIGSEGV

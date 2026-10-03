@@ -6,47 +6,123 @@ claims:
 - id: 3c1816f66a
   gist: Multiplies RAX by the operand as unsigned numbers and stores th…
   support:
-  - {doc: sdm, at: 1429, units: [044169e7d3, 4850ff1b96, 0f3291adb3], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [044169e7d3, 4850ff1b96, 0f3291adb3]
+    part: Description
+    quotes:
+      044169e7d3: Performs an unsigned multiplication of the first operand (destination operand) and the
+        second operand (source operand) and stores the result in the destination operand.
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
 - id: a7a3f73efc
   gist: MUL r/m64 is encoded as REX.W + F7 /4.
   support:
-  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1429
+    units: [4850ff1b96]
+    part: Opcode table
+    by: match
+    quotes:
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
 - id: 17f22d42c9
   gist: RDX:RAX := RAX r/m64.
   support:
-  - {doc: sdm, at: 1429, units: [4850ff1b96], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [4850ff1b96]
+    part: Opcode table
+    quotes:
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
 - id: 05be60e4f1
   gist: The 32-bit form (F7 /4) multiplies EAX and writes EDX:EAX; the…
   support:
-  - {doc: sdm, at: 1429, units: [89394ebe87, ae4bf5a29c], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [89394ebe87, ae4bf5a29c]
+    part: Opcode table
+    quotes:
+      89394ebe87: F6 /4 | MUL r/m8[1] | M | Valid | Valid | Unsigned multiply (AX := AL ∗ r/m8).
+      ae4bf5a29c: F7 /4 | MUL r/m32 | M | Valid | Valid | Unsigned multiply (EDX:EAX := EAX ∗ r/m32).
 - id: 1f1aa91256
   gist: 'Flags modified: OF, CF; undefined: SF, ZF, AF, PF.'
   support:
-  - {doc: sdm, at: 1430, units: [9f41ea0667, 90e3d2cc23], part: Flags Affected}
+  - doc: sdm
+    at: 1430
+    units: [9f41ea0667, 90e3d2cc23]
+    part: Flags Affected
+    quotes:
+      9f41ea0667: The OF and CF flags are set to 0 if the upper half of the result is 0; otherwise, they
+        are set to 1.
+      90e3d2cc23: The SF, ZF, AF, and PF flags are undefined.
 - id: 22c22fbf46
   gist: CF and OF are 0 if the upper half of the product is 0, otherwis…
   support:
-  - {doc: sdm, at: 1430, units: [9f41ea0667], part: Flags Affected}
-  - {doc: sdm, at: 1429, units: [9d0a0e51c2], part: Description}
+  - doc: sdm
+    at: 1430
+    units: [9f41ea0667]
+    part: Flags Affected
+    quotes:
+      9f41ea0667: The OF and CF flags are set to 0 if the upper half of the result is 0; otherwise, they
+        are set to 1.
+  - doc: sdm
+    at: 1429
+    units: [9d0a0e51c2]
+    part: Description
+    quotes:
+      9d0a0e51c2: If the high-order bits of the product are 0, the CF and OF flags are cleared; otherwise,
+        the flags are set.
 - id: a8c3af8839
   gist: mul src multiplies the unsigned value in rax by src (a register…
   support:
-  - {doc: sdm, at: 1429, units: [4850ff1b96, 254de13c7b, e91bbaa475], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [4850ff1b96, 254de13c7b, e91bbaa475]
+    part: Opcode table
+    quotes:
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+      e91bbaa475: The result is stored in register AX, register pair DX:AX, or register pair EDX:EAX (depending
+        on the operand size), with the high-order bits of the product contained in register AH, DX, or
+        EDX, respectively.
 - id: 343b006115
   gist: The multiplicand is implicit, so there is only one explicit ope…
   support:
-  - {doc: sdm, at: 1429, units: [92e9ec2799, 15c63c03d3], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [92e9ec2799, 15c63c03d3]
+    part: Description
+    quotes:
+      92e9ec2799: The destination operand is an implied operand located in register AL, AX or EAX (depending
+        on the size of the operand); the source operand is located in a general-purpose register or a
+        memory location.
+      15c63c03d3: M | ModRM:r/m (r) | N/A | N/A | N/A
 - id: d9694a380d
   gist: Multiplying unsigned numbers when you need the whole product, f…
   how: derived
   note: The quadword row delivers the full 128-bit product in RDX:RAX.
   support:
-  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
-  - {doc: sdm, at: 1429, units: [0f3291adb3], part: Table}
+  - doc: sdm
+    at: 1429
+    units: [0f3291adb3]
+    part: Table
+    quotes:
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
+  - doc: sdm
+    at: 1429
+    units: [0f3291adb3]
+    part: Table
+    quotes:
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
 - id: 2ea8f5cb9d
   gist: 'Checking for unsigned overflow of a 64-bit multiply: CF and OF…'
   support:
-  - {doc: sdm, at: 1430, units: [9f41ea0667], part: Flags Affected}
+  - doc: sdm
+    at: 1430
+    units: [9f41ea0667]
+    part: Flags Affected
+    quotes:
+      9f41ea0667: The OF and CF flags are set to 0 if the upper half of the result is 0; otherwise, they
+        are set to 1.
 - id: ea0f2d1671
   gist: For an ordinary signed or truncated multiply, imul is simpler (…
   how: derived
@@ -57,11 +133,23 @@ claims:
     units: [c0bc920325, 1c427b5098, 0527f7241f]
     part: Description
     note: From the IMUL entry.
+    quotes:
+      c0bc920325: This instruction has three forms, depending on the number of operands.
+      1c427b5098: Two-operand form — With this form the destination operand (the first operand) is multiplied
+        by the source operand (second operand).
+      0527f7241f: Three-operand form — This form requires a destination operand (the first operand) and
+        two source operands (the second and the third operands).
   - doc: sdm
     at: 1155
     units: [c0bc920325, 1c427b5098, 0527f7241f]
     part: Description
     note: From the IMUL entry.
+    quotes:
+      c0bc920325: This instruction has three forms, depending on the number of operands.
+      1c427b5098: Two-operand form — With this form the destination operand (the first operand) is multiplied
+        by the source operand (second operand).
+      0527f7241f: Three-operand form — This form requires a destination operand (the first operand) and
+        two source operands (the second and the third operands).
 - id: a545ea8414
   gist: For a multiply that leaves the flags alone and lets you choose…
   how: derived
@@ -73,11 +161,27 @@ claims:
     units: [732fc2309f, bc3a60f924]
     part: Description
     note: From the MULX entry.
+    quotes:
+      732fc2309f: Performs an unsigned multiplication of the implicit source operand (EDX/RDX) and the
+        specified source operand (the third operand) and stores the low half of the result in the second
+        destination (second operand), the high half of the result in the first destination operand (first
+        operand), without reading or writing the arithmetic flags.
+      bc3a60f924: This enables efficient programming where the software can interleave add with carry
+        operations and multiplications.
   - doc: sdm
     at: 1441
     units: [732fc2309f, bc3a60f924, 05061e6bf2]
     part: Description
     note: From the MULX entry.
+    quotes:
+      732fc2309f: Performs an unsigned multiplication of the implicit source operand (EDX/RDX) and the
+        specified source operand (the third operand) and stores the low half of the result in the second
+        destination (second operand), the high half of the result in the first destination operand (first
+        operand), without reading or writing the arithmetic flags.
+      bc3a60f924: This enables efficient programming where the software can interleave add with carry
+        operations and multiplications.
+      05061e6bf2: VEX.LZ.F2.0F38.W1 F6 /r MULX r64a, r64b, r/m64 | RVM | V/N.E. | BMI2 | Unsigned multiply
+        of r/m64 with RDX without affecting arithmetic flags.
 - id: 7f54a5868d
   gist: Implicit registers.
   how: editorial
@@ -85,7 +189,15 @@ claims:
 - id: d5d3fd27b0
   gist: rax is always the multiplicand and rdx is always overwritten by…
   support:
-  - {doc: sdm, at: 1429, units: [92e9ec2799, 0f3291adb3], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [92e9ec2799, 0f3291adb3]
+    part: Description
+    quotes:
+      92e9ec2799: The destination operand is an implied operand located in register AL, AX or EAX (depending
+        on the size of the operand); the source operand is located in a general-purpose register or a
+        memory location.
+      0f3291adb3: Quadword | RAX | r/m64 | RDX:RAX
 - id: 2d4b26a81b
   gist: Save anything you need from rdx first.
   how: editorial
@@ -95,23 +207,61 @@ claims:
   how: derived
   note: The only operand form is ModRM:r/m; no row has an immediate.
   support:
-  - {doc: sdm, at: 1429, units: [89394ebe87, 4850ff1b96, 15c63c03d3], part: Opcode table}
-  - {doc: sdm, at: 1429, units: [89394ebe87, 4850ff1b96, 15c63c03d3], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [89394ebe87, 4850ff1b96, 15c63c03d3]
+    part: Opcode table
+    quotes:
+      89394ebe87: F6 /4 | MUL r/m8[1] | M | Valid | Valid | Unsigned multiply (AX := AL ∗ r/m8).
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+      15c63c03d3: M | ModRM:r/m (r) | N/A | N/A | N/A
+  - doc: sdm
+    at: 1429
+    units: [89394ebe87, 4850ff1b96, 15c63c03d3]
+    part: Opcode table
+    quotes:
+      89394ebe87: F6 /4 | MUL r/m8[1] | M | Valid | Valid | Unsigned multiply (AX := AL ∗ r/m8).
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+      15c63c03d3: M | ModRM:r/m (r) | N/A | N/A | N/A
 - id: efe7a1e97b
   gist: mul 10 is not valid; load the constant into a register.
   how: derived
   note: No immediate form exists, so the assembler rejects it.
   support:
-  - {doc: sdm, at: 1429, units: [4850ff1b96, 15c63c03d3], part: Opcode table}
-  - {doc: sdm, at: 1429, units: [4850ff1b96, 15c63c03d3], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [4850ff1b96, 15c63c03d3]
+    part: Opcode table
+    quotes:
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+      15c63c03d3: M | ModRM:r/m (r) | N/A | N/A | N/A
+  - doc: sdm
+    at: 1429
+    units: [4850ff1b96, 15c63c03d3]
+    part: Opcode table
+    quotes:
+      4850ff1b96: REX.W + F7 /4 | MUL r/m64 | M | Valid | N.E. | Unsigned multiply (RDX:RAX := RAX ∗ r/m64).
+      15c63c03d3: M | ModRM:r/m (r) | N/A | N/A | N/A
 - id: f1fed617b8
   gist: Only CF and OF mean anything.
   support:
-  - {doc: sdm, at: 1430, units: [9f41ea0667, 90e3d2cc23], part: Flags Affected}
+  - doc: sdm
+    at: 1430
+    units: [9f41ea0667, 90e3d2cc23]
+    part: Flags Affected
+    quotes:
+      9f41ea0667: The OF and CF flags are set to 0 if the upper half of the result is 0; otherwise, they
+        are set to 1.
+      90e3d2cc23: The SF, ZF, AF, and PF flags are undefined.
 - id: cf25792845
   gist: SF, ZF, AF and PF are undefined afterwards, so do not branch on…
   support:
-  - {doc: sdm, at: 1430, units: [90e3d2cc23], part: Flags Affected}
+  - doc: sdm
+    at: 1430
+    units: [90e3d2cc23]
+    part: Flags Affected
+    quotes:
+      90e3d2cc23: The SF, ZF, AF, and PF flags are undefined.
 - id: f898bf2045
   gist: 32-bit form.
   how: editorial
@@ -119,33 +269,64 @@ claims:
 - id: f0e19bb0f4
   gist: mul ecx multiplies eax and writes edx:eax; both writes zero-ext…
   support:
-  - {doc: sdm, at: 1429, units: [ae4bf5a29c, ae1030617f], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [ae4bf5a29c, ae1030617f]
+    part: Opcode table
+    quotes:
+      ae4bf5a29c: F7 /4 | MUL r/m32 | M | Valid | Valid | Unsigned multiply (EDX:EAX := EAX ∗ r/m32).
+      ae1030617f: Doubleword | EAX | r/m32 | EDX:EAX
   - doc: sdm
     at: 79
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: efbead63d5
   gist: The 8-bit form writes the 16-bit product to ax.
   support:
-  - {doc: sdm, at: 1429, units: [89394ebe87, b624b485ad], part: Opcode table}
+  - doc: sdm
+    at: 1429
+    units: [89394ebe87, b624b485ad]
+    part: Opcode table
+    quotes:
+      89394ebe87: F6 /4 | MUL r/m8[1] | M | Valid | Valid | Unsigned multiply (AX := AL ∗ r/m8).
+      b624b485ad: Byte | AL | r/m8 | AX
 - id: fd352c64aa
   gist: 'It is unsigned: for signed values the high half is wrong.'
   how: derived
   note: MUL treats the operands as unsigned; IMUL's one-operand form is the signed counterpart.
   support:
-  - {doc: sdm, at: 1429, units: [044169e7d3], part: Description}
+  - doc: sdm
+    at: 1429
+    units: [044169e7d3]
+    part: Description
+    quotes:
+      044169e7d3: Performs an unsigned multiplication of the first operand (destination operand) and the
+        second operand (source operand) and stores the result in the destination operand.
   - doc: sdm
     at: 1155
     units: [29fced48e4]
     part: Description
     note: 'From the IMUL entry: signed multiplication.'
-  - {doc: sdm, at: 1429, units: [044169e7d3], part: Description}
+    quotes:
+      29fced48e4: Performs a signed multiplication of two operands.
+  - doc: sdm
+    at: 1429
+    units: [044169e7d3]
+    part: Description
+    quotes:
+      044169e7d3: Performs an unsigned multiplication of the first operand (destination operand) and the
+        second operand (source operand) and stores the result in the destination operand.
   - doc: sdm
     at: 1155
     units: [29fced48e4]
     part: Description
     note: 'From the IMUL entry: signed multiplication.'
+    quotes:
+      29fced48e4: Performs a signed multiplication of two operands.
 - id: 7f798bf7a9
   gist: Use imul (one-operand form) instead.
   support:
@@ -154,6 +335,12 @@ claims:
     units: [07730dc140, a48af4d695]
     part: Description
     note: From the IMUL entry.
+    quotes:
+      07730dc140: One-operand form — This form is identical to that used by the MUL instruction.
+      a48af4d695: Here, the source operand (in a general-purpose register or memory location) is multiplied
+        by the value in the AL, AX, EAX, or RAX register (depending on the operand size) and the product
+        (twice the size of the input operand) is stored in the AX, DX:AX, EDX:EAX, or RDX:RAX registers,
+        respectively.
 - id: f763fc266b
   gist: mov rax, 0xFFFFFFFFFFFFFFFF mov rbx, 2 mul rbx ; rdx:rax = 0x1:…
   how: illustrative

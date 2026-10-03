@@ -21,7 +21,7 @@ import numpy as np
 
 from .claims import Claim
 from .embedding import Embedder
-from .evidence import Entry, PageEvidence, Support, key_terms, plain_text
+from .evidence import Entry, PageEvidence, Support, key_terms, plain_text, quotable
 from .sources import Located, SourceRegistry
 from .textunits import squash
 
@@ -53,6 +53,7 @@ class Candidate:
             units=[u.loc.unit.id],
             part=u.loc.unit.part or None,
             by="match" if self.method == "match" else "auto",
+            quotes={u.loc.unit.id: u.text} if quotable(u.loc.unit) else {},
         )
 
 

@@ -6,131 +6,371 @@ claims:
 - id: cdcf8aed05
   gist: Shifts the bits of the operand toward the low end, filling with…
   support:
-  - {doc: sdm, at: 1893, units: [6270709cc1, a82b35c96e, 2c7d465e22, bf769a6efb], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [6270709cc1, a82b35c96e, 2c7d465e22, bf769a6efb]
+    part: Description
+    quotes:
+      6270709cc1: The shift arithmetic right (SAR) and shift logical right (SHR) instructions shift the
+        bits of the destination operand to the right (toward less significant bit locations).
+      a82b35c96e: The SHR instruction clears the most significant bit (see Figure 7-8 in the Intel® 64
+        and IA-32 Architectures Software Developer's Manual, Volume 1); the SAR instruction sets or clears
+        the most significant bit to correspond to the sign (most significant bit) of the original value
+        in the destination operand.
+      2c7d465e22: The SAR and SHR instructions can be used to perform signed or unsigned division, respectively,
+        of the destination operand by powers of 2.
+      bf769a6efb: REX.W + D1 /5 | SHR r/m64, 1 | M1 | Valid | N.E. | Unsigned divide r/m64 by 2, once.
 - id: 9c7db5ef87
   gist: SHR r/m64, imm8 is encoded as REX.W + C1 /5 ib.
   support:
-  - {doc: sdm, at: 1893, units: [b4a1f65a46], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1893
+    units: [b4a1f65a46]
+    part: Opcode table
+    by: match
+    quotes:
+      b4a1f65a46: REX.W + C1 /5 ib | SHR r/m64, imm8 | MI | Valid | N.E. | Unsigned divide r/m64 by 2,
+        imm8 times.
 - id: 97b845e0fe
   gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
   support:
-  - {doc: sdm, at: 1892, units: [94fcd8b602], part: Opcode table}
-  - {doc: sdm, at: 1893, units: [bb6f6afe08, bf769a6efb], part: Opcode table}
+  - doc: sdm
+    at: 1892
+    units: [94fcd8b602]
+    part: Opcode table
+    quotes:
+      94fcd8b602: D0 /5 | SHR r/m8[2],1 | M1 | Valid | Valid | Unsigned divide r/m8 by 2, once.
+  - doc: sdm
+    at: 1893
+    units: [bb6f6afe08, bf769a6efb]
+    part: Opcode table
+    quotes:
+      bb6f6afe08: D1 /5 | SHR r/m32, 1 | M1 | Valid | Valid | Unsigned divide r/m32 by 2, once.
+      bf769a6efb: REX.W + D1 /5 | SHR r/m64, 1 | M1 | Valid | N.E. | Unsigned divide r/m64 by 2, once.
 - id: 3f670e81ec
   gist: SHR r/m64, CL is encoded as REX.W + D3 /5.
   support:
-  - {doc: sdm, at: 1893, units: [1ec3744c4f], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1893
+    units: [1ec3744c4f]
+    part: Opcode table
+    by: match
+    quotes:
+      1ec3744c4f: REX.W + D3 /5 | SHR r/m64, CL | MC | Valid | N.E. | Unsigned divide r/m64 by 2, CL times.
 - id: 0e5ff6f3d0
   gist: Count in CL.
   support:
-  - {doc: sdm, at: 1893, units: [1ec3744c4f, 6a7744d2a3], part: Opcode table}
+  - doc: sdm
+    at: 1893
+    units: [1ec3744c4f, 6a7744d2a3]
+    part: Opcode table
+    quotes:
+      1ec3744c4f: REX.W + D3 /5 | SHR r/m64, CL | MC | Valid | N.E. | Unsigned divide r/m64 by 2, CL times.
+      6a7744d2a3: The count operand can be an immediate value or the CL register.
 - id: 85bc29d0e8
   gist: Masked to 6 bits for a 64-bit operand (5 bits for 8-, 16- and 3…
   support:
-  - {doc: sdm, at: 1893, units: [c45c18538a], part: Description}
-  - {doc: sdm, at: 1894, units: [0cab443de0, 7b59e7cce3], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [c45c18538a]
+    part: Description
+    quotes:
+      c45c18538a: The count is masked to 5 bits (or 6 bits with a 64-bit operand).
+  - doc: sdm
+    at: 1894
+    units: [0cab443de0, 7b59e7cce3]
+    part: Description
+    quotes:
+      0cab443de0: Using a REX prefix in the form of REX.W promotes operation to 64-bits and sets the mask
+        width for CL to 6 bits.
+      7b59e7cce3: In 64-bit mode, the instruction's default operation size is 32 bits and the mask width
+        for CL is 5 bits.
 - id: 127c9a15ca
   gist: SHR r/m64, 1 is encoded as REX.W + D1 /5.
   support:
-  - {doc: sdm, at: 1893, units: [bf769a6efb], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1893
+    units: [bf769a6efb]
+    part: Opcode table
+    by: match
+    quotes:
+      bf769a6efb: REX.W + D1 /5 | SHR r/m64, 1 | M1 | Valid | N.E. | Unsigned divide r/m64 by 2, once.
 - id: bc77de7670
   gist: Short encoding for a shift by one.
   how: derived
   note: The count-of-one rows (D1) carry no immediate byte, unlike the imm8 rows (C1).
   support:
-  - {doc: sdm, at: 1893, units: [e3b3cee5a0, bf769a6efb, b4a1f65a46], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [e3b3cee5a0, bf769a6efb, b4a1f65a46]
+    part: Description
+    quotes:
+      e3b3cee5a0: A special opcode encoding is provided for a count of 1.
+      bf769a6efb: REX.W + D1 /5 | SHR r/m64, 1 | M1 | Valid | N.E. | Unsigned divide r/m64 by 2, once.
+      b4a1f65a46: REX.W + C1 /5 ib | SHR r/m64, imm8 | MI | Valid | N.E. | Unsigned divide r/m64 by 2,
+        imm8 times.
 - id: da90a82493
   gist: 'Flags modified: CF, OF, SF, ZF, PF; undefined: AF.'
   support:
-  - {doc: sdm, at: 1895, units: [1971cf0e5d, 572e2d5093, 4dc3161a94, a6633281e3], part: Flags Affected}
+  - doc: sdm
+    at: 1895
+    units: [1971cf0e5d, 572e2d5093, 4dc3161a94, a6633281e3]
+    part: Flags Affected
+    quotes:
+      1971cf0e5d: The CF flag contains the value of the last bit shifted out of the destination operand;
+        it is undefined for SHL and SHR instructions where the count is greater than or equal to the size
+        (in bits) of the destination operand.
+      572e2d5093: The OF flag is affected only for 1-bit shifts (see "Description" above); otherwise,
+        it is undefined.
+      4dc3161a94: The SF, ZF, and PF flags are set according to the result.
+      a6633281e3: For a non-zero count, the AF flag is undefined.
 - id: 36d21e37b9
   gist: If the count is 0 no flag changes.
   support:
-  - {doc: sdm, at: 1895, units: [85c0a4fdcc], part: Flags Affected}
+  - doc: sdm
+    at: 1895
+    units: [85c0a4fdcc]
+    part: Flags Affected
+    quotes:
+      85c0a4fdcc: If the count is 0, the flags are not affected.
 - id: 1bdfd656ec
   gist: CF is the last bit shifted out.
   support:
-  - {doc: sdm, at: 1893, units: [7a5d08b855], part: Description}
-  - {doc: sdm, at: 1895, units: [1971cf0e5d], part: Flags Affected}
+  - doc: sdm
+    at: 1893
+    units: [7a5d08b855]
+    part: Description
+    quotes:
+      7a5d08b855: At the end of the shift operation, the CF flag contains the last bit shifted out of
+        the destination operand.
+  - doc: sdm
+    at: 1895
+    units: [1971cf0e5d]
+    part: Flags Affected
+    quotes:
+      1971cf0e5d: The CF flag contains the value of the last bit shifted out of the destination operand;
+        it is undefined for SHL and SHR instructions where the count is greater than or equal to the size
+        (in bits) of the destination operand.
 - id: 0838723d1c
   gist: OF is defined only for 1-bit shifts, where it is set to the top…
   support:
-  - {doc: sdm, at: 1894, units: [7386528d3e, 24fbf30650], part: Description}
-  - {doc: sdm, at: 1895, units: [572e2d5093], part: Flags Affected}
+  - doc: sdm
+    at: 1894
+    units: [7386528d3e, 24fbf30650]
+    part: Description
+    quotes:
+      7386528d3e: The OF flag is affected only on 1-bit shifts.
+      24fbf30650: For the SHR instruction, the OF flag is set to the most-significant bit of the original
+        operand.
+  - doc: sdm
+    at: 1895
+    units: [572e2d5093]
+    part: Flags Affected
+    quotes:
+      572e2d5093: The OF flag is affected only for 1-bit shifts (see "Description" above); otherwise,
+        it is undefined.
 - id: 66ddd857e8
   gist: AF is undefined for a non-zero count.
   support:
-  - {doc: sdm, at: 1895, units: [a6633281e3], part: Flags Affected}
+  - doc: sdm
+    at: 1895
+    units: [a6633281e3]
+    part: Flags Affected
+    quotes:
+      a6633281e3: For a non-zero count, the AF flag is undefined.
 - id: 43ff61d825
   gist: shr dst, count moves every bit of dst toward the least signific…
   support:
-  - {doc: sdm, at: 1893, units: [6270709cc1, 4956cfe26b, a82b35c96e], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [6270709cc1, 4956cfe26b, a82b35c96e]
+    part: Description
+    quotes:
+      6270709cc1: The shift arithmetic right (SAR) and shift logical right (SHR) instructions shift the
+        bits of the destination operand to the right (toward less significant bit locations).
+      4956cfe26b: For each shift count, the least significant bit of the destination operand is shifted
+        into the CF flag, and the most significant bit is either set or cleared depending on the instruction
+        type.
+      a82b35c96e: The SHR instruction clears the most significant bit (see Figure 7-8 in the Intel® 64
+        and IA-32 Architectures Software Developer's Manual, Volume 1); the SAR instruction sets or clears
+        the most significant bit to correspond to the sign (most significant bit) of the original value
+        in the destination operand.
 - id: 71f86d8bf3
   gist: The last bit shifted out is kept in CF. For unsigned values, sh…
   how: derived
   note: The SDM calls SHR unsigned division by 2 per count; 'rounds down' is what dropping the low bits
     means for unsigned values.
   support:
-  - {doc: sdm, at: 1893, units: [7a5d08b855, 2c7d465e22, bf769a6efb], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [7a5d08b855, 2c7d465e22, bf769a6efb]
+    part: Description
+    quotes:
+      7a5d08b855: At the end of the shift operation, the CF flag contains the last bit shifted out of
+        the destination operand.
+      2c7d465e22: The SAR and SHR instructions can be used to perform signed or unsigned division, respectively,
+        of the destination operand by powers of 2.
+      bf769a6efb: REX.W + D1 /5 | SHR r/m64, 1 | M1 | Valid | N.E. | Unsigned divide r/m64 by 2, once.
 - id: 60d04a74f0
   gist: 'Dividing an unsigned number by a power of two: shr rax, 4 divid…'
   how: derived
   note: Sixteen is 2^4 and each count divides by 2.
   support:
-  - {doc: sdm, at: 1893, units: [b4a1f65a46, 2c7d465e22], part: Opcode table}
+  - doc: sdm
+    at: 1893
+    units: [b4a1f65a46, 2c7d465e22]
+    part: Opcode table
+    quotes:
+      b4a1f65a46: REX.W + C1 /5 ib | SHR r/m64, imm8 | MI | Valid | N.E. | Unsigned divide r/m64 by 2,
+        imm8 times.
+      2c7d465e22: The SAR and SHR instructions can be used to perform signed or unsigned division, respectively,
+        of the destination operand by powers of 2.
 - id: cc9d943ff6
   gist: 'Extracting the top bits of a value: shr rax, 56 leaves the high…'
   how: derived
   note: Shifting right by 56 leaves bits 63:56 in the low byte, zero-filled above.
   support:
-  - {doc: sdm, at: 1893, units: [6270709cc1, a82b35c96e], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [6270709cc1, a82b35c96e]
+    part: Description
+    quotes:
+      6270709cc1: The shift arithmetic right (SAR) and shift logical right (SHR) instructions shift the
+        bits of the destination operand to the right (toward less significant bit locations).
+      a82b35c96e: The SHR instruction clears the most significant bit (see Figure 7-8 in the Intel® 64
+        and IA-32 Architectures Software Developer's Manual, Volume 1); the SAR instruction sets or clears
+        the most significant bit to correspond to the sign (most significant bit) of the original value
+        in the destination operand.
 - id: e07ae82a89
   gist: 'Reading a single bit position: shr rax, 63 leaves the top bit a…'
   how: derived
   note: Shifting right by 63 leaves only bit 63, zero-filled above.
   support:
-  - {doc: sdm, at: 1893, units: [6270709cc1, a82b35c96e], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [6270709cc1, a82b35c96e]
+    part: Description
+    quotes:
+      6270709cc1: The shift arithmetic right (SAR) and shift logical right (SHR) instructions shift the
+        bits of the destination operand to the right (toward less significant bit locations).
+      a82b35c96e: The SHR instruction clears the most significant bit (see Figure 7-8 in the Intel® 64
+        and IA-32 Architectures Software Developer's Manual, Volume 1); the SAR instruction sets or clears
+        the most significant bit to correspond to the sign (most significant bit) of the original value
+        in the destination operand.
 - id: 517ebc984b
   gist: Zero fill means unsigned.
   support:
-  - {doc: sdm, at: 1893, units: [a82b35c96e], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [a82b35c96e]
+    part: Description
+    quotes:
+      a82b35c96e: The SHR instruction clears the most significant bit (see Figure 7-8 in the Intel® 64
+        and IA-32 Architectures Software Developer's Manual, Volume 1); the SAR instruction sets or clears
+        the most significant bit to correspond to the sign (most significant bit) of the original value
+        in the destination operand.
 - id: cc8b873740
   gist: For a negative signed number shr produces a huge positive value…
   how: derived
   note: SHR clears the top bit, so a negative value becomes a large positive one; SAR is the signed variant.
   support:
-  - {doc: sdm, at: 1893, units: [a82b35c96e, 2c7d465e22], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [a82b35c96e, 2c7d465e22]
+    part: Description
+    quotes:
+      a82b35c96e: The SHR instruction clears the most significant bit (see Figure 7-8 in the Intel® 64
+        and IA-32 Architectures Software Developer's Manual, Volume 1); the SAR instruction sets or clears
+        the most significant bit to correspond to the sign (most significant bit) of the original value
+        in the destination operand.
+      2c7d465e22: The SAR and SHR instructions can be used to perform signed or unsigned division, respectively,
+        of the destination operand by powers of 2.
 - id: 6ed2e9a72b
   gist: The count is masked to its low 6 bits for a 64-bit operand (5 b…
   support:
-  - {doc: sdm, at: 1893, units: [c45c18538a, c506491372], part: Description}
-  - {doc: sdm, at: 1894, units: [0cab443de0, 7b59e7cce3], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [c45c18538a, c506491372]
+    part: Description
+    quotes:
+      c45c18538a: The count is masked to 5 bits (or 6 bits with a 64-bit operand).
+      c506491372: The count range is limited to 0 to 31 (or 63 with a 64-bit operand).
+  - doc: sdm
+    at: 1894
+    units: [0cab443de0, 7b59e7cce3]
+    part: Description
+    quotes:
+      0cab443de0: Using a REX prefix in the form of REX.W promotes operation to 64-bits and sets the mask
+        width for CL to 6 bits.
+      7b59e7cce3: In 64-bit mode, the instruction's default operation size is 32 bits and the mask width
+        for CL is 5 bits.
 - id: 3353742f31
   gist: A count of 0 changes nothing, including the flags.
   support:
-  - {doc: sdm, at: 1895, units: [85c0a4fdcc], part: Flags Affected}
+  - doc: sdm
+    at: 1895
+    units: [85c0a4fdcc]
+    part: Flags Affected
+    quotes:
+      85c0a4fdcc: If the count is 0, the flags are not affected.
 - id: 196fdc439e
   gist: After a variable-count shift the flags depend on the count.
   how: derived
   note: A count of 0 leaves the flags alone.
   support:
-  - {doc: sdm, at: 1895, units: [85c0a4fdcc], part: Flags Affected}
+  - doc: sdm
+    at: 1895
+    units: [85c0a4fdcc]
+    part: Flags Affected
+    quotes:
+      85c0a4fdcc: If the count is 0, the flags are not affected.
 - id: e47d7b0454
   gist: OF is only defined for a shift by exactly 1 (then it is the ori…
   support:
-  - {doc: sdm, at: 1894, units: [7386528d3e, 24fbf30650], part: Description}
-  - {doc: sdm, at: 1893, units: [7a5d08b855], part: Description}
-  - {doc: sdm, at: 1895, units: [572e2d5093], part: Flags Affected}
+  - doc: sdm
+    at: 1894
+    units: [7386528d3e, 24fbf30650]
+    part: Description
+    quotes:
+      7386528d3e: The OF flag is affected only on 1-bit shifts.
+      24fbf30650: For the SHR instruction, the OF flag is set to the most-significant bit of the original
+        operand.
+  - doc: sdm
+    at: 1893
+    units: [7a5d08b855]
+    part: Description
+    quotes:
+      7a5d08b855: At the end of the shift operation, the CF flag contains the last bit shifted out of
+        the destination operand.
+  - doc: sdm
+    at: 1895
+    units: [572e2d5093]
+    part: Flags Affected
+    quotes:
+      572e2d5093: The OF flag is affected only for 1-bit shifts (see "Description" above); otherwise,
+        it is undefined.
 - id: f8a148bfb3
   gist: The count is an 8-bit immediate, the constant 1, or cl.
   support:
-  - {doc: sdm, at: 1893, units: [6a7744d2a3, e3b3cee5a0, 1ec3744c4f], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [6a7744d2a3, e3b3cee5a0, 1ec3744c4f]
+    part: Description
+    quotes:
+      6a7744d2a3: The count operand can be an immediate value or the CL register.
+      e3b3cee5a0: A special opcode encoding is provided for a count of 1.
+      1ec3744c4f: REX.W + D3 /5 | SHR r/m64, CL | MC | Valid | N.E. | Unsigned divide r/m64 by 2, CL times.
 - id: 364ee35c8a
   gist: No other register can supply the count (see shrx).
   how: derived
   note: The count operand is an immediate or CL; SHRX (BMI2) takes a general register.
   support:
-  - {doc: sdm, at: 1893, units: [6a7744d2a3], part: Description}
+  - doc: sdm
+    at: 1893
+    units: [6a7744d2a3]
+    part: Description
+    quotes:
+      6a7744d2a3: The count operand can be an immediate value or the CL register.
 - id: 18a3ecf741
   gist: 32-bit operations zero the upper half of the register.
   support:
@@ -139,6 +379,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -147,6 +390,8 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: caea63f626
   gist: shr rax, 4 ; rax /= 16 (unsigned) shr rax, 63 ; rax = the old t…
   how: illustrative

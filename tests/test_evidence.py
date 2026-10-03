@@ -128,7 +128,7 @@ def test_ledger_file_is_readable_yaml_in_page_order(content_dir, store):
         ev.record(page, [ev.Entry(id=last, how="editorial"), ev.Entry(id=first, support=[src()])]),
     )
     text = page.path.read_text(encoding="utf-8")
-    assert text.startswith("# Evidence ledger") and "Pointers only" in text
+    assert text.startswith("# Evidence ledger") and "short quotation" in text
     data = yaml.safe_load(text)
     assert data["splitter"] == SPLITTER_VERSION
     assert [e["id"] for e in data["claims"]] == [first, last]  # page order, not insertion order
@@ -468,3 +468,120 @@ def test_without_a_checkout_run_refs_are_not_looked_up(store, content_dir, root)
     assert any(
         "needs `ref`" in p for p in run_check(reload(store, content_dir), root=None).problems
     )
+
+
+# ---- quotations ------------------------------------------------------------------------------
+
+LONG = "word " * 100  # 500 characters: over MAX_QUOTE
+
+
+def quoted_support(unit=COUNTS, text="The instruction counts the bits set to 1.", **kw):
+    return ev.Support(
+        doc="wikibooks", at="Population count", units=[unit], quotes={unit: text}, **kw
+    )
+
+
+def test_a_quote_must_belong_to_a_cited_sentence():
+    with pytest.raises(ValueError, match="not cited"):
+        ev.Support(doc="sdm", at=1, units=[COUNTS], quotes={STORES: "It stores the count."})
+
+
+def test_quotes_round_trip_through_the_ledger_file(store, content_dir):
+    page = popcnt(store)
+    ev.save(
+        page, ev.record(page, [ev.Entry(id=page.claims[0].claim.id, support=[quoted_support()])])
+    )
+    text = page.path.read_text(encoding="utf-8")
+    assert "The instruction counts the bits set to 1." in text and "quotes:" in text
+    (sup,) = popcnt(reload(store, content_dir)).claims[0].entry.support
+    assert sup.quotes == {COUNTS: "The instruction counts the bits set to 1."}
+
+
+def test_attach_quotes_reads_the_local_document(store, registry):
+    page = popcnt(store)
+    page.claims[0].entry = ev.Entry(
+        id=page.claims[0].claim.id, support=[src(COUNTS), src(STORES, by="auto")]
+    )
+    ledger, changed = ev.attach_quotes(page, registry)
+    assert changed == 2
+    quotes = [s.quotes for s in ledger.claims[0].support]
+    assert quotes == [
+        {COUNTS: "The instruction counts the bits set to 1."},
+        {STORES: "It stores the count in a register."},
+    ]
+    page.claims[0].entry = ledger.claims[0]
+    assert ev.attach_quotes(page, registry)[1] == 0  # nothing new the second time
+
+
+def test_long_sentences_and_pseudocode_are_cited_by_pointer_only(tmp_path):
+    sentence = "Short sentence here."
+    html = tmp_path / "w.html"
+    html.write_text(
+        f"<h1>S</h1><p>{sentence}</p><p>{LONG}.</p><pre>mov eax, 1\nret</pre>", encoding="utf-8"
+    )
+    reg = SourceRegistry(
+        Settings(wikibooks_html=html, sdm_pdf=tmp_path / "none.pdf"), tmp_path / "c"
+    )
+    units = {loc.unit.text[:12]: loc.unit for loc in reg["wikibooks"].units("S")}
+    assert ev.quotable(units["Short senten"]) and not ev.quotable(units["word word wo"])
+    code = type("U", (), {"kind": "code", "text": "x := 1;"})()
+    assert not ev.quotable(code)  # Operation pseudocode is never quoted
+
+
+def test_check_verifies_quotes_against_their_fingerprint_without_any_document(store, content_dir):
+    page = popcnt(store)
+    cid = page.claims[0].claim.id
+    ev.save(page, ev.record(page, [ev.Entry(id=cid, support=[quoted_support()])]))
+    rep = run_check(reload(store, content_dir), None)
+    assert rep.problems == [] and rep.quotes_ok == 1
+    tampered = page.path.read_text().replace("counts the bits", "counts the nibbles")
+    page.path.write_text(tampered)
+    (problem,) = run_check(reload(store, content_dir), None).problems
+    assert "is not that sentence" in problem
+
+
+def test_check_rejects_a_quote_longer_than_the_limit(store, content_dir):
+    page = popcnt(store)
+    unit = digest(LONG)
+    sup = ev.Support(doc="wikibooks", at="Population count", units=[unit], quotes={unit: LONG})
+    ev.save(page, ev.record(page, [ev.Entry(id=page.claims[0].claim.id, support=[sup])]))
+    problems = run_check(reload(store, content_dir), None).problems
+    assert any(f"limited to {ev.MAX_QUOTE}" in p for p in problems)
+
+
+def test_merging_keeps_the_quotes_of_both_sides(store):
+    page = popcnt(store)
+    cid = page.claims[0].claim.id
+    page.claims[0].entry = ev.Entry(id=cid, support=[quoted_support(by="llm")])
+    merged = ev.record(
+        page, [ev.Entry(id=cid, support=[quoted_support(STORES, "It stores.", by="llm")])]
+    )
+    (only,) = merged.claims[0].support
+    assert only.units == [COUNTS, STORES] and set(only.quotes) == {COUNTS, STORES}
+
+
+def test_a_quoted_pointer_shows_the_sentence_when_the_document_is_absent():
+    claim = ev.Claim("x", "The count of bits.", "S", "prose")
+    entry = ev.Entry(id="x", support=[quoted_support()])
+    (p,) = ev.passages(entry, claim, None)
+    assert p.state == "quoted" and p.unquoted == 0
+    assert [(u.text, u.cited) for u in p.units] == [
+        ("The instruction counts the bits set to 1.", True)
+    ]
+    assert "<b>bits</b>" in str(p.units[0].html)  # words shared with the claim are marked
+    partial = ev.Entry(
+        id="x",
+        support=[
+            ev.Support(doc="wikibooks", at="S", units=[COUNTS, STORES], quotes={COUNTS: "A."})
+        ],
+    )
+    (q,) = ev.passages(partial, claim, None)
+    assert q.state == "quoted" and q.unquoted == 1
+
+
+def test_json_form_carries_the_quotes_but_not_the_surrounding_text(store):
+    page = popcnt(store)
+    page.claims[0].entry = ev.Entry(id=page.claims[0].claim.id, support=[quoted_support()])
+    support = ev.page_to_dict(page, None)["claims"][0]["support"][0]
+    assert support["quotes"] == {COUNTS: "The instruction counts the bits set to 1."}
+    assert "passage" not in support

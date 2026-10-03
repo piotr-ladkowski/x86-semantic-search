@@ -6,31 +6,76 @@ claims:
 - id: c3f47cc92e
   gist: Adds 1 to the operand in place without changing the carry flag.
   support:
-  - {doc: sdm, at: 1161, units: [1bbdaea7df], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [1bbdaea7df]
+    part: Description
+    quotes:
+      1bbdaea7df: Adds 1 to the destination operand, while preserving the state of the CF flag.
 - id: 52f450e8b0
   gist: INC r/m64 is encoded as REX.W + FF /0.
   support:
-  - {doc: sdm, at: 1161, units: [4e07a9956d], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1161
+    units: [4e07a9956d]
+    part: Opcode table
+    by: match
+    quotes:
+      4e07a9956d: REX.W + FF /0 | INC r/m64 | M | Valid | N.E. | Increment r/m quadword by 1.
 - id: 8ba84f805e
   gist: The 32-, 16- and 8-bit forms are FF /0 (32/16-bit) and FE /0 (8…
   support:
-  - {doc: sdm, at: 1161, units: [4e6285dd5a, eb3e226fff, 7cfc371bcd], part: Opcode table}
+  - doc: sdm
+    at: 1161
+    units: [4e6285dd5a, eb3e226fff, 7cfc371bcd]
+    part: Opcode table
+    quotes:
+      4e6285dd5a: FE /0 | INC r/m8[1] | M | Valid | Valid | Increment r/m byte by 1.
+      eb3e226fff: FF /0 | INC r/m16 | M | Valid | Valid | Increment r/m word by 1.
+      7cfc371bcd: FF /0 | INC r/m32 | M | Valid | Valid | Increment r/m doubleword by 1.
 - id: d3f5690c27
   gist: The one-byte 40+ rd encodings of 32-bit mode do not exist in 64…
   support:
-  - {doc: sdm, at: 1161, units: [32fc55b7ba, eee77b7993, 818a845a7e], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [32fc55b7ba, eee77b7993, 818a845a7e]
+    part: Description
+    quotes:
+      32fc55b7ba: In 64-bit mode, INC r16 and INC r32 are not encodable (because opcodes 40H through 47H
+        are REX prefixes).
+      eee77b7993: 40+ rw2 | INC r16 | O | N.E. | Valid | Increment word register by 1.
+      818a845a7e: 40+ rd | INC r32 | O | N.E. | Valid | Increment doubleword register by 1.
 - id: 2aed03aa46
   gist: 'Flags modified: OF, SF, ZF, AF, PF.'
   support:
-  - {doc: sdm, at: 1161, units: [7912fbaba8], part: Flags Affected}
+  - doc: sdm
+    at: 1161
+    units: [7912fbaba8]
+    part: Flags Affected
+    quotes:
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
 - id: c550439195
   gist: CF is NOT affected; that is the difference from add reg, 1.
   support:
-  - {doc: sdm, at: 1161, units: [056a03066d, 5de9c5cfd9], part: Flags Affected}
+  - doc: sdm
+    at: 1161
+    units: [056a03066d, 5de9c5cfd9]
+    part: Flags Affected
+    quotes:
+      056a03066d: The CF flag is not affected.
+      5de9c5cfd9: (Use a ADD instruction with an immediate operand of 1 to perform an increment operation
+        that does updates the CF flag.)
 - id: 0dd5a0dd14
   gist: inc dst adds 1 to dst and stores the result back, setting OF, S…
   support:
-  - {doc: sdm, at: 1161, units: [1bbdaea7df, d10b3b545f, 7912fbaba8, 056a03066d], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [1bbdaea7df, d10b3b545f, 7912fbaba8, 056a03066d]
+    part: Description
+    quotes:
+      1bbdaea7df: Adds 1 to the destination operand, while preserving the state of the CF flag.
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
+      056a03066d: The CF flag is not affected.
 - id: 140d200768
   gist: 'Stepping a counter or index: inc rcx.'
   how: editorial
@@ -38,33 +83,77 @@ claims:
 - id: 2077a45b6b
   gist: Updating a loop counter inside a multi-word addition without di…
   support:
-  - {doc: sdm, at: 1161, units: [41464b6748, 1bbdaea7df], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [41464b6748, 1bbdaea7df]
+    part: Description
+    quotes:
+      41464b6748: This instruction allows a loop counter to be updated without disturbing the CF flag.
+      1bbdaea7df: Adds 1 to the destination operand, while preserving the state of the CF flag.
 - id: 5b76c5e6d6
   gist: 'Incrementing memory in place, atomically if you add lock: lock…'
   support:
-  - {doc: sdm, at: 1161, units: [138ae4629d, 7618c9e8a1], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [138ae4629d, 7618c9e8a1]
+    part: Description
+    quotes:
+      138ae4629d: The destination operand can be a register or a memory location.
+      7618c9e8a1: This instruction can be used with a LOCK prefix to allow the instruction to be executed
+        atomically.
 - id: 34e9cf5185
   gist: CF is preserved.
   support:
-  - {doc: sdm, at: 1161, units: [056a03066d], part: Flags Affected}
+  - doc: sdm
+    at: 1161
+    units: [056a03066d]
+    part: Flags Affected
+    quotes:
+      056a03066d: The CF flag is not affected.
 - id: e5974cf7cf
   gist: add rax, 1 updates CF; inc rax does not.
   support:
-  - {doc: sdm, at: 1161, units: [5de9c5cfd9, 056a03066d], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [5de9c5cfd9, 056a03066d]
+    part: Description
+    quotes:
+      5de9c5cfd9: (Use a ADD instruction with an immediate operand of 1 to perform an increment operation
+        that does updates the CF flag.)
+      056a03066d: The CF flag is not affected.
 - id: 0d481e065d
   gist: If a later jc/jb or adc depends on the carry of an earlier inst…
   how: derived
   note: INC leaves CF alone, so a later consumer of CF sees the earlier instruction's value.
   support:
-  - {doc: sdm, at: 1161, units: [056a03066d], part: Flags Affected}
+  - doc: sdm
+    at: 1161
+    units: [056a03066d]
+    part: Flags Affected
+    quotes:
+      056a03066d: The CF flag is not affected.
 - id: 75a88b285b
   gist: The short encodings are gone in 64-bit mode.
   support:
-  - {doc: sdm, at: 1161, units: [32fc55b7ba], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [32fc55b7ba]
+    part: Description
+    quotes:
+      32fc55b7ba: In 64-bit mode, INC r16 and INC r32 are not encodable (because opcodes 40H through 47H
+        are REX prefixes).
 - id: 672af8836e
   gist: In 32-bit code, inc r32 was a single byte (40-47); in 64-bit mo…
   support:
-  - {doc: sdm, at: 1161, units: [32fc55b7ba, 818a845a7e, 7cfc371bcd], part: Description}
+  - doc: sdm
+    at: 1161
+    units: [32fc55b7ba, 818a845a7e, 7cfc371bcd]
+    part: Description
+    quotes:
+      32fc55b7ba: In 64-bit mode, INC r16 and INC r32 are not encodable (because opcodes 40H through 47H
+        are REX prefixes).
+      818a845a7e: 40+ rd | INC r32 | O | N.E. | Valid | Increment doubleword register by 1.
+      7cfc371bcd: FF /0 | INC r/m32 | M | Valid | Valid | Increment r/m doubleword by 1.
 - id: 586f765144
   gist: 32-bit operations zero the upper half.
   support:
@@ -73,6 +162,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 610833d206
   gist: inc eax clears bits 63:32 of rax.
   support:
@@ -81,6 +173,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 86fb083055
   gist: lock inc needs a memory destination.
   support:
@@ -89,6 +184,8 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
 - id: fd7a914af1
   gist: 'With a register destination the lock prefix raises #UD.'
   support:
@@ -97,6 +194,8 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
 - id: 49c091b2fb
   gist: inc dword [rdi] ; increment a 32-bit value in memory lock inc q…
   how: illustrative

@@ -1,0 +1,1467 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers (document, page or section, fingerprint) with a short quotation of each cited
+# sentence. Managed by `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 00db74cd10
+  gist: What an x86 exception is, what the CPU does when one happens, w…
+  how: editorial
+  note: Summary of the article's own sections; each topic is traced below.
+- id: c480dd2584
+  gist: An exception is the processor stopping an instruction because i…
+  support:
+  - doc: sdm
+    at: 3351
+    units: [6a7aca9e29]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      6a7aca9e29: Exceptions occur when the processor detects an error condition while executing an instruction,
+        such as division by zero.
+- id: cb3edc2383
+  gist: The operating system gets to react, and the program usually eit…
+  how: derived
+  note: The handler runs and the program resumes; for the abort class the operating system ends the program.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [d5b074cdfb, 9bfdda19f5]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      d5b074cdfb: When an interrupt is received or an exception is detected, the currently running procedure
+        or task is suspended while the processor executes an interrupt or exception handler.
+      9bfdda19f5: When execution of the handler is complete, the processor resumes execution of the interrupted
+        procedure or task.
+  - doc: sdm
+    at: 3355
+    units: [638e1b7010]
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      638e1b7010: An application causing this class of exceptions should be terminated by the operating
+        system.
+- id: 099bbcb42e
+  gist: This page explains what the CPU does, which exceptions a user-s…
+  how: editorial
+  note: Lead-in to the sections of this page.
+- id: 45446cca66
+  gist: Both are events that suspend the running program and call a han…
+  support:
+  - doc: sdm
+    at: 3351
+    units: [e85c410ce3, 0766b1e2f5, d5b074cdfb]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      e85c410ce3: Interrupts and exceptions are events that indicate that a condition exists somewhere
+        in the system, the processor, or within the currently executing program or task that requires
+        the attention of a processor.
+      0766b1e2f5: They typically result in a forced transfer of execution from the currently running program
+        or task to a special software routine or task called an interrupt handler or an exception handler.
+      d5b074cdfb: When an interrupt is received or an exception is detected, the currently running procedure
+        or task is suspended while the processor executes an interrupt or exception handler.
+- id: cf7eb11132
+  gist: 'Interrupts come from outside the instruction stream: a device o…'
+  how: derived
+  note: A device is an external event; INT n is a software-generated one. 'Outside the instruction stream'
+    is this page's framing.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [3aac0bea8e, d0b9c7c7d7]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      3aac0bea8e: System hardware uses interrupts to handle events external to the processor, such as
+        requests to service peripheral devices.
+      d0b9c7c7d7: Software can also generate interrupts by executing the INT n instruction.
+- id: 26ba35f9b5
+  gist: Exceptions come from the instruction being executed.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [6a7aca9e29]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      6a7aca9e29: Exceptions occur when the processor detects an error condition while executing an instruction,
+        such as division by zero.
+- id: 7e544dc74b
+  gist: Each event has a vector number from 0 to 255.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [1793b154c7, bcd1e956f5]
+    part: 7.2 EXCEPTION AND INTERRUPT VECTORS
+    quotes:
+      1793b154c7: The allowable range for vector numbers is 0 to 255.
+      bcd1e956f5: To aid in handling exceptions and interrupts, each architecturally defined exception
+        and each interrupt condition requiring special handling by the processor is assigned a unique
+        identification number, called a vector number.
+- id: d6dafc0165
+  gist: Vectors 0 to 31 are reserved by the architecture; the rest are…
+  support:
+  - doc: sdm
+    at: 3351
+    units: [2664e66c44, 4b47fba131]
+    part: 7.2 EXCEPTION AND INTERRUPT VECTORS
+    quotes:
+      2664e66c44: Vector numbers in the range 0 through 31 are reserved by the Intel 64 and IA-32 architectures
+        for architecture-defined exceptions and interrupts.
+      4b47fba131: Vector numbers in the range 32 to 255 are designated as user-defined interrupts and
+        are not reserved by the Intel 64 and IA-32 architecture.
+- id: 7a94fd8ad2
+  gist: 'The usual written form is # followed by two letters: #UD is vec…'
+  how: derived
+  note: 'Table 7-1 pairs vector 6 with #UD, 13 with #GP and 14 with #PF; the table is cited by page.'
+  support:
+  - doc: sdm
+    at: 3352
+    units: [e389f393fe]
+    part: Table
+    note: Table 7-1 (vectors 0-14), cited by page.
+- id: 39b34a6478
+  gist: The IF flag, which cli and sti change, switches off external in…
+  support:
+  - doc: sdm
+    at: 3358
+    units: [e8d91d6842]
+    part: 7.8.1 Masking Maskable Hardware Interrupts
+    quotes:
+      e8d91d6842: The IF flag can be set or cleared with the STI (set interrupt-enable flag) and CLI (clear
+        interrupt-enable flag) instructions, respectively.
+  - doc: sdm
+    at: 3357
+    units: [d6cbc9ed8a]
+    part: 7.8.1 Masking Maskable Hardware Interrupts
+    quotes:
+      d6cbc9ed8a: The IF flag does not affect non-maskable interrupts (NMIs) delivered to the NMI pin
+        or delivery mode NMI messages delivered through the local APIC, nor does it affect processor generated
+        exceptions.
+- id: a1461dc5cc
+  gist: It notices the problem while executing the instruction.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [6a7aca9e29]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      6a7aca9e29: Exceptions occur when the processor detects an error condition while executing an instruction,
+        such as division by zero.
+- id: df2f2893e2
+  gist: Apart from aborts, an exception is reported on an instruction b…
+  support:
+  - doc: sdm
+    at: 3355
+    units: [46dd1157e4]
+    part: 7.6 PROGRAM OR TASK RESTART
+    quotes:
+      46dd1157e4: To allow the restarting of program or task following the handling of an exception or
+        an interrupt, all exceptions (except aborts) are guaranteed to report exceptions on an instruction
+        boundary.
+- id: 0809e99c02
+  gist: It finds the handler.
+  how: editorial
+  note: Lead-in to the next statement.
+- id: 7f291b74e9
+  gist: The vector is an index into the interrupt descriptor table (IDT…
+  how: derived
+  note: The IDT maps a vector to a handler; the operating system's initialisation code builds it.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [fa46c82d3d]
+    part: 7.2 EXCEPTION AND INTERRUPT VECTORS
+    quotes:
+      fa46c82d3d: The processor uses the vector number assigned to an exception or interrupt as an index
+        into the interrupt descriptor table (IDT).
+  - doc: sdm
+    at: 3360
+    units: [15ee07238a, 176e9174c3]
+    part: 7.10 INTERRUPT DESCRIPTOR TABLE (IDT)
+    quotes:
+      15ee07238a: The interrupt descriptor table (IDT) associates each exception or interrupt vector with
+        a gate descriptor for the procedure or task used to service the associated exception or interrupt.
+      176e9174c3: It normally is used by the initialization code of an operating system when creating
+        an IDT.
+- id: e6d0b9c16c
+  gist: In 64-bit mode each entry is 16 bytes, so the entry for vector…
+  how: derived
+  note: 'Arithmetic on the sentence: 14 x 16 = 224 bytes from the start of the table.'
+  support:
+  - doc: sdm
+    at: 3371
+    units: [84f5c6ba07]
+    part: 7.14.1 64-Bit Mode IDT
+    quotes:
+      84f5c6ba07: In 64-bit mode, the IDT index is formed by scaling the interrupt vector by 16.
+- id: b8932ec13e
+  gist: It saves where it was.
+  how: editorial
+  note: Lead-in to the next statement.
+- id: f76e400cca
+  gist: It pushes the stack pointer (ss:rsp), rflags and the return add…
+  how: derived
+  note: The new stack's pointer comes from the TSS, which the operating system sets up; the frame holds
+    SS:RSP, RFLAGS, CS:RIP, each pushed as 8 bytes.
+  support:
+  - doc: sdm
+    at: 3370
+    units: [4dd1c83972]
+    part: 7.14 EXCEPTION AND INTERRUPT HANDLING IN 64-BIT MODE
+    quotes:
+      4dd1c83972: The stack pointer (SS:RSP) is pushed unconditionally on interrupts.
+  - doc: sdm
+    at: 3364
+    units: [aab578e0f4, 53eeee184b, 01125de923]
+    part: 7.12.1 Exception- or Interrupt-Handler Procedures
+    quotes:
+      aab578e0f4: The processor then saves the current state of the EFLAGS, CS, and EIP registers on the
+        new stack (see Figure 7-4).
+      53eeee184b: The segment selector and stack pointer for the stack to be used by the handler are obtained
+        from the TSS for the currently executing task.
+      01125de923: 'When the processor performs a call to the exception-or interrupt-handler procedure:
+        • If the handler procedure is going to be executed at a numerically lower privilege level, a stack
+        switch occurs.'
+  - doc: sdm
+    at: 3371
+    units: [b1152c04c5]
+    part: 7.14.2 64-Bit Mode Stack Frame
+    quotes:
+      b1152c04c5: In 64-bit mode, the size of interrupt stack-frame pushes is fixed at eight bytes.
+- id: d5225ff30a
+  gist: In 64-bit mode ss:rsp is always pushed.
+  support:
+  - doc: sdm
+    at: 3370
+    units: [4dd1c83972]
+    part: 7.14 EXCEPTION AND INTERRUPT HANDLING IN 64-BIT MODE
+    quotes:
+      4dd1c83972: The stack pointer (SS:RSP) is pushed unconditionally on interrupts.
+- id: 170b846f71
+  gist: Some exceptions push one more value on top, the error code.
+  support:
+  - doc: sdm
+    at: 3364
+    units: [3e225208e8, 6c6bf5b2f6]
+    part: 7.12.1 Exception- or Interrupt-Handler Procedures
+    quotes:
+      3e225208e8: If an exception causes an error code to be saved, it is pushed on the current stack
+        after the EIP value.
+      6c6bf5b2f6: If an exception causes an error code to be saved, it is pushed on the new stack after
+        the EIP value.
+- id: a398330783
+  gist: It calls the handler, which is operating-system code.
+  how: derived
+  note: The SDM calls the handler a software routine; that it is operating-system code follows from the
+    IDT being built by the operating system.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [0766b1e2f5]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      0766b1e2f5: They typically result in a forced transfer of execution from the currently running program
+        or task to a special software routine or task called an interrupt handler or an exception handler.
+  - doc: sdm
+    at: 3360
+    units: [176e9174c3]
+    part: 7.10 INTERRUPT DESCRIPTOR TABLE (IDT)
+    quotes:
+      176e9174c3: It normally is used by the initialization code of an operating system when creating
+        an IDT.
+- id: 4a617fc4d8
+  gist: Your program is suspended until the handler finishes.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [d5b074cdfb]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      d5b074cdfb: When an interrupt is received or an exception is detected, the currently running procedure
+        or task is suspended while the processor executes an interrupt or exception handler.
+- id: 4874a5b370
+  gist: The handler decides.
+  how: editorial
+  note: Lead-in to the next statement.
+- id: 79e1e68edf
+  gist: It can repair the cause and resume the program with iret, or gi…
+  how: derived
+  note: The handler can restart the program, or, when it cannot be fixed, the program is ended.
+  support:
+  - doc: sdm
+    at: 3351
+    units: [9bfdda19f5, f073fc459a]
+    part: 7.1 INTERRUPT AND EXCEPTION OVERVIEW
+    quotes:
+      9bfdda19f5: When execution of the handler is complete, the processor resumes execution of the interrupted
+        procedure or task.
+      f073fc459a: The resumption of the interrupted procedure or task happens without loss of program
+        continuity, unless recovery from an exception was not possible or an interrupt caused the currently
+        running program to be terminated.
+  - doc: sdm
+    at: 3364
+    units: [8b59bdb14a]
+    part: 7.12.1 Exception- or Interrupt-Handler Procedures
+    quotes:
+      8b59bdb14a: To return from an exception-or interrupt-handler procedure, the handler must use the
+        IRET (or IRETD) instruction.
+  - doc: sdm
+    at: 3355
+    units: [638e1b7010]
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      638e1b7010: An application causing this class of exceptions should be terminated by the operating
+        system.
+- id: 71fee1e34a
+  gist: Resuming goes back to the saved cs:rip.
+  how: derived
+  note: IRET restores the saved state as RET restores the return address.
+  support:
+  - doc: sdm
+    at: 3364
+    units: [aab578e0f4, 840747da08]
+    part: 7.12.1 Exception- or Interrupt-Handler Procedures
+    quotes:
+      aab578e0f4: The processor then saves the current state of the EFLAGS, CS, and EIP registers on the
+        new stack (see Figure 7-4).
+      840747da08: The IRET instruction is similar to the RET instruction except that it restores the saved
+        flags into the EFLAGS register.
+- id: fc09f21c62
+  gist: Whether that is the instruction that failed or the one after it…
+  support:
+  - doc: sdm
+    at: 3355
+    units: [53feedfa00, '2302139866']
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      53feedfa00: The return address (saved contents of the CS and EIP registers) for the fault handler
+        points to the faulting instruction, rather than to the instruction following the faulting instruction.
+      '2302139866': The return address for the trap handler points to the instruction to be executed after
+        the trapping instruction.
+- id: 5be548b2de
+  gist: Fault | the instruction that caused it, with the machine state…
+  support:
+  - doc: sdm
+    at: 3355
+    units: [656787200c, 53feedfa00, 3ace10b16a]
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      656787200c: Faults — A fault is an exception that can generally be corrected and that, once corrected,
+        allows the program to be restarted with no loss of continuity.
+      53feedfa00: The return address (saved contents of the CS and EIP registers) for the fault handler
+        points to the faulting instruction, rather than to the instruction following the faulting instruction.
+      3ace10b16a: To ensure that the restart is handled trans-parently to the currently executing program
+        or task, the processor saves the necessary registers and stack pointers to allow a restart to
+        the state prior to the execution of the faulting instruction.
+  - doc: sdm
+    at: 3375
+    units: [849cee572a]
+    part: ''
+    note: '#DE is a fault.'
+    quotes:
+      849cee572a: Exception Class Fault.
+  - doc: sdm
+    at: 3382
+    units: [849cee572a]
+    part: ''
+    note: '#UD is a fault.'
+    quotes:
+      849cee572a: Exception Class Fault.
+  - doc: sdm
+    at: 3394
+    units: [849cee572a]
+    part: ''
+    note: '#GP is a fault.'
+    quotes:
+      849cee572a: Exception Class Fault.
+  - doc: sdm
+    at: 3397
+    units: [849cee572a]
+    part: ''
+    note: '#PF is a fault.'
+    quotes:
+      849cee572a: Exception Class Fault.
+- id: 448e32d28b
+  gist: Trap | the instruction after the one that caused it | yes, from…
+  support:
+  - doc: sdm
+    at: 3355
+    units: [ef1ff3d981, '2302139866']
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      ef1ff3d981: Traps — A trap is an exception that is reported immediately following the execution
+        of the trapping instruction.
+      '2302139866': The return address for the trap handler points to the instruction to be executed after
+        the trapping instruction.
+  - doc: sdm
+    at: 3379
+    units: [69f21b7227]
+    part: ''
+    note: '#BP is a trap.'
+    quotes:
+      69f21b7227: Exception Class Trap.
+- id: 08ef818cea
+  gist: 'Abort | not always the exact instruction | no | #DF, #MC'
+  support:
+  - doc: sdm
+    at: 3355
+    units: [bf0feaf300]
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      bf0feaf300: Aborts — An abort is an exception that does not always report the precise location of
+        the instruction causing the exception and does not allow a restart of the program or task that
+        caused the exception.
+  - doc: sdm
+    at: 3385
+    units: [479d53eb05]
+    part: ''
+    note: '#DF is an abort.'
+    quotes:
+      479d53eb05: Exception Class Abort.
+  - doc: sdm
+    at: 3405
+    units: [479d53eb05]
+    part: ''
+    note: '#MC is an abort.'
+    quotes:
+      479d53eb05: Exception Class Abort.
+- id: 583aaee2f9
+  gist: 'This is why a page fault is usually invisible: the operating sy…'
+  how: derived
+  note: The handler recovers from a not-present page and restarts the program; the saved rip is the faulting
+    load.
+  support:
+  - doc: sdm
+    at: 3397
+    units: [69bb205d13]
+    part: Description
+    quotes:
+      69bb205d13: The exception handler can recover from page-not-present conditions and restart the program
+        or task without any loss of program continuity.
+  - doc: sdm
+    at: 3355
+    units: [53feedfa00]
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      53feedfa00: The return address (saved contents of the CS and EIP registers) for the fault handler
+        points to the faulting instruction, rather than to the instruction following the faulting instruction.
+- id: 5e9e1ac4bb
+  gist: 'It is also why a division by zero cannot simply be resumed: the…'
+  how: derived
+  note: The saved rip points at the div and nothing changed, so restarting without a fix faults again;
+    what remains is ending the process or running a handler.
+  support:
+  - doc: sdm
+    at: 3355
+    units: [53feedfa00]
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      53feedfa00: The return address (saved contents of the CS and EIP registers) for the fault handler
+        points to the faulting instruction, rather than to the instruction following the faulting instruction.
+  - doc: sdm
+    at: 3375
+    units: [7096bd241c, 8116b5d502, 78915f581c]
+    part: Description
+    quotes:
+      7096bd241c: Indicates the divisor operand for a DIV or IDIV instruction is 0 or that the result
+        cannot be represented in the number of bits specified for the destination operand.
+      8116b5d502: Saved contents of CS and EIP registers point to the instruction that generated the exception.
+      78915f581c: A program-state change does not accompany the divide error, because the exception occurs
+        before the faulting instruction is executed.
+- id: b7cb34a379
+  gist: '0 | #DE divide error | fault | no | div or idiv with a zero div…'
+  support:
+  - doc: sdm
+    at: 3375
+    units: [849cee572a, 7096bd241c]
+    part: ''
+    quotes:
+      849cee572a: Exception Class Fault.
+      7096bd241c: Indicates the divisor operand for a DIV or IDIV instruction is 0 or that the result
+        cannot be represented in the number of bits specified for the destination operand.
+  - doc: sdm
+    at: 3375
+    units: [71f8e7976e]
+    part: Description
+    note: The Exception Error Code field of this entry.
+    quotes:
+      71f8e7976e: None.
+- id: a735d38772
+  gist: '1 | #DB debug | fault or trap | no | single-stepping (TF set) a…'
+  support:
+  - doc: sdm
+    at: 3376
+    units: [3c269bb78b, c179a977e1, bf6246dc62]
+    part: ''
+    quotes:
+      3c269bb78b: Exception Class Trap or Fault.
+      c179a977e1: Single-step | Trap
+      bf6246dc62: Instruction fetch breakpoint | Fault
+  - doc: sdm
+    at: 3376
+    units: [71f8e7976e]
+    part: Description
+    note: The Exception Error Code field of this entry.
+    quotes:
+      71f8e7976e: None.
+- id: a2a916ca9d
+  gist: '3 | #BP breakpoint | trap | no | int3'
+  support:
+  - doc: sdm
+    at: 3379
+    units: [69f21b7227]
+    part: ''
+    quotes:
+      69f21b7227: Exception Class Trap.
+  - doc: sdm
+    at: 3379
+    units: [71f8e7976e]
+    part: Description
+    note: The Exception Error Code field of this entry.
+    quotes:
+      71f8e7976e: None.
+  - doc: sdm
+    at: 1171
+    units: [8f93915ea1]
+    part: Description
+    quotes:
+      8f93915ea1: The INT3 instruction uses a one-byte opcode (CC) and is intended for calling the debug
+        exception handler with a breakpoint exception (#BP).
+- id: c4e786bbc4
+  gist: '6 | #UD invalid opcode | fault | no | an undefined or reserved…'
+  support:
+  - doc: sdm
+    at: 3382
+    units: [849cee572a, 4efa2b754e, 9b79a596b7, 723ef8e423, dc7e7b541b]
+    part: ''
+    quotes:
+      849cee572a: Exception Class Fault.
+      4efa2b754e: 'Indicates that the processor did one of the following things: • Attempted to execute
+        an invalid or reserved opcode.'
+      9b79a596b7: Attempted to execute an MMX or SSE/SSE2/SSE3 instruction on an Intel 64 or IA-32 processor
+        that does not support the MMX technology or SSE/SSE2/SSE3/SSSE3 extensions, respectively.
+      723ef8e423: Executed a UD0, UD1, UD2, or UDB instruction.
+      dc7e7b541b: Detected a LOCK prefix that precedes an instruction that may not be locked or one that
+        may be locked but the destination operand is not a memory location.
+  - doc: sdm
+    at: 3382
+    units: [71f8e7976e]
+    part: Description
+    note: The Exception Error Code field of this entry.
+    quotes:
+      71f8e7976e: None.
+  - doc: sdm
+    at: 962
+    units: [f8c3e31849]
+    part: Description
+    note: DAA is not valid in 64-bit mode.
+    quotes:
+      f8c3e31849: It is not valid in 64-bit mode.
+  - doc: sdm
+    at: 1171
+    units: [ad88175c5c]
+    part: Description
+    note: INTO cannot be used in 64-bit mode.
+    quotes:
+      ad88175c5c: (The INTO instruction cannot be used in 64-bit mode.)
+- id: c433947d9c
+  gist: '8 | #DF double fault | abort | yes, always zero | a second exce…'
+  support:
+  - doc: sdm
+    at: 3385
+    units: [479d53eb05, 532a09cfc5]
+    part: ''
+    quotes:
+      479d53eb05: Exception Class Abort.
+      532a09cfc5: Indicates that the processor detected a second exception while calling an exception
+        handler for a prior exception.
+  - doc: sdm
+    at: 3386
+    units: [88bfc1fbae]
+    part: Description
+    quotes:
+      88bfc1fbae: The processor always pushes an error code of 0 onto the stack of the double-fault handler.
+- id: 4b1d3d91c6
+  gist: '12 | #SS stack fault | fault | yes | a stack access that fails,…'
+  support:
+  - doc: sdm
+    at: 3393
+    units: [849cee572a, 074cffaa35, 7f269086ae]
+    part: ''
+    quotes:
+      849cee572a: Exception Class Fault.
+      074cffaa35: A canonical violation is detected in 64-bit mode during an operation that reference
+        memory using the stack pointer register containing a non-canonical memory address.
+      7f269086ae: If the exception is caused by a not-present stack segment or by overflow of the new
+        stack during an inter-privilege-level call, the error code contains a segment selector for the
+        segment that caused the exception.
+- id: 604a64048c
+  gist: '13 | #GP general protection | fault | yes | a non-canonical add…'
+  support:
+  - doc: sdm
+    at: 3394
+    units: [849cee572a, fa7510e2b4, 821c167028]
+    part: ''
+    quotes:
+      849cee572a: Exception Class Fault.
+      fa7510e2b4: Attempting to execute a privileged instruction when the CPL is not equal to 0 (see Section
+        6.9, "Privileged Instructions," for a list of privileged instructions).
+      821c167028: Executing the INT n instruction when the CPL is greater than the DPL of the referenced
+        interrupt, trap, or task gate.
+  - doc: sdm
+    at: 3395
+    units: [33e0c4bed0, 8cd08a963b, 8fbbff3a94]
+    part: Description
+    quotes:
+      33e0c4bed0: Executing an SSE/SSE2/SSE3 instruction that attempts to access a 128-bit memory location
+        that is not aligned on a 16-byte boundary when the instruction requires 16-byte alignment.
+      8cd08a963b: 'The following conditions cause general-protection exceptions in 64-bit mode: • If the
+        memory address is in a non-canonical form.'
+      8fbbff3a94: The processor pushes an error code onto the exception handler's stack.
+- id: bfed0c2468
+  gist: '14 | #PF page fault | fault | yes, special layout | a page that…'
+  support:
+  - doc: sdm
+    at: 3397
+    units: [849cee572a, 26abe85767, 3fedb09b3f, 63311fa96b, f62eae7134]
+    part: ''
+    quotes:
+      849cee572a: Exception Class Fault.
+      3fedb09b3f: Code running in user mode attempts to write to a read-only page.
+      63311fa96b: An instruction fetch to a linear address that translates to a physical address in a
+        memory page with the execute-disable bit set (for information about the execute-disable bit, see
+        Chapter 5, "Paging").
+      f62eae7134: The error code for a page fault has a format different from that for other exceptions
+        (see Figure 7-11).
+- id: 330014b5ea
+  gist: '17 | #AC alignment check | fault | yes, normally zero | a misal…'
+  support:
+  - doc: sdm
+    at: 3403
+    units: [849cee572a, 6473cce083, ae9b3e0b2c, 63b7b86cb5]
+    part: ''
+    quotes:
+      849cee572a: Exception Class Fault.
+      6473cce083: An alignment violation occurs when the processor detects an unaligned memory operand
+        when alignment checking was enabled.
+      ae9b3e0b2c: 'To enable alignment checking, the following conditions must be true: • AM flag in CR0
+        register is set.'
+      63b7b86cb5: Alignment violations are generated only when operating at privilege level 3 (user mode).
+  - doc: sdm
+    at: 3404
+    units: [c8c76f9596]
+    part: Description
+    quotes:
+      c8c76f9596: For alignment violations and bus-lock violations due to split locks, the error code
+        is null, meaning that bits 31:2 of the error code are clear.
+- id: 08d3e2398e
+  gist: '18 | #MC machine check | abort | no | a hardware error: an inte…'
+  support:
+  - doc: sdm
+    at: 3405
+    units: [479d53eb05, c0cee953f4]
+    part: ''
+    quotes:
+      479d53eb05: Exception Class Abort.
+      c0cee953f4: Indicates that the processor detected an internal machine error or a bus error, or that
+        an external agent detected a bus error.
+  - doc: sdm
+    at: 3405
+    units: [71f8e7976e]
+    part: Description
+    note: The Exception Error Code field of this entry.
+    quotes:
+      71f8e7976e: None.
+- id: 0d1c9061d5
+  gist: '21 | #CP control protection | fault | yes, special layout | a r…'
+  support:
+  - doc: sdm
+    at: 3409
+    units: [849cee572a, 220341d824, 4b3d216df3, 64423f50f2, 2556ee8291]
+    part: ''
+    quotes:
+      849cee572a: Exception Class Fault.
+      220341d824: Indicates a control flow transfer attempt violated the control flow enforcement technology
+        constraints.
+      4b3d216df3: '— 1 - NEAR-RET: Indicates the #CP was caused by a near RET instruction.'
+      64423f50f2: '— 3 - ENDBRANCH: indicates the #CP was due to missing ENDBRANCH at target of an indirect
+        call or jump instruction.'
+      2556ee8291: Yes (special format).
+- id: f1ea5d7723
+  gist: Vector 4 (#OF) comes from into and vector 5 (#BR) from bound.
+  support:
+  - doc: sdm
+    at: 1171
+    units: [314f8dfb3c]
+    part: Description
+    quotes:
+      314f8dfb3c: The INTO instruction is a special mnemonic for calling overflow exception (#OF), exception
+        4.
+  - doc: sdm
+    at: 809
+    units: [9a03604308]
+    part: Description
+    quotes:
+      9a03604308: If the index is not within bounds, a BOUND range exceeded exception (#BR) is signaled.
+  - doc: sdm
+    at: 3352
+    units: [e389f393fe]
+    part: Table
+    note: Table 7-1 (vectors 0-14), cited by page.
+- id: 8b2b3854e3
+  gist: Neither instruction can be used in 64-bit mode, so a 64-bit pro…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'INTO''s opcode byte CE gives #UD (vector 6) in 64-bit mode on the test machine; the SDM says
+    neither instruction is valid in 64-bit mode.'
+  support:
+  - doc: sdm
+    at: 1171
+    units: [ad88175c5c, ade3616150]
+    part: Description
+    quotes:
+      ad88175c5c: (The INTO instruction cannot be used in 64-bit mode.)
+      ade3616150: CE | INTO | ZO | Invalid | Valid | Generate overflow trap if overflow flag is 1.
+  - doc: sdm
+    at: 809
+    units: [f8c3e31849]
+    part: Description
+    quotes:
+      f8c3e31849: It is not valid in 64-bit mode.
+- id: 3ae4d2c81b
+  gist: The invalid-opcode exception is the CPU's answer to "that is no…
+  support:
+  - doc: sdm
+    at: 3382
+    units: [4efa2b754e, dc7e7b541b]
+    part: Description
+    quotes:
+      4efa2b754e: 'Indicates that the processor did one of the following things: • Attempted to execute
+        an invalid or reserved opcode.'
+      dc7e7b541b: Detected a LOCK prefix that precedes an instruction that may not be locked or one that
+        may be locked but the destination operand is not a memory location.
+- id: 1fc1cbd314
+  gist: It has no error code and the saved rip points at the offending…
+  support:
+  - doc: sdm
+    at: 3382
+    units: [71f8e7976e]
+    part: Description
+    note: The Exception Error Code field of this entry.
+    quotes:
+      71f8e7976e: None.
+  - doc: sdm
+    at: 3382
+    units: [2b9286c305]
+    part: Description
+    quotes:
+      2b9286c305: The saved contents of CS and EIP registers point to the instruction that generated the
+        exception.
+- id: 304974e1ec
+  gist: 'Causes you meet in practice:'
+  how: editorial
+  note: Lead-in to the next statement.
+- id: e8d8851968
+  gist: A real undefined opcode, or ud2, which exists to raise this exc…
+  support:
+  - doc: sdm
+    at: 3382
+    units: [4efa2b754e, 723ef8e423]
+    part: Description
+    quotes:
+      4efa2b754e: 'Indicates that the processor did one of the following things: • Attempted to execute
+        an invalid or reserved opcode.'
+      723ef8e423: Executed a UD0, UD1, UD2, or UDB instruction.
+  - doc: sdm
+    at: 2026
+    units: [8752f39663]
+    part: Description
+    quotes:
+      8752f39663: This instruction is provided for software testing to explicitly generate an invalid
+        opcode exception.
+- id: 12068b77d8
+  gist: A lock prefix on an instruction that cannot be locked, or on on…
+  support:
+  - doc: sdm
+    at: 3382
+    units: [dc7e7b541b]
+    part: Description
+    quotes:
+      dc7e7b541b: Detected a LOCK prefix that precedes an instruction that may not be locked or one that
+        may be locked but the destination operand is not a memory location.
+  - doc: sdm
+    at: 719
+    units: [47552c0032]
+    part: 64-Bit Mode Exceptions
+    note: 'The ADD entry lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
+- id: 1bd4baf328
+  gist: An instruction that was removed in 64-bit mode, such as the old…
+  support:
+  - doc: sdm
+    at: 962
+    units: [039dc3dfbe, f8c3e31849]
+    part: Opcode table
+    quotes:
+      039dc3dfbe: 27 | DAA | ZO | Invalid | Valid | Decimal adjust AL after addition.
+      f8c3e31849: It is not valid in 64-bit mode.
+  - doc: sdm
+    at: 1171
+    units: [ade3616150, ad88175c5c]
+    part: Opcode table
+    quotes:
+      ade3616150: CE | INTO | ZO | Invalid | Valid | Generate overflow trap if overflow flag is 1.
+      ad88175c5c: (The INTO instruction cannot be used in 64-bit mode.)
+- id: 97e59508cb
+  gist: An instruction for a CPU feature this CPU lacks, such as POPCNT…
+  support:
+  - doc: sdm
+    at: 1695
+    units: [3054813a7d]
+    part: 64-Bit Mode Exceptions
+    note: 'The #UD condition names the CPUID bit.'
+    quotes:
+      3054813a7d: '#UD If CPUID.01H:ECX.POPCNT[23] = 0.'
+- id: df1018b512
+  gist: DIV and IDIV raise it when the divisor is zero and also when th…
+  support:
+  - doc: sdm
+    at: 3375
+    units: [7096bd241c]
+    part: Description
+    quotes:
+      7096bd241c: Indicates the divisor operand for a DIV or IDIV instruction is 0 or that the result
+        cannot be represented in the number of bits specified for the destination operand.
+  - doc: sdm
+    at: 970
+    units: [899e87f561, 602f8497c6]
+    part: 64-Bit Mode Exceptions
+    note: 'DIV: the two #DE conditions.'
+    quotes:
+      899e87f561: '#DE If the source operand (divisor) is 0'
+      602f8497c6: If the quotient is too large for the designated register.
+  - doc: sdm
+    at: 1154
+    units: [899e87f561, 602f8497c6]
+    part: 64-Bit Mode Exceptions
+    note: 'IDIV: the two #DE conditions.'
+    quotes:
+      899e87f561: '#DE If the source operand (divisor) is 0.'
+      602f8497c6: If the quotient is too large for the designated register.
+- id: 989fd25d44
+  gist: 'The second case surprises people:'
+  how: editorial
+  note: Lead-in to the next statement.
+- id: 88b3618076
+  gist: mov edx, 1 ; dividend = 1:0 = 2^64 xor eax, eax mov ecx, 1 div…
+  how: run
+  ref: tests/asm/exceptions.asm
+  note: '`div rcx` with rdx:rax = 2^64 is the ''quotient too big'' case in exceptions.asm; it raises vector
+    0 (#DE). The registers are set up as in the listing.'
+  support:
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
+- id: 0f31e010d7
+  gist: For idiv the classic overflow is the most negative 64-bit numbe…
+  how: run
+  ref: tests/asm/exceptions.asm
+  note: exceptions.asm divides the most negative number by -1 and it raises vector 0 (#DE); the SDM's
+    range check rejects a result above 7FFF...F, and -2^63 / -1 = +2^63 is above it.
+  support:
+  - {doc: sdm, at: 1153, units: [78258978bd], part: Operation}
+- id: 2cbf31dd20
+  gist: A divide error is reported through the exception, never through…
+  support:
+  - doc: sdm
+    at: 968
+    units: [52f0f81ad4]
+    part: Description
+    quotes:
+      52f0f81ad4: 'Overflow is indicated with the #DE (divide error) exception rather than with the CF
+        flag.'
+- id: 18df5267c1
+  gist: '#PF is about the page tables.'
+  support:
+  - {doc: sdm, at: 3397, units: [26abe85767], part: Description}
+- id: aac93e70cc
+  gist: 'The CPU found no usable translation for the address: the page i…'
+  support:
+  - doc: sdm
+    at: 3397
+    units: [26abe85767, bb81fd895b, 3fedb09b3f, 63311fa96b]
+    part: Description
+    quotes:
+      bb81fd895b: The procedure does not have sufficient privilege to access the indicated page (that
+        is, a procedure running in user mode attempts to access a supervisor-mode page).
+      3fedb09b3f: Code running in user mode attempts to write to a read-only page.
+      63311fa96b: An instruction fetch to a linear address that translates to a physical address in a
+        memory page with the execute-disable bit set (for information about the execute-disable bit, see
+        Chapter 5, "Paging").
+- id: 3328ba92fe
+  gist: The CPU puts the faulting address in the cr2 register and descr…
+  support:
+  - doc: sdm
+    at: 3399
+    units: [c96657e4a6]
+    part: Description
+    quotes:
+      c96657e4a6: The processor loads the CR2 register with the linear address that generated the exception.
+  - doc: sdm
+    at: 3397
+    units: [ed98e0e0cc]
+    part: Description
+    quotes:
+      ed98e0e0cc: 'The processor provides the page-fault handler with two items of information to aid
+        in diag-nosing the exception and recovering from it: • An error code on the stack.'
+- id: bf122803b4
+  gist: '#GP is every other protection violation.'
+  support:
+  - doc: sdm
+    at: 3394
+    units: [69ddd12594, 1cc0133416]
+    part: Description
+    quotes:
+      69ddd12594: Indicates that the processor detected one of a class of protection violations called
+        "general-protection violations."
+      1cc0133416: The conditions that cause this exception to be generated comprise all the protection
+        violations that do not cause other exceptions to be generated (such as, invalid-TSS, segment-not-present,
+        stack-fault, or page-fault exceptions).
+- id: 48fe0447c6
+  gist: The usual user-mode causes are an address that is not canonical…
+  support:
+  - doc: sdm
+    at: 3395
+    units: [8cd08a963b, 33e0c4bed0]
+    part: Description
+    quotes:
+      8cd08a963b: 'The following conditions cause general-protection exceptions in 64-bit mode: • If the
+        memory address is in a non-canonical form.'
+      33e0c4bed0: Executing an SSE/SSE2/SSE3 instruction that attempts to access a 128-bit memory location
+        that is not aligned on a 16-byte boundary when the instruction requires 16-byte alignment.
+  - doc: sdm
+    at: 76
+    units: [77d938f006, 4352216c99]
+    part: 3.3.7.1 Canonical Addressing
+    quotes:
+      77d938f006: In 64-bit mode, an address is considered to be in canonical form if address bits 63
+        through to the most-significant implemented bit by the microarchitecture are set to either all
+        ones or all zeros.
+      4352216c99: This means a canonical address must have bits 63 through 48 set to zeros or ones (depending
+        on whether bit 47 is a zero or one).
+  - doc: sdm
+    at: 3394
+    units: [fa7510e2b4, 821c167028]
+    part: Description
+    quotes:
+      fa7510e2b4: Attempting to execute a privileged instruction when the CPL is not equal to 0 (see Section
+        6.9, "Privileged Instructions," for a list of privileged instructions).
+      821c167028: Executing the INT n instruction when the CPL is greater than the DPL of the referenced
+        interrupt, trap, or task gate.
+  - doc: sdm
+    at: 1143
+    units: [9b930879bf]
+    part: Description
+    quotes:
+      9b930879bf: The HLT instruction is a privileged instruction.
+  - doc: sdm
+    at: 3358
+    units: [e8d91d6842, 04c98c9f40]
+    part: 7.8.1 Masking Maskable Hardware Interrupts
+    quotes:
+      e8d91d6842: The IF flag can be set or cleared with the STI (set interrupt-enable flag) and CLI (clear
+        interrupt-enable flag) instructions, respectively.
+      04c98c9f40: A general-protection exception (#GP) is generated if they are executed when the CPL
+        is greater than the IOPL.1 If IF = 0, maskable hardware interrupts remain inhibited on the instruction
+        boundary following an execution of STI.2 The inhibition ends after delivery of another event (e.g.,
+        exception) or the execution of the next instruction.
+  - doc: sdm
+    at: 1160
+    units: [61e17c6bb1]
+    part: Protected Mode Exceptions
+    note: 'IN raises #GP(0) when the I/O permission rules forbid the port.'
+    quotes:
+      61e17c6bb1: '#GP(0) If the CPL is greater than (has less privilege) the I/O privilege level (IOPL)
+        and any of the corresponding I/O permission bits in TSS for the I/O port being accessed is 1.'
+- id: cba30bf248
+  gist: The error code is normally zero.
+  support:
+  - doc: sdm
+    at: 3395
+    units: [79a531713a]
+    part: Description
+    quotes:
+      79a531713a: If the fault condition was detected while loading a segment descriptor, the error code
+        contains a segment selector to or IDT vector number for the descriptor; otherwise, the error code
+        is 0.
+- id: fb06a0fa75
+  gist: The page-fault error code is a set of bits.
+  support:
+  - doc: sdm
+    at: 3397
+    units: [f62eae7134]
+    part: Description
+    quotes:
+      f62eae7134: The error code for a page fault has a format different from that for other exceptions
+        (see Figure 7-11).
+  - doc: sdm
+    at: 3399
+    units: [f396e76898]
+    part: Table
+    quotes:
+      f396e76898: Reserved | SGX | Reserved | HLAT | SS | PK | I/D | RSVD | U/S | W/R | P
+- id: 1fcd4b4f1f
+  gist: Bit 0 clear means "page not present"; bit 1 means the access wa…
+  support:
+  - doc: sdm
+    at: 3397
+    units: [eec2f71bc5, 2b7c9d3cfb, 3676db096c, d472bc72e4, 9626578d06, 82c8c6b690]
+    part: Description
+    quotes:
+      eec2f71bc5: — P flag (bit 0).
+      2b7c9d3cfb: This flag is 0 if there is no translation for the linear address because the P flag
+        was 0 in one of the paging-structure entries used to translate that address.
+      3676db096c: — W/R (bit 1).
+      d472bc72e4: If the access causing the page-fault exception was a write, this flag is 1; otherwise,
+        it is 0.
+      9626578d06: — U/S (bit 2).
+      82c8c6b690: If a user-mode access caused the page-fault exception, this flag is 1; it is 0 if a
+        supervisor-mode access did so.
+  - doc: sdm
+    at: 3398
+    units: [f40397bf79, 1b425589af]
+    part: Description
+    quotes:
+      f40397bf79: — I/D flag (bit 4).
+      1b425589af: This flag is 1 if the access causing the page-fault exception was an instruction fetch.
+- id: d3281c53b0
+  gist: 'The error code of a #GP or #SS that involves a descriptor has a…'
+  support:
+  - doc: sdm
+    at: 3369
+    units: [6fd89c2da2, 5dbaf151a0, 39a4c5f1c5]
+    part: 7.13 ERROR CODE
+    quotes:
+      6fd89c2da2: EXT External event (bit 0) — When set, indicates that the exception occurred during
+        delivery of an event external to the program, such as an interrupt or an earlier exception.1 The
+        bit is cleared if the exception occurred during delivery of a software interrupt (INT n, INT3,
+        or INTO).
+      5dbaf151a0: IDT Descriptor location (bit 1) — When set, indicates that the index portion of the
+        error code refers to a gate descriptor in the IDT; when clear, indicates that the index refers
+        to a descriptor in the GDT or the current LDT.
+      39a4c5f1c5: TI GDT/LDT (bit 2) — Only used when the IDT flag is clear.
+  - doc: sdm
+    at: 3370
+    units: [5a5dabe44a]
+    part: 7.13 ERROR CODE
+    quotes:
+      5a5dabe44a: The segment selector index field provides an index into the IDT, GDT, or current LDT
+        to the segment or gate selector being referenced by the error code.
+  - doc: sdm
+    at: 3243
+    units: [3ea260d235]
+    part: 3.4.2 Segment Selectors
+    note: 'Vol. 3A, 3.4.2: the index is selector bits 3 through 15.'
+    quotes:
+      3ea260d235: Index (Bits 3 through 15) — Selects one of 8192 descriptors in the GDT or LDT.
+- id: 42113654e6
+  gist: After int 0x21 the CPU reports vector 13 with error code 0x10a:…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: exceptions.asm executes `int 0x21` and the handler reads vector 13 with error code 0x10a; the
+    SDM describes the layout, and the INT n operation builds the code from the vector and the IDT flag
+    (pseudocode, cited by page).
+  support:
+  - doc: sdm
+    at: 3369
+    units: [6fd89c2da2, 5dbaf151a0]
+    part: 7.13 ERROR CODE
+    quotes:
+      6fd89c2da2: EXT External event (bit 0) — When set, indicates that the exception occurred during
+        delivery of an event external to the program, such as an interrupt or an earlier exception.1 The
+        bit is cleared if the exception occurred during delivery of a software interrupt (INT n, INT3,
+        or INTO).
+      5dbaf151a0: IDT Descriptor location (bit 1) — When set, indicates that the index portion of the
+        error code refers to a gate descriptor in the IDT; when clear, indicates that the index refers
+        to a descriptor in the GDT or the current LDT.
+  - doc: sdm
+    at: 3370
+    units: [5a5dabe44a]
+    part: 7.13 ERROR CODE
+    quotes:
+      5a5dabe44a: The segment selector index field provides an index into the IDT, GDT, or current LDT
+        to the segment or gate selector being referenced by the error code.
+  - doc: sdm
+    at: 1175
+    units: [55b9094a70]
+    part: Operation
+    note: 'INT n operation: #GP with an error code built from the vector number and the IDT flag.'
+  - doc: sdm
+    at: 1172
+    units: [cdc11caa67]
+    part: Description
+    quotes:
+      cdc11caa67: Each of the INT n, INTO, and INT3 instructions generates a general-protection exception
+        (#GP) if the CPL is greater than the DPL value in the selected gate descriptor in the IDT.
+- id: 36f16dd778
+  gist: A debugger sets a breakpoint by overwriting the first byte of a…
+  support:
+  - doc: sdm
+    at: 3379
+    units: [0114cfef86]
+    part: Description
+    quotes:
+      0114cfef86: Typically, a debugger sets a breakpoint by replacing the first opcode byte of an instruction
+        with the opcode for the INT3 instruction.
+  - doc: sdm
+    at: 1171
+    units: [8f93915ea1]
+    part: Description
+    quotes:
+      8f93915ea1: The INT3 instruction uses a one-byte opcode (CC) and is intended for calling the debug
+        exception handler with a breakpoint exception (#BP).
+- id: 02ebc1ba67
+  gist: 'When it runs, #BP is a trap, so the saved rip points after the…'
+  support:
+  - doc: sdm
+    at: 3379
+    units: [b92cd8503f, 11997306d1, 69f21b7227]
+    part: Description
+    quotes:
+      b92cd8503f: Saved contents of CS and EIP registers point to the instruction following the INT3 instruction.
+      11997306d1: The debugger can thus resume the suspended program by replacing the INT3 instruction
+        that caused the breakpoint with the original opcode and decrementing the saved contents of the
+        EIP register.
+      69f21b7227: Exception Class Trap.
+- id: 3d35857748
+  gist: 'Single-stepping uses the TF flag in rflags: after each instruct…'
+  support:
+  - doc: sdm
+    at: 3376
+    units: [f6a51e0fc6, c179a977e1]
+    part: Description
+    quotes:
+      f6a51e0fc6: When set, this bit indicates that the cause of the debug exception was the execution
+        of a single instruction (because execution of that instruction commenced with RFLAGS.TF = 1).1
+        • Bit 15 is not currently defined and will be zero until it is.
+      c179a977e1: Single-step | Trap
+- id: 949f9fa3a2
+  gist: '#AC fires only when three things are true: the alignment-check…'
+  how: run
+  ref: tests/asm/exceptions.asm
+  note: 'exceptions.asm sets rflags.AC with popfq at user level and the unaligned load raises #AC; the
+    three conditions are the SDM''s. That the alignment-check bit in CR0 is set by the operating system
+    is the usual arrangement and is not run here.'
+  support:
+  - doc: sdm
+    at: 3403
+    units: [ae9b3e0b2c, 82ae60f73d, 86534c40c1, 63b7b86cb5]
+    part: Description
+    quotes:
+      ae9b3e0b2c: 'To enable alignment checking, the following conditions must be true: • AM flag in CR0
+        register is set.'
+      82ae60f73d: AC flag in the EFLAGS register is set.
+      86534c40c1: The CPL is 3 (including virtual-8086 mode).
+      63b7b86cb5: Alignment violations are generated only when operating at privilege level 3 (user mode).
+- id: 8f5d4e3b62
+  gist: Alignment is checked on data accesses, not on instruction fetch…
+  support:
+  - doc: sdm
+    at: 3403
+    units: [f832dd1ed5]
+    part: Description
+    quotes:
+      f832dd1ed5: Alignment checks are only carried out in data (or stack) accesses (not in code fetches
+        or system segment accesses).
+- id: 59e62e5acc
+  gist: '#SS is the stack''s version of #GP; in 64-bit mode the usual cau…'
+  how: derived
+  note: 'Canonical violations on stack references give #SS and others give #GP; measured with a push on
+    a non-canonical rsp.'
+  support:
+  - doc: sdm
+    at: 76
+    units: [a3d8306876, 7cef26b3ed]
+    part: 3.3.7.1 Canonical Addressing
+    quotes:
+      a3d8306876: However, in the case of explicit or implied stack references, a stack fault (#SS) is
+        generated.
+      7cef26b3ed: In most cases, a general-protection exception (#GP) is generated.
+  - doc: sdm
+    at: 3393
+    units: [074cffaa35]
+    part: Description
+    quotes:
+      074cffaa35: A canonical violation is detected in 64-bit mode during an operation that reference
+        memory using the stack pointer register containing a non-canonical memory address.
+- id: 7325a351b1
+  gist: '#DF means a second exception happened while the CPU was deliver…'
+  how: derived
+  note: An abort cannot be restarted and the operating system should end the application.
+  support:
+  - doc: sdm
+    at: 3385
+    units: [532a09cfc5]
+    part: Description
+    quotes:
+      532a09cfc5: Indicates that the processor detected a second exception while calling an exception
+        handler for a prior exception.
+  - doc: sdm
+    at: 3355
+    units: [bf0feaf300, 638e1b7010]
+    part: 7.5 EXCEPTION CLASSIFICATIONS
+    quotes:
+      bf0feaf300: Aborts — An abort is an exception that does not always report the precise location of
+        the instruction causing the exception and does not allow a restart of the program or task that
+        caused the exception.
+      638e1b7010: An application causing this class of exceptions should be terminated by the operating
+        system.
+- id: 1c46709af8
+  gist: '#CP belongs to Intel''s control-flow enforcement: ret against a…'
+  support:
+  - doc: sdm
+    at: 3409
+    units: [220341d824, 4b3d216df3, 64423f50f2]
+    part: Description
+    quotes:
+      220341d824: Indicates a control flow transfer attempt violated the control flow enforcement technology
+        constraints.
+      4b3d216df3: '— 1 - NEAR-RET: Indicates the #CP was caused by a near RET instruction.'
+      64423f50f2: '— 3 - ENDBRANCH: indicates the #CP was due to missing ENDBRANCH at target of an indirect
+        call or jump instruction.'
+- id: bee52b56cd
+  gist: The CPU only knows vectors.
+  how: editorial
+  note: Lead-in; the signals are Linux's choice and are measured below.
+- id: 50e9ea7a78
+  gist: The kernel's handler turns most exceptions that came from user…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: Every case in the test arrives as a signal in a handler.
+- id: 41f0c6fda8
+  gist: The program in tests/asm/test_exceptions.c provokes each one in…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: Describes the test program itself.
+- id: 465e71545c
+  gist: 'Measured on x86-64 Linux:'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: Lead-in to the measured table.
+- id: eb7059002f
+  gist: 'ud2, lock add eax, ebx, byte 27h, byte CEh | 6 #UD | 0 | SIGILL…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: ud2, a locked add with a register destination, and the raw bytes 27h and CEh each give
+    vector 6, error code 0, SIGILL, ILL_ILLOPN. Expected output is tests/asm/expected_exceptions.txt,
+    compared by `make verify-asm`.'
+- id: b24350fe33
+  gist: div by zero, div with a quotient that is too big, idiv of the m…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: zero divisor, quotient too big and the idiv overflow each give vector 0, error code
+    0, SIGFPE, FPE_INTDIV. Expected output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 497c8330ca
+  gist: 'int3 | 3 #BP | 0 | SIGTRAP | SI_KERNEL'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: int3 gives vector 3, error code 0, SIGTRAP, SI_KERNEL. Expected output is tests/asm/expected_exceptions.txt,
+    compared by `make verify-asm`.'
+- id: 4301cd13b8
+  gist: 'a read from address 0 | 14 #PF | 0x4 | SIGSEGV | SEGV_MAPERR, a…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: a read from address 0 gives vector 14, error code 0x4, SIGSEGV, SEGV_MAPERR, address
+    0. Expected output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 959d1b6a23
+  gist: 'a jump to address 0 (call rax with rax = 0) | 14 #PF | 0x14 | S…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: a call to address 0 gives vector 14, error code 0x14, SIGSEGV, SEGV_MAPERR, address
+    0. Expected output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 1fe2409c34
+  gist: 'a write to a read-only page | 14 #PF | 0x7 | SIGSEGV | SEGV_ACC…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: a write to a read-only page gives vector 14, error code 0x7, SIGSEGV, SEGV_ACCERR,
+    with the address. Expected output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 9e1c1791b2
+  gist: 'a read from a non-canonical address | 13 #GP | 0 | SIGSEGV | SI…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: a read from a non-canonical address gives vector 13, error code 0, SIGSEGV, SI_KERNEL.
+    Expected output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 9158551bce
+  gist: 'movaps on an address that is not 16-byte aligned | 13 #GP | 0 |…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: movaps on an unaligned address gives vector 13, error code 0, SIGSEGV, SI_KERNEL. Expected
+    output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 37830825ff
+  gist: 'hlt, cli, in al, dx | 13 #GP | 0 | SIGSEGV | SI_KERNEL, no addr…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: hlt, cli and in al, dx each give vector 13, error code 0, SIGSEGV, SI_KERNEL. Expected
+    output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 8c4bd1c5f2
+  gist: 'int 0x21 | 13 #GP | 0x10a | SIGSEGV | SI_KERNEL, no address'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: int 0x21 gives vector 13, error code 0x10a, SIGSEGV, SI_KERNEL. Expected output is
+    tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 919ab5f862
+  gist: 'push with a non-canonical rsp | 12 #SS | 0 | SIGBUS | SI_KERNEL'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: a push with a non-canonical rsp gives vector 12, error code 0, SIGBUS, SI_KERNEL. Expected
+    output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: 59c21cb8c7
+  gist: 'an unaligned load with rflags.AC set | 17 #AC | 0 | SIGBUS | BU…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: 'Measured: an unaligned load with AC set gives vector 17, error code 0, SIGBUS, BUS_ADRALN. Expected
+    output is tests/asm/expected_exceptions.txt, compared by `make verify-asm`.'
+- id: c5ec512554
+  gist: So the signal alone does not tell you which exception happened:…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: The table shows SIGSEGV for both vector 14 and vector 13, and SIGBUS for both vector 12 and vector
+    17.
+- id: baa76eac62
+  gist: 'In the cases above two details separate them: a SIGSEGV with SE…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: In the table the page-fault cases carry SEGV_MAPERR or SEGV_ACCERR and an address, and the general-protection
+    cases carry SI_KERNEL and none.
+- id: 54f10027a4
+  gist: SEGV_MAPERR says no page is mapped there; SEGV_ACCERR says a pa…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: In the table address 0 is unmapped (SEGV_MAPERR) and the read-only page is mapped but refuses
+    the write (SEGV_ACCERR).
+- id: e36c651981
+  gist: When a program receives one of these signals and has no handler…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: The test also runs ud2 and a read from address 0 with no handler installed, and the child is killed
+    by SIGILL and SIGSEGV.
+- id: f589a9495a
+  gist: Your own sigaction handler, as in the test program, can look at…
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: The test program is a sigaction handler that reads this information.
+- id: 991cb145fe
+  gist: 'SIGILL: look at the instruction at the reported address.'
+  how: editorial
+  note: Advice.
+- id: b8334206e1
+  gist: A ud2, a missing CPU feature (an instruction newer than the mac…
+  how: derived
+  note: 'ud2 and unsupported instructions are in the #UD list; jumping into data follows from ''an invalid
+    or reserved opcode''.'
+  support:
+  - doc: sdm
+    at: 3382
+    units: [4efa2b754e, 723ef8e423, 9b79a596b7]
+    part: Description
+    quotes:
+      4efa2b754e: 'Indicates that the processor did one of the following things: • Attempted to execute
+        an invalid or reserved opcode.'
+      723ef8e423: Executed a UD0, UD1, UD2, or UDB instruction.
+      9b79a596b7: Attempted to execute an MMX or SSE/SSE2/SSE3 instruction on an Intel 64 or IA-32 processor
+        that does not support the MMX technology or SSE/SSE2/SSE3/SSSE3 extensions, respectively.
+- id: 055165a42f
+  gist: 'SIGFPE in integer code: a div or idiv fault, even though no flo…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: The div and idiv cases in the test raise SIGFPE (vector 0) although no floating-point instruction
+    is involved.
+- id: 9d5be5417c
+  gist: Check for a zero divisor and for a dividend that was not set up…
+  how: derived
+  note: div and idiv take their dividend from rdx:rax, so a stale rdx changes the quotient; cqo is the
+    sign extension for idiv.
+  support:
+  - doc: sdm
+    at: 968
+    units: ['2451701361']
+    part: Description
+    quotes:
+      '2451701361': In 64-bit mode when REX.W is applied, the instruction divides the unsigned value in
+        RDX:RAX by the source operand and stores the quotient in RAX, the remainder in RDX.
+  - doc: sdm
+    at: 1152
+    units: [c21055875c]
+    part: Description
+    quotes:
+      c21055875c: In 64-bit mode when REX.W is applied, the instruction divides the signed value in RDX:RAX
+        by the source operand.
+- id: ad932cd525
+  gist: 'SIGSEGV with an address: you used a bad pointer.'
+  how: editorial
+  note: Advice.
+- id: fb65943c59
+  gist: Address 0 or a small number is a null pointer; a large garbage…
+  how: editorial
+  note: Advice.
+- id: 78d2010cad
+  gist: 'SIGSEGV with no address: a general-protection fault: a non-cano…'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: The non-canonical, privileged-instruction and misaligned-movaps cases in the test give SIGSEGV
+    with no address; the ABI requires a 16-byte-aligned stack at a call.
+  support:
+  - doc: sdm
+    at: 3395
+    units: [8cd08a963b, 33e0c4bed0]
+    part: Description
+    quotes:
+      8cd08a963b: 'The following conditions cause general-protection exceptions in 64-bit mode: • If the
+        memory address is in a non-canonical form.'
+      33e0c4bed0: Executing an SSE/SSE2/SSE3 instruction that attempts to access a 128-bit memory location
+        that is not aligned on a 16-byte boundary when the instruction requires 16-byte alignment.
+  - doc: sdm
+    at: 3394
+    units: [fa7510e2b4]
+    part: Description
+    quotes:
+      fa7510e2b4: Attempting to execute a privileged instruction when the CPL is not equal to 0 (see Section
+        6.9, "Privileged Instructions," for a list of privileged instructions).
+  - doc: sysv
+    at: 17
+    units: [d1956c1de1]
+    part: 3.2.2 The Stack Frame
+    note: The System V ABI promises a 16-byte-aligned stack at the call.
+    quotes:
+      d1956c1de1: The end of the input argument area shall be aligned on a 16 (32, if __m256 is passed
+        on stack) byte boundary.
+- id: aa8ddeb663
+  gist: 'SIGBUS: in these tests, a stack fault or an alignment check.'
+  how: run
+  ref: tests/asm/test_exceptions.c
+  note: The two SIGBUS cases in the test are the stack fault and the alignment check.
+- id: ce15590eab
+  gist: The SDM lists the exceptions an instruction can raise at the en…
+  how: derived
+  note: DIV's entry lists its exceptions by mode at the end.
+  support:
+  - doc: sdm
+    at: 970
+    units: [899e87f561, 602f8497c6]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      899e87f561: '#DE If the source operand (divisor) is 0'
+      602f8497c6: If the quotient is too large for the designated register.
+- id: 138d87a444
+  gist: The pages on this site mention the ones that matter for user co…
+  how: editorial
+  note: Links to sibling pages; each of them lists these exceptions in its own text.
+- id: 06a3151292
+  gist: This page covers what Linux does because that is what was run.
+  how: editorial
+  note: Scope statement.
+- id: f9c5c47556
+  gist: Other operating systems report the same CPU exceptions in their…
+  how: editorial
+  note: Scope statement.

@@ -6,46 +6,100 @@ claims:
 - id: f295c0eca6
   gist: Loads the value at the top of the stack into the destination, t…
   support:
-  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - doc: sdm
+    at: 1687
+    units: [3f9c78822c]
+    part: Description
+    quotes:
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
   - {doc: sdm, at: 1688, units: [c85667596a], part: Operation}
 - id: f474c52603
   gist: POP r64 is encoded as 58+ rd.
   support:
-  - {doc: sdm, at: 1687, units: [de173f4118], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1687
+    units: [de173f4118]
+    part: Opcode table
+    by: match
+    quotes:
+      de173f4118: 58+ rd | POP r64 | O | Valid | N.E. | Pop top of stack into r64; increment stack pointer.
+        Cannot encode 32-bit operand size.
 - id: ce1aa37441
   gist: A 16-bit form exists with the 66h prefix; a 32-bit pop cannot b…
   support:
-  - {doc: sdm, at: 1687, units: [aba26f3c16, 32a2eabd2b, cc6c21fff4], part: Opcode table}
-  - {doc: sdm, at: 1688, units: [9360e4623e], part: Description}
+  - doc: sdm
+    at: 1687
+    units: [aba26f3c16, 32a2eabd2b, cc6c21fff4]
+    part: Opcode table
+    quotes:
+      aba26f3c16: 8F /0 | POP r/m16 | M | Valid | Valid | Pop top of stack into m16; increment stack pointer.
+      32a2eabd2b: 8F /0 | POP r/m32 | M | N.E. | Valid | Pop top of stack into m32; increment stack pointer.
+      cc6c21fff4: 58+ rd | POP r32 | O | N.E. | Valid | Pop top of stack into r32; increment stack pointer.
+  - doc: sdm
+    at: 1688
+    units: [9360e4623e]
+    part: Description
+    quotes:
+      9360e4623e: When in 64-bit mode, POPs using 32-bit operands are not encodable and POPs to DS, ES,
+        SS are not valid.
   - doc: sdm
     at: 189
     units: [18b8f59c67]
     part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
     note: 'Vol. 1, 7.3.1.5: stack manipulation in 64-bit mode.'
+    quotes:
+      18b8f59c67: 16-bit pushes and pops are supported by using the 66H operand-size prefix.
 - id: 41ae78d937
   gist: POP r/m64 is encoded as 8F /0.
   support:
-  - {doc: sdm, at: 1687, units: [378bbd0827], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1687
+    units: [378bbd0827]
+    part: Opcode table
+    by: match
+    quotes:
+      378bbd0827: 8F /0 | POP r/m64 | M | Valid | N.E. | Pop top of stack into m64; increment stack pointer.
+        Cannot encode 32-bit operand size.
 - id: 6da199390e
   gist: No flags are affected.
   support:
-  - {doc: sdm, at: 1690, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1690
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: a030411362
   gist: pop dst reads the 8-byte value at [rsp], stores it in dst, and…
   support:
-  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - doc: sdm
+    at: 1687
+    units: [3f9c78822c]
+    part: Description
+    quotes:
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
   - {doc: sdm, at: 1688, units: [c85667596a], part: Operation}
 - id: b0c1321545
   gist: 'It undoes a push: the stack is last-in, first-out.'
   how: derived
   note: POP loads from the top and increments RSP; PUSH decrements RSP and stores at the top.
   support:
-  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - doc: sdm
+    at: 1687
+    units: [3f9c78822c]
+    part: Description
+    quotes:
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
   - doc: sdm
     at: 1811
     units: [fcafc8633c]
     part: Description
     note: From the PUSH entry.
+    quotes:
+      fcafc8633c: Decrements the stack pointer and then stores the source operand on the top of the stack.
 - id: 39ac85a242
   gist: Restoring registers saved with push, in the reverse order they…
   how: editorial
@@ -53,7 +107,15 @@ claims:
 - id: 73318354b7
   gist: Moving a value from the stack into a register or memory locatio…
   support:
-  - {doc: sdm, at: 1687, units: [c3c3aca4a4, 3f9c78822c], part: Description}
+  - doc: sdm
+    at: 1687
+    units: [c3c3aca4a4, 3f9c78822c]
+    part: Description
+    quotes:
+      c3c3aca4a4: The destination operand can be a general-purpose register, memory location, or segment
+        register.
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
 - id: 16982341f0
   gist: 'Throwing a stack value away: pop into a scratch register (or ad…'
   how: editorial
@@ -65,28 +127,71 @@ claims:
 - id: 32771e2751
   gist: A 32-bit pop cannot be encoded in 64-bit mode; use a 64-bit ope…
   support:
-  - {doc: sdm, at: 1688, units: [9360e4623e], part: Description}
-  - {doc: sdm, at: 1687, units: [32a2eabd2b, cc6c21fff4, 378bbd0827], part: Opcode table}
+  - doc: sdm
+    at: 1688
+    units: [9360e4623e]
+    part: Description
+    quotes:
+      9360e4623e: When in 64-bit mode, POPs using 32-bit operands are not encodable and POPs to DS, ES,
+        SS are not valid.
+  - doc: sdm
+    at: 1687
+    units: [32a2eabd2b, cc6c21fff4, 378bbd0827]
+    part: Opcode table
+    quotes:
+      32a2eabd2b: 8F /0 | POP r/m32 | M | N.E. | Valid | Pop top of stack into m32; increment stack pointer.
+      cc6c21fff4: 58+ rd | POP r32 | O | N.E. | Valid | Pop top of stack into r32; increment stack pointer.
+      378bbd0827: 8F /0 | POP r/m64 | M | Valid | N.E. | Pop top of stack into m64; increment stack pointer.
+        Cannot encode 32-bit operand size.
   - doc: sdm
     at: 189
     units: [18b8f59c67]
     part: 7.3.1.5 Stack Manipulation Instructions in 64-Bit Mode
     note: 'Vol. 1, 7.3.1.5: stack manipulation in 64-bit mode.'
+    quotes:
+      18b8f59c67: 16-bit pushes and pops are supported by using the 66H operand-size prefix.
 - id: 0965b58d03
   gist: Popping into DS, ES or SS is not valid.
   support:
-  - {doc: sdm, at: 1688, units: [9360e4623e], part: Description}
-  - {doc: sdm, at: 1687, units: [6d06635bd5, 6924e33be1, 295954d35b], part: Opcode table}
-  - {doc: sdm, at: 1691, units: [1273149eeb], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1688
+    units: [9360e4623e]
+    part: Description
+    quotes:
+      9360e4623e: When in 64-bit mode, POPs using 32-bit operands are not encodable and POPs to DS, ES,
+        SS are not valid.
+  - doc: sdm
+    at: 1687
+    units: [6d06635bd5, 6924e33be1, 295954d35b]
+    part: Opcode table
+    quotes:
+      6d06635bd5: 1F | POP DS | ZO | Invalid | Valid | Pop top of stack into DS; increment stack pointer.
+      6924e33be1: 07 | POP ES | ZO | Invalid | Valid | Pop top of stack into ES; increment stack pointer.
+      295954d35b: 17 | POP SS | ZO | Invalid | Valid | Pop top of stack into SS; increment stack pointer.
+  - doc: sdm
+    at: 1691
+    units: [1273149eeb]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      1273149eeb: If the DS, ES, or SS register is being loaded.
 - id: 7ab0ae2123
   gist: pop rsp loads rsp from the stack.
   support:
-  - {doc: sdm, at: 1687, units: [3f9c78822c], part: Description}
+  - doc: sdm
+    at: 1687
+    units: [3f9c78822c]
+    part: Description
+    quotes:
+      3f9c78822c: Loads the value from the top of the stack to the location specified with the destination
+        operand (or explicit opcode) and then increments the stack pointer.
   - doc: sdm
     at: 1688
     units: [bbdd976a13]
     part: Description
     note: Stated for ESP.
+    quotes:
+      bbdd976a13: The POP ESP instruction increments the stack pointer (ESP) before data at the old top
+        of stack is written into the destination.
 - id: d5acd6ef05
   gist: The stack pointer is incremented before the old top-of-stack va…
   support:
@@ -95,6 +200,9 @@ claims:
     units: [bbdd976a13]
     part: Description
     note: Stated for ESP; RSP in 64-bit mode.
+    quotes:
+      bbdd976a13: The POP ESP instruction increments the stack pointer (ESP) before data at the old top
+        of stack is written into the destination.
 - id: e7649ef60e
   gist: Memory destinations that use rsp.
   how: editorial
@@ -107,6 +215,10 @@ claims:
     units: [b3ac953b5b]
     part: Description
     note: Stated for ESP; RSP in 64-bit mode.
+    quotes:
+      b3ac953b5b: If the ESP register is used as a base register for addressing a destination operand
+        in memory, the POP instruction computes the effective address of the operand after it increments
+        the ESP register.
 - id: fd4a019142
   gist: Faults.
   how: editorial
@@ -114,7 +226,14 @@ claims:
 - id: b44c60b60f
   gist: 'A non-canonical stack address raises #SS(0), a non-canonical me…'
   support:
-  - {doc: sdm, at: 1691, units: ['8129235435', 33920ea836, 9bf63f56fc], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1691
+    units: ['8129235435', 33920ea836, 9bf63f56fc]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      '8129235435': '#SS(0) If the stack address is in a non-canonical form.'
+      33920ea836: '#GP(0) If the memory address is in a non-canonical form.'
+      9bf63f56fc: '#PF(fault-code) If a page fault occurs.'
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -123,15 +242,27 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 6ba6bc2e67
   gist: It leaves all flags alone (popf is the instruction that pops in…
   support:
-  - {doc: sdm, at: 1690, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1690
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
   - doc: sdm
     at: 1696
     units: [12fa1799ee]
     part: Description
     note: 'From the POPF entry: it pops into EFLAGS.'
+    quotes:
+      12fa1799ee: Pops a doubleword (POPFD) from the top of the stack (if the current operand-size attribute
+        is 32) and stores the value in the EFLAGS register, or pops a word from the top of the stack (if
+        the operand-size attribute is 16) and stores it in the lower 16 bits of the EFLAGS register (that
+        is, the FLAGS register).
 - id: 8778d27419
   gist: pop rbx ; rbx = [rsp]; rsp += 8 pop qword [rdi] ; store the top…
   how: illustrative

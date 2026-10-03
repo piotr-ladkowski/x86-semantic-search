@@ -6,55 +6,142 @@ claims:
 - id: 1559949ef6
   gist: Subtracts the second operand from the first and sets the flags,…
   support:
-  - {doc: sdm, at: 865, units: [1a066e1724, 3bb9b063e1], part: Description}
+  - doc: sdm
+    at: 865
+    units: [1a066e1724, 3bb9b063e1]
+    part: Description
+    quotes:
+      1a066e1724: Compares the first source operand with the second source operand and sets the status
+        flags in the EFLAGS register according to the results.
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: eea4619b9a
   gist: CMP r/m64, r64 is encoded as REX.W + 39 /r.
   support:
-  - {doc: sdm, at: 865, units: [d6de8a508c], part: Opcode table, by: match}
+  - doc: sdm
+    at: 865
+    units: [d6de8a508c]
+    part: Opcode table
+    by: match
+    quotes:
+      d6de8a508c: REX.W + 39 /r | CMP r/m64,r64 | MR | Valid | N.E. | Compare r64 with r/m64.
 - id: 97b845e0fe
   gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
   support:
-  - {doc: sdm, at: 865, units: [4825b31922, e3fda71b25, fe85b35d58, d6de8a508c], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [4825b31922, e3fda71b25, fe85b35d58, d6de8a508c]
+    part: Opcode table
+    quotes:
+      4825b31922: 38 /r | CMP r/m8[1], r8[1] | MR | Valid | Valid | Compare r8 with r/m8.
+      e3fda71b25: 39 /r | CMP r/m16, r16 | MR | Valid | Valid | Compare r16 with r/m16.
+      fe85b35d58: 39 /r | CMP r/m32, r32 | MR | Valid | Valid | Compare r32 with r/m32.
+      d6de8a508c: REX.W + 39 /r | CMP r/m64,r64 | MR | Valid | N.E. | Compare r64 with r/m64.
 - id: 238a29b505
   gist: CMP r64, r/m64 is encoded as REX.W + 3B /r.
   support:
-  - {doc: sdm, at: 865, units: [90a56b3192], part: Opcode table, by: match}
+  - doc: sdm
+    at: 865
+    units: [90a56b3192]
+    part: Opcode table
+    by: match
+    quotes:
+      90a56b3192: REX.W + 3B /r | CMP r64, r/m64 | RM | Valid | N.E. | Compare r/m64 with r64.
 - id: b86519a968
   gist: CMP r/m64, imm8 is encoded as REX.W + 83 /7 ib.
   support:
-  - {doc: sdm, at: 865, units: [b6561e2095], part: Opcode table, by: match}
+  - doc: sdm
+    at: 865
+    units: [b6561e2095]
+    part: Opcode table
+    by: match
+    quotes:
+      b6561e2095: REX.W + 83 /7 ib | CMP r/m64, imm8 | MI | Valid | N.E. | Compare imm8 with r/m64.
 - id: 51e483d20e
   gist: imm8 is sign-extended to 64 bits.
   support:
-  - {doc: sdm, at: 865, units: [b6561e2095, 946a37cb6d], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [b6561e2095, 946a37cb6d]
+    part: Opcode table
+    quotes:
+      b6561e2095: REX.W + 83 /7 ib | CMP r/m64, imm8 | MI | Valid | N.E. | Compare imm8 with r/m64.
+      946a37cb6d: When an immediate value is used as an operand, it is sign-extended to the length of
+        the first operand.
 - id: 3c787307ff
   gist: CMP r/m64, imm32 is encoded as REX.W + 81 /7 id.
   support:
-  - {doc: sdm, at: 865, units: [b6e6f8a896], part: Opcode table, by: match}
+  - doc: sdm
+    at: 865
+    units: [b6e6f8a896]
+    part: Opcode table
+    by: match
+    quotes:
+      b6e6f8a896: REX.W + 81 /7 id | CMP r/m64, imm32 | MI | Valid | N.E. | Compare imm32 sign-extended
+        to 64-bits with r/m64.
 - id: 735d1e8ccd
   gist: imm32 is sign-extended to 64 bits.
   support:
-  - {doc: sdm, at: 865, units: [b6e6f8a896], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [b6e6f8a896]
+    part: Opcode table
+    quotes:
+      b6e6f8a896: REX.W + 81 /7 id | CMP r/m64, imm32 | MI | Valid | N.E. | Compare imm32 sign-extended
+        to 64-bits with r/m64.
 - id: e0264187b6
   gist: CMP RAX, imm32 is encoded as REX.W + 3D id.
   support:
-  - {doc: sdm, at: 865, units: [663f9cbda6], part: Opcode table, by: match}
+  - doc: sdm
+    at: 865
+    units: [663f9cbda6]
+    part: Opcode table
+    by: match
+    quotes:
+      663f9cbda6: REX.W + 3D id | CMP RAX, imm32 | I | Valid | N.E. | Compare imm32 sign-extended to 64-bits
+        with RAX.
 - id: dde1c70266
   gist: Short encoding for the accumulator.
   how: derived
   note: The accumulator row (3D id, operand encoding I) has no ModRM byte, which the general 81 /7 id
     form needs.
   support:
-  - {doc: sdm, at: 865, units: [663f9cbda6, 09bba7787f], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [663f9cbda6, 09bba7787f]
+    part: Opcode table
+    quotes:
+      663f9cbda6: REX.W + 3D id | CMP RAX, imm32 | I | Valid | N.E. | Compare imm32 sign-extended to 64-bits
+        with RAX.
+      09bba7787f: I | AL/AX/EAX/RAX (r) | imm8/16/32 | N/A | N/A
 - id: 462694adb8
   gist: 'Flags modified: CF, OF, SF, ZF, AF, PF.'
   support:
-  - {doc: sdm, at: 866, units: [1a792e6456], part: Flags Affected}
+  - doc: sdm
+    at: 866
+    units: [1a792e6456]
+    part: Flags Affected
+    quotes:
+      1a792e6456: The CF, OF, SF, ZF, AF, and PF flags are set according to the result.
 - id: ca55b92b7d
   gist: Set exactly as SUB would set them; no register or memory is wri…
   support:
-  - {doc: sdm, at: 865, units: [3bb9b063e1, fb75803af8, b0bfd0b66e], part: Description}
-  - {doc: sdm, at: 866, units: [9332f2e5cd], part: Description}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1, fb75803af8, b0bfd0b66e]
+    part: Description
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
+      fb75803af8: RM | ModRM:reg (r) | ModRM:r/m (r) | N/A | N/A
+      b0bfd0b66e: MR | ModRM:r/m (r) | ModRM:reg (r) | N/A | N/A
+  - doc: sdm
+    at: 866
+    units: [9332f2e5cd]
+    part: Description
+    quotes:
+      9332f2e5cd: temp := SRC1 − SignExtend(SRC2); ModifyStatusFlags; (* Modify status flags in the same
+        manner as the SUB instruction*)
 - id: 29b87f52c6
   gist: cmp a, b computes a - b, sets the status flags from that result…
   support:
@@ -63,37 +150,74 @@ claims:
     units: [1a066e1724, 3bb9b063e1, fb75803af8, b0bfd0b66e]
     part: Description
     note: 'Both operands are marked (r): read only.'
+    quotes:
+      1a066e1724: Compares the first source operand with the second source operand and sets the status
+        flags in the EFLAGS register according to the results.
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
+      fb75803af8: RM | ModRM:reg (r) | ModRM:r/m (r) | N/A | N/A
+      b0bfd0b66e: MR | ModRM:r/m (r) | ModRM:reg (r) | N/A | N/A
 - id: 91e1d90a68
   gist: It exists to feed a conditional instruction (jcc, setcc, cmovcc…
   support:
-  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+  - doc: sdm
+    at: 865
+    units: [9fc1e3da9d]
+    part: Description
+    quotes:
+      9fc1e3da9d: The condition codes used by the Jcc, CMOVcc, and SETcc instructions are based on the
+        results of a CMP instruction.
 - id: 64b1e2d91e
   gist: 'Before a conditional jump, setcc or cmovcc: cmp rax, rbx then j…'
   how: derived
   note: The SDM says Jcc, CMOVcc and SETcc conditions are based on CMP's result; JL and JE are rows of
     the Jcc table.
   support:
-  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+  - doc: sdm
+    at: 865
+    units: [9fc1e3da9d]
+    part: Description
+    quotes:
+      9fc1e3da9d: The condition codes used by the Jcc, CMOVcc, and SETcc instructions are based on the
+        results of a CMP instruction.
   - doc: sdm
     at: 1203
     units: [4d1db289db, e937db03ed]
     part: Opcode table
     note: From the Jcc entry.
+    quotes:
+      4d1db289db: 7C cb | JL rel8 | D | Valid | Valid | Jump short if less (SF≠ OF).
+      e937db03ed: 74 cb | JE rel8 | D | Valid | Valid | Jump short if equal (ZF=1).
 - id: 767a82a610
   gist: 'Comparing a register or memory value with a constant: cmp dword…'
   support:
-  - {doc: sdm, at: 865, units: [3ac5030a2b, a3f3934c76], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [3ac5030a2b, a3f3934c76]
+    part: Opcode table
+    quotes:
+      3ac5030a2b: 81 /7 id | CMP r/m32, imm32 | MI | Valid | Valid | Compare imm32 with r/m32.
+      a3f3934c76: MI | ModRM:r/m (r) | imm8/16/32 | N/A | N/A
 - id: 3df9a56606
   gist: Checking equality (je/jne) or ordering.
   how: derived
   note: JE and JNE test ZF, which CMP sets from the subtraction.
   support:
-  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+  - doc: sdm
+    at: 865
+    units: [9fc1e3da9d]
+    part: Description
+    quotes:
+      9fc1e3da9d: The condition codes used by the Jcc, CMOVcc, and SETcc instructions are based on the
+        results of a CMP instruction.
   - doc: sdm
     at: 1203
     units: [e937db03ed, 18b1475313]
     part: Opcode table
     note: From the Jcc entry.
+    quotes:
+      e937db03ed: 74 cb | JE rel8 | D | Valid | Valid | Jump short if equal (ZF=1).
+      18b1475313: 75 cb | JNE rel8 | D | Valid | Valid | Jump short if not equal (ZF=0).
 - id: cff82bcf3d
   gist: For a plain "is this zero?" test, test reg, reg is a byte short…
   how: derived
@@ -105,11 +229,16 @@ claims:
     units: [fbd31e52b9]
     part: Opcode table
     note: 'From the TEST entry: 85 /r.'
+    quotes:
+      fbd31e52b9: 85 /r | TEST r/m32, r32 | MR | Valid | Valid | AND r32 with r/m32; set SF, ZF, PF according
+        to result.
   - doc: sdm
     at: 865
     units: [5b7dfed80a]
     part: Opcode table
     note: 83 /7 ib.
+    quotes:
+      5b7dfed80a: 83 /7 ib | CMP r/m32, imm8 | MI | Valid | Valid | Compare imm8 with r/m32.
 - id: f934cf1d22
   gist: Operand order.
   how: editorial
@@ -119,45 +248,90 @@ claims:
   how: derived
   note: JL jumps when SF differs from OF; for a subtraction that is the signed 'less than' case.
   support:
-  - {doc: sdm, at: 865, units: [3bb9b063e1], part: Description}
+  - doc: sdm
+    at: 865
+    units: [3bb9b063e1]
+    part: Description
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
   - doc: sdm
     at: 1203
     units: [4d1db289db]
     part: Opcode table
     note: From the Jcc entry.
+    quotes:
+      4d1db289db: 7C cb | JL rel8 | D | Valid | Valid | Jump short if less (SF≠ OF).
 - id: 475e98f91b
   gist: Signed versus unsigned is chosen by the instruction that reads…
   how: derived
   note: JB and JA test CF and ZF (unsigned); JL and JG test SF, OF and ZF (signed).
   support:
-  - {doc: sdm, at: 865, units: [9fc1e3da9d], part: Description}
+  - doc: sdm
+    at: 865
+    units: [9fc1e3da9d]
+    part: Description
+    quotes:
+      9fc1e3da9d: The condition codes used by the Jcc, CMOVcc, and SETcc instructions are based on the
+        results of a CMP instruction.
   - doc: sdm
     at: 1203
     units: [a397db1da2, aa86466ea7, 4d1db289db, 4c0eb334fa]
     part: Opcode table
     note: From the Jcc entry.
+    quotes:
+      a397db1da2: 72 cb | JB rel8 | D | Valid | Valid | Jump short if below (CF=1).
+      aa86466ea7: 77 cb | JA rel8 | D | Valid | Valid | Jump short if above (CF=0 and ZF=0).
+      4d1db289db: 7C cb | JL rel8 | D | Valid | Valid | Jump short if less (SF≠ OF).
+      4c0eb334fa: 7F cb | JG rel8 | D | Valid | Valid | Jump short if greater (ZF=0 and SF=OF).
   - doc: sdm
     at: 1974
     units: [90a715b8dd]
     part: Description
     note: 'From the SUB entry: CF for unsigned, OF for signed.'
+    quotes:
+      90a715b8dd: It evaluates the result for both signed and unsigned integer operands and sets the OF
+        and CF flags to indicate an overflow in the signed or unsigned result, respectively.
 - id: 1a91d386b2
   gist: Immediates are sign-extended to the size of the first operand:…
   support:
-  - {doc: sdm, at: 865, units: [946a37cb6d, b6e6f8a896], part: Description}
+  - doc: sdm
+    at: 865
+    units: [946a37cb6d, b6e6f8a896]
+    part: Description
+    quotes:
+      946a37cb6d: When an immediate value is used as an operand, it is sign-extended to the length of
+        the first operand.
+      b6e6f8a896: REX.W + 81 /7 id | CMP r/m64, imm32 | MI | Valid | N.E. | Compare imm32 sign-extended
+        to 64-bits with r/m64.
 - id: 881ad8ee9d
   gist: To compare a 64-bit register with 4294967295, load that constan…
   how: derived
   note: The 64-bit immediate form takes an imm32 sign-extended; 4294967295 does not fit as a positive
     value.
   support:
-  - {doc: sdm, at: 865, units: [b6e6f8a896, 946a37cb6d], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [b6e6f8a896, 946a37cb6d]
+    part: Opcode table
+    quotes:
+      b6e6f8a896: REX.W + 81 /7 id | CMP r/m64, imm32 | MI | Valid | N.E. | Compare imm32 sign-extended
+        to 64-bits with r/m64.
+      946a37cb6d: When an immediate value is used as an operand, it is sign-extended to the length of
+        the first operand.
 - id: 16631dc74c
   gist: At most one memory operand.
   how: derived
   note: Every form in the opcode table has one r/m operand and a register or immediate; none has two.
   support:
-  - {doc: sdm, at: 865, units: [fe85b35d58, 29a2d4c8b0, a3f3934c76], part: Opcode table}
+  - doc: sdm
+    at: 865
+    units: [fe85b35d58, 29a2d4c8b0, a3f3934c76]
+    part: Opcode table
+    quotes:
+      fe85b35d58: 39 /r | CMP r/m32, r32 | MR | Valid | Valid | Compare r32 with r/m32.
+      29a2d4c8b0: 3B /r | CMP r32, r/m32 | RM | Valid | Valid | Compare r/m32 with r32.
+      a3f3934c76: MI | ModRM:r/m (r) | imm8/16/32 | N/A | N/A
 - id: c2b7f17143
   gist: A lock prefix is always invalid (#UD), since cmp never writes.
   support:
@@ -166,6 +340,8 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: cbd5761cc5
   gist: cmp rax, rbx ; flags from rax - rbx jl .less ; taken if rax < r…
   how: illustrative

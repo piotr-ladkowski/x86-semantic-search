@@ -6,37 +6,86 @@ claims:
 - id: 9c626a95ff
   gist: Replaces the operand with its negative (0 minus the operand) an…
   support:
-  - {doc: sdm, at: 1447, units: [9fe7a3e7cc, 5125caf898, 7912fbaba8], part: Flags Affected}
+  - doc: sdm
+    at: 1447
+    units: [9fe7a3e7cc, 5125caf898, 7912fbaba8]
+    part: Flags Affected
+    quotes:
+      9fe7a3e7cc: Replaces the value of operand (the destination operand) with its two's complement.
+      5125caf898: (This operation is equivalent to subtracting the operand from 0.)
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
 - id: f251d30584
   gist: NEG r/m64 is encoded as REX.W + F7 /3.
   support:
-  - {doc: sdm, at: 1447, units: [7b0d1f01d4], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1447
+    units: [7b0d1f01d4]
+    part: Opcode table
+    by: match
+    quotes:
+      7b0d1f01d4: REX.W + F7 /3 | NEG r/m64 | M | Valid | N.E. | Two's complement negate r/m64.
 - id: 97b845e0fe
   gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
   support:
-  - {doc: sdm, at: 1447, units: [1273a10cb8, b83376c713, ad238ccd37, 7b0d1f01d4], part: Opcode table}
+  - doc: sdm
+    at: 1447
+    units: [1273a10cb8, b83376c713, ad238ccd37, 7b0d1f01d4]
+    part: Opcode table
+    quotes:
+      1273a10cb8: F6 /3 | NEG r/m8[1] | M | Valid | Valid | Two's complement negate r/m8.
+      b83376c713: F7 /3 | NEG r/m16 | M | Valid | Valid | Two's complement negate r/m16.
+      ad238ccd37: F7 /3 | NEG r/m32 | M | Valid | Valid | Two's complement negate r/m32.
+      7b0d1f01d4: REX.W + F7 /3 | NEG r/m64 | M | Valid | N.E. | Two's complement negate r/m64.
 - id: 2e16fbec7c
   gist: 'Flags modified: OF, SF, ZF, AF, CF, PF.'
   support:
-  - {doc: sdm, at: 1447, units: [f9e3165e5a, 7912fbaba8], part: Flags Affected}
+  - doc: sdm
+    at: 1447
+    units: [f9e3165e5a, 7912fbaba8]
+    part: Flags Affected
+    quotes:
+      f9e3165e5a: The CF flag set to 0 if the source operand is 0; otherwise it is set to 1.
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
 - id: 097fb789da
   gist: CF is 0 if the operand was 0, otherwise 1.
   support:
-  - {doc: sdm, at: 1447, units: [f9e3165e5a], part: Flags Affected}
+  - doc: sdm
+    at: 1447
+    units: [f9e3165e5a]
+    part: Flags Affected
+    quotes:
+      f9e3165e5a: The CF flag set to 0 if the source operand is 0; otherwise it is set to 1.
 - id: 7fca2a6e96
   gist: The rest are set from the result.
   support:
-  - {doc: sdm, at: 1447, units: [7912fbaba8], part: Flags Affected}
+  - doc: sdm
+    at: 1447
+    units: [7912fbaba8]
+    part: Flags Affected
+    quotes:
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
 - id: 4e81ca9e47
   gist: neg dst replaces dst with 0 - dst, the two's-complement negativ…
   support:
-  - {doc: sdm, at: 1447, units: [9fe7a3e7cc, 5125caf898], part: Description}
+  - doc: sdm
+    at: 1447
+    units: [9fe7a3e7cc, 5125caf898]
+    part: Description
+    quotes:
+      9fe7a3e7cc: Replaces the value of operand (the destination operand) with its two's complement.
+      5125caf898: (This operation is equivalent to subtracting the operand from 0.)
 - id: bcac11d6c2
   gist: Positive becomes negative and the other way round; 0 stays 0.
   how: derived
   note: Two's complement negation is 0 minus the value.
   support:
-  - {doc: sdm, at: 1447, units: [9fe7a3e7cc, 5125caf898], part: Description}
+  - doc: sdm
+    at: 1447
+    units: [9fe7a3e7cc, 5125caf898]
+    part: Description
+    quotes:
+      9fe7a3e7cc: Replaces the value of operand (the destination operand) with its two's complement.
+      5125caf898: (This operation is equivalent to subtracting the operand from 0.)
 - id: 34d849317f
   gist: 'Flipping the sign of a signed integer: neg rax.'
   how: editorial
@@ -46,7 +95,13 @@ claims:
   how: derived
   note: The destination is also the operand, so 0 - x lands in the same register.
   support:
-  - {doc: sdm, at: 1447, units: [84efd55e5f, 5125caf898], part: Description}
+  - doc: sdm
+    at: 1447
+    units: [84efd55e5f, 5125caf898]
+    part: Description
+    quotes:
+      84efd55e5f: The destination operand is located in a general-purpose register or a memory location.
+      5125caf898: (This operation is equivalent to subtracting the operand from 0.)
 - id: c9b4635fe7
   gist: 'Building an absolute value: negate a copy, then pick the positi…'
   how: editorial
@@ -54,41 +109,75 @@ claims:
 - id: 0a19e1bf6a
   gist: CF means "was not zero".
   support:
-  - {doc: sdm, at: 1447, units: [f9e3165e5a], part: Flags Affected}
+  - doc: sdm
+    at: 1447
+    units: [f9e3165e5a]
+    part: Flags Affected
+    quotes:
+      f9e3165e5a: The CF flag set to 0 if the source operand is 0; otherwise it is set to 1.
 - id: 8db511622f
   gist: After neg, CF is 0 only if the operand was 0, so jnc/jae after…
   how: derived
   note: CF is 0 only for a zero operand, so a no-carry branch tests for it.
   support:
-  - {doc: sdm, at: 1447, units: [f9e3165e5a], part: Flags Affected}
+  - doc: sdm
+    at: 1447
+    units: [f9e3165e5a]
+    part: Flags Affected
+    quotes:
+      f9e3165e5a: The CF flag set to 0 if the source operand is 0; otherwise it is set to 1.
 - id: a7aea3c00a
   gist: It is not an overflow flag.
   how: derived
   note: CF here is 'operand was nonzero'; overflow is OF's job.
   support:
-  - {doc: sdm, at: 1447, units: [f9e3165e5a], part: Flags Affected}
+  - doc: sdm
+    at: 1447
+    units: [f9e3165e5a]
+    part: Flags Affected
+    quotes:
+      f9e3165e5a: The CF flag set to 0 if the source operand is 0; otherwise it is set to 1.
   - doc: sdm
     at: 82
     units: [426ef97feb]
     part: 3.4.3.1 Status Flags
     note: Status flags (Vol. 1, 3.4.3.1).
+    quotes:
+      426ef97feb: OF (bit 11) Overflow flag — Set if the integer result is too large a positive number
+        or too small a negative number (excluding the sign-bit) to fit in the destination operand; cleared
+        otherwise.
 - id: b20909272b
   gist: The most negative value has no positive counterpart.
   how: derived
   note: A property of two's complement.
   support:
-  - {doc: sdm, at: 1447, units: [9fe7a3e7cc], part: Description}
+  - doc: sdm
+    at: 1447
+    units: [9fe7a3e7cc]
+    part: Description
+    quotes:
+      9fe7a3e7cc: Replaces the value of operand (the destination operand) with its two's complement.
 - id: 4e66d36df4
   gist: Negating the smallest signed number (0x8000000000000000 for a 6…
   how: derived
   note: 0 - 0x8000000000000000 wraps to itself; OF reports signed overflow.
   support:
-  - {doc: sdm, at: 1447, units: [9fe7a3e7cc, 7912fbaba8], part: Description}
+  - doc: sdm
+    at: 1447
+    units: [9fe7a3e7cc, 7912fbaba8]
+    part: Description
+    quotes:
+      9fe7a3e7cc: Replaces the value of operand (the destination operand) with its two's complement.
+      7912fbaba8: The OF, SF, ZF, AF, and PF flags are set according to the result.
   - doc: sdm
     at: 82
     units: [426ef97feb]
     part: 3.4.3.1 Status Flags
     note: Status flags (Vol. 1, 3.4.3.1).
+    quotes:
+      426ef97feb: OF (bit 11) Overflow flag — Set if the integer result is too large a positive number
+        or too small a negative number (excluding the sign-bit) to fit in the destination operand; cleared
+        otherwise.
 - id: ffa8056729
   gist: Identity with NOT.
   how: editorial
@@ -98,12 +187,20 @@ claims:
   how: derived
   note: Two's complement is the bitwise complement plus one.
   support:
-  - {doc: sdm, at: 1447, units: [9fe7a3e7cc], part: Description}
+  - doc: sdm
+    at: 1447
+    units: [9fe7a3e7cc]
+    part: Description
+    quotes:
+      9fe7a3e7cc: Replaces the value of operand (the destination operand) with its two's complement.
   - doc: sdm
     at: 1450
     units: [9758a513bd]
     part: Description
     note: From the NOT entry.
+    quotes:
+      9758a513bd: Performs a bitwise NOT operation (each 1 is set to 0, and each 0 is set to 1) on the
+        destination operand and stores the result in the destination operand location.
 - id: 586f765144
   gist: 32-bit operations zero the upper half.
   support:
@@ -112,6 +209,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 29c9d67f07
   gist: neg eax clears bits 63:32 of rax.
   support:
@@ -120,6 +220,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: c884d14ee4
   gist: 'lock neg needs a memory destination (otherwise #UD).'
   support:
@@ -128,6 +231,8 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
 - id: 645e762cba
   gist: neg rax ; rax = -rax neg dword [rdi] ; negate a 32-bit signed v…
   how: illustrative

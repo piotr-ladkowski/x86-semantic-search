@@ -6,117 +6,336 @@ claims:
 - id: e4da586ad7
   gist: Prefix that repeats one string instruction RCX times; REPE and…
   support:
-  - {doc: sdm, at: 1852, units: [66597eb95d], part: Description}
-  - {doc: sdm, at: 1854, units: [40370a9880], part: Description}
-  - {doc: sdm, at: 1856, units: [761c6062da], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [66597eb95d]
+    part: Description
+    quotes:
+      66597eb95d: Repeats a string instruction the number of times specified in the count register.
+  - doc: sdm
+    at: 1854
+    units: [40370a9880]
+    part: Description
+    quotes:
+      40370a9880: Repeats a string instruction the number of times specified in the count register or
+        until the ZF flag is clear.
+  - doc: sdm
+    at: 1856
+    units: [761c6062da]
+    part: Description
+    quotes:
+      761c6062da: Repeats a string instruction the number of times specified in the count register or
+        until the ZF flag is set.
 - id: 88a25227fb
   gist: Also written as REPE, REPZ, REPNE, REPNZ.
   support:
-  - {doc: sdm, at: 1854, units: [7b6c3d947b, 43fd618f6a], part: Description}
-  - {doc: sdm, at: 1856, units: [384b91250d, 13c0a1fa34], part: Description}
+  - doc: sdm
+    at: 1854
+    units: [7b6c3d947b, 43fd618f6a]
+    part: Description
+    quotes:
+      7b6c3d947b: The REPE (repeat while equal) and REPZ (repeat while zero) mnemonics are prefixes that
+        can be added to the CMPS and SCAS instructions.
+      43fd618f6a: (The REPZ prefix is a synonymous form of the REPE prefix.)
+  - doc: sdm
+    at: 1856
+    units: [384b91250d, 13c0a1fa34]
+    part: Description
+    quotes:
+      384b91250d: The REPNE (repeat while not equal) and REPNZ (repeat while not zero) mnemonics are prefixes
+        that can be added to the CMPS and SCAS instructions.
+      13c0a1fa34: (The REPNZ prefix is a synonymous form of the REPNE prefix.)
 - id: 9e94e75af6
   gist: REP MOVS / STOS / LODS is encoded as F3 + string opcode.
   support:
-  - {doc: sdm, at: 1852, units: [20668b35cf, e624faefc5, d00490e280], part: Opcode table}
+  - doc: sdm
+    at: 1852
+    units: [20668b35cf, e624faefc5, d00490e280]
+    part: Opcode table
+    quotes:
+      20668b35cf: F3 A4 | REP MOVS m8, m8 | ZO | Valid | Valid | Move (count) bytes from (src) to (dest).
+      e624faefc5: F3 AA | REP STOS m8 | ZO | Valid | Valid | Fill (count) bytes at (dest) with AL.
+      d00490e280: F3 AC | REP LODS AL | ZO | Valid | Valid | Load (count) bytes from (src) to AL.
 - id: 8dec5c7f07
   gist: e.g. rep movsb = F3 A4; rep stosq = F3 REX.W AB.
   support:
-  - {doc: sdm, at: 1852, units: [20668b35cf, 257ecc7e4e], part: Opcode table}
+  - doc: sdm
+    at: 1852
+    units: [20668b35cf, 257ecc7e4e]
+    part: Opcode table
+    quotes:
+      20668b35cf: F3 A4 | REP MOVS m8, m8 | ZO | Valid | Valid | Move (count) bytes from (src) to (dest).
+      257ecc7e4e: F3 REX.W AB | REP STOS m64 | ZO | Valid | N.E. | Fill (count) quadwords at (dest) with
+        RAX.
 - id: 6d3513c9d1
   gist: (INS and OUTS also accept REP but are privileged.)
   how: derived
   note: 'REP applies to INS and OUTS; the INS entry''s #GP(0) is for CPL above IOPL, which is what ''privileged''
     means here.'
   support:
-  - {doc: sdm, at: 1852, units: [2dd56035f0], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [2dd56035f0]
+    part: Description
+    quotes:
+      2dd56035f0: The REP (repeat) mnemonic is a prefix that can be added to the INS, OUTS, MOVS, LODS,
+        and STOS instructions.
   - doc: sdm
     at: 1167
     units: [61e17c6bb1]
     part: 64-Bit Mode Exceptions
     note: 'From the INS entry: the I/O privilege check.'
+    quotes:
+      61e17c6bb1: '#GP(0) If the CPL is greater than (has less privilege) the I/O privilege level (IOPL)
+        and any of the corresponding I/O permission bits in TSS for the I/O port being accessed is 1.'
 - id: c51f9b0c5e
   gist: REPE CMPS / SCAS (also REPZ) is encoded as F3 + string opcode.
   support:
-  - {doc: sdm, at: 1854, units: [62007c85e1, 89796b16b5], part: Opcode table}
+  - doc: sdm
+    at: 1854
+    units: [62007c85e1, 89796b16b5]
+    part: Opcode table
+    quotes:
+      62007c85e1: F3 A6 | REPE CMPS m8, m8 | ZO | Valid | Valid | Find nonmatching bytes in (src1) and
+        (src2).
+      89796b16b5: F3 AE | REPE SCAS m8 | ZO | Valid | Valid | Find non-AL byte starting at (src2).
 - id: 41d735003b
   gist: Repeat while the compared elements are equal (ZF = 1).
   support:
-  - {doc: sdm, at: 1854, units: [a7670241fc, 40370a9880], part: Description}
+  - doc: sdm
+    at: 1854
+    units: [a7670241fc, 40370a9880]
+    part: Description
+    quotes:
+      a7670241fc: The REPE/REPZ prefixes check the state of the ZF flag after each iteration and terminate
+        the repeat loop if the ZF flag is not set.
+      40370a9880: Repeats a string instruction the number of times specified in the count register or
+        until the ZF flag is clear.
 - id: 30d6d47ef4
   gist: The byte F3 is the same as for REP.
   support:
-  - {doc: sdm, at: 1852, units: [20668b35cf], part: Opcode table}
-  - {doc: sdm, at: 1854, units: [62007c85e1], part: Opcode table}
+  - doc: sdm
+    at: 1852
+    units: [20668b35cf]
+    part: Opcode table
+    quotes:
+      20668b35cf: F3 A4 | REP MOVS m8, m8 | ZO | Valid | Valid | Move (count) bytes from (src) to (dest).
+  - doc: sdm
+    at: 1854
+    units: [62007c85e1]
+    part: Opcode table
+    quotes:
+      62007c85e1: F3 A6 | REPE CMPS m8, m8 | ZO | Valid | Valid | Find nonmatching bytes in (src1) and
+        (src2).
 - id: b1e12049da
   gist: REPNE CMPS / SCAS (also REPNZ) is encoded as F2 + string opcode.
   support:
-  - {doc: sdm, at: 1856, units: [c4b20615b6, 9c652713cb], part: Opcode table}
+  - doc: sdm
+    at: 1856
+    units: [c4b20615b6, 9c652713cb]
+    part: Opcode table
+    quotes:
+      c4b20615b6: F2 A6 | REPNE CMPS m8, m8 | ZO | Valid | Valid | Find matching bytes in (src1) and (src2).
+      9c652713cb: F2 AE | REPNE SCAS m8 | ZO | Valid | Valid | Find AL, starting at (src2).
 - id: 6894f4eb67
   gist: Repeat while the compared elements differ (ZF = 0).
   support:
-  - {doc: sdm, at: 1856, units: [936ce0ed7f, 761c6062da], part: Description}
+  - doc: sdm
+    at: 1856
+    units: [936ce0ed7f, 761c6062da]
+    part: Description
+    quotes:
+      936ce0ed7f: The REPNE/REPNZ prefixes also check the state of the ZF flag after each iteration and
+        terminate the repeat loop if the ZF flag is set.
+      761c6062da: Repeats a string instruction the number of times specified in the count register or
+        until the ZF flag is set.
 - id: 70f7c63d67
   gist: 'Flags read: ZF.'
   support:
-  - {doc: sdm, at: 1854, units: [a7670241fc], part: Description}
-  - {doc: sdm, at: 1856, units: [936ce0ed7f], part: Description}
+  - doc: sdm
+    at: 1854
+    units: [a7670241fc]
+    part: Description
+    quotes:
+      a7670241fc: The REPE/REPZ prefixes check the state of the ZF flag after each iteration and terminate
+        the repeat loop if the ZF flag is not set.
+  - doc: sdm
+    at: 1856
+    units: [936ce0ed7f]
+    part: Description
+    quotes:
+      936ce0ed7f: The REPNE/REPNZ prefixes also check the state of the ZF flag after each iteration and
+        terminate the repeat loop if the ZF flag is set.
 - id: e9101d5c9f
   gist: The prefixes do not change flags.
   support:
-  - {doc: sdm, at: 1853, units: [71f8e7976e], part: Flags Affected}
-  - {doc: sdm, at: 1855, units: [c946051c07], part: Flags Affected}
+  - doc: sdm
+    at: 1853
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
+  - doc: sdm
+    at: 1855
+    units: [c946051c07]
+    part: Flags Affected
+    quotes:
+      c946051c07: None by the prefixes; however, the CMPS and SCAS instructions do set the status flags
+        in the EFLAGS register.
 - id: 8c4ce26f6f
   gist: REPE and REPNE read ZF (set by the CMPS or SCAS they repeat); R…
   support:
-  - {doc: sdm, at: 1854, units: [a7670241fc, 2460ebe111], part: Description}
-  - {doc: sdm, at: 1856, units: [936ce0ed7f], part: Description}
-  - {doc: sdm, at: 1852, units: [06e40ebb3c], part: Description}
+  - doc: sdm
+    at: 1854
+    units: [a7670241fc, 2460ebe111]
+    part: Description
+    quotes:
+      a7670241fc: The REPE/REPZ prefixes check the state of the ZF flag after each iteration and terminate
+        the repeat loop if the ZF flag is not set.
+      2460ebe111: The ZF flag does not require initialization because both the CMPS and SCAS instructions
+        affect the ZF flag according to the results of the comparisons they make.
+  - doc: sdm
+    at: 1856
+    units: [936ce0ed7f]
+    part: Description
+    quotes:
+      936ce0ed7f: The REPNE/REPNZ prefixes also check the state of the ZF flag after each iteration and
+        terminate the repeat loop if the ZF flag is set.
+  - doc: sdm
+    at: 1852
+    units: [06e40ebb3c]
+    part: Description
+    quotes:
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
 - id: df8fc3c12e
   gist: A repeat prefix placed before a string instruction (movs, stos,…
   support:
-  - {doc: sdm, at: 1852, units: [2dd56035f0, 615edebf54], part: Description}
-  - {doc: sdm, at: 1854, units: [7b6c3d947b], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [2dd56035f0, 615edebf54]
+    part: Description
+    quotes:
+      2dd56035f0: The REP (repeat) mnemonic is a prefix that can be added to the INS, OUTS, MOVS, LODS,
+        and STOS instructions.
+      615edebf54: The REP prefixes apply only to one string instruction at a time.
+  - doc: sdm
+    at: 1854
+    units: [7b6c3d947b]
+    part: Description
+    quotes:
+      7b6c3d947b: The REPE (repeat while equal) and REPZ (repeat while zero) mnemonics are prefixes that
+        can be added to the CMPS and SCAS instructions.
 - id: 5d72bcde92
   gist: The count register is rcx in 64-bit mode (ecx with a 67h prefix…
   support:
-  - {doc: sdm, at: 1852, units: [7340ea2c83, 69bd867494, 23a1178a1a], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [7340ea2c83, 69bd867494, 23a1178a1a]
+    part: Description
+    quotes:
+      7340ea2c83: Thus, the default count register in 64-bit mode is RCX; REX.W has no effect on the address
+        size and the count register.
+      69bd867494: If 67H is used to override the default address size, the size of the count register
+        is also overridden.
+      23a1178a1a: The count register is CX, ECX, or RCX, depending on the instruction's address size.
 - id: 7879a34944
   gist: Each repetition decrements rcx, and the repetition stops when i…
   support:
-  - {doc: sdm, at: 1852, units: [06e40ebb3c], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [06e40ebb3c]
+    part: Description
+    quotes:
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
   - {doc: sdm, at: 1853, units: [0cc2dc93fa], part: Operation}
 - id: f78eb9064c
   gist: rep | movs, stos, lods | (never; only the count)
   support:
-  - {doc: sdm, at: 1852, units: [06e40ebb3c, 2dd56035f0], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [06e40ebb3c, 2dd56035f0]
+    part: Description
+    quotes:
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
+      2dd56035f0: The REP (repeat) mnemonic is a prefix that can be added to the INS, OUTS, MOVS, LODS,
+        and STOS instructions.
 - id: 044ab1ffa0
   gist: repe / repz | cmps, scas | the comparison finds a difference (Z…
   support:
-  - {doc: sdm, at: 1854, units: [a7670241fc, 7b6c3d947b], part: Description}
+  - doc: sdm
+    at: 1854
+    units: [a7670241fc, 7b6c3d947b]
+    part: Description
+    quotes:
+      a7670241fc: The REPE/REPZ prefixes check the state of the ZF flag after each iteration and terminate
+        the repeat loop if the ZF flag is not set.
+      7b6c3d947b: The REPE (repeat while equal) and REPZ (repeat while zero) mnemonics are prefixes that
+        can be added to the CMPS and SCAS instructions.
 - id: 3137eabf64
   gist: repne / repnz | cmps, scas | the comparison finds a match (ZF =…
   support:
-  - {doc: sdm, at: 1856, units: [936ce0ed7f, 384b91250d], part: Description}
+  - doc: sdm
+    at: 1856
+    units: [936ce0ed7f, 384b91250d]
+    part: Description
+    quotes:
+      936ce0ed7f: The REPNE/REPNZ prefixes also check the state of the ZF flag after each iteration and
+        terminate the repeat loop if the ZF flag is set.
+      384b91250d: The REPNE (repeat while not equal) and REPNZ (repeat while not zero) mnemonics are prefixes
+        that can be added to the CMPS and SCAS instructions.
 - id: 728a8ddcbf
   gist: 'Block copy and fill: rep movsb, rep stosq.'
   support:
-  - {doc: sdm, at: 1852, units: [20668b35cf, 257ecc7e4e], part: Opcode table}
+  - doc: sdm
+    at: 1852
+    units: [20668b35cf, 257ecc7e4e]
+    part: Opcode table
+    quotes:
+      20668b35cf: F3 A4 | REP MOVS m8, m8 | ZO | Valid | Valid | Move (count) bytes from (src) to (dest).
+      257ecc7e4e: F3 REX.W AB | REP STOS m64 | ZO | Valid | N.E. | Fill (count) quadwords at (dest) with
+        RAX.
 - id: 3b316d8c72
   gist: 'Searching: repne scasb scans memory for the byte in al.'
   support:
-  - {doc: sdm, at: 1856, units: [9c652713cb], part: Opcode table}
+  - doc: sdm
+    at: 1856
+    units: [9c652713cb]
+    part: Opcode table
+    quotes:
+      9c652713cb: F2 AE | REPNE SCAS m8 | ZO | Valid | Valid | Find AL, starting at (src2).
 - id: d73cd5e05d
   gist: 'Comparing buffers: repe cmpsb runs until the first mismatch.'
   support:
-  - {doc: sdm, at: 1854, units: [62007c85e1, a7670241fc], part: Opcode table}
+  - doc: sdm
+    at: 1854
+    units: [62007c85e1, a7670241fc]
+    part: Opcode table
+    quotes:
+      62007c85e1: F3 A6 | REPE CMPS m8, m8 | ZO | Valid | Valid | Find nonmatching bytes in (src1) and
+        (src2).
+      a7670241fc: The REPE/REPZ prefixes check the state of the ZF flag after each iteration and terminate
+        the repeat loop if the ZF flag is not set.
 - id: 14455059b8
   gist: It repeats only one instruction.
   support:
-  - {doc: sdm, at: 1852, units: [615edebf54], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [615edebf54]
+    part: Description
+    quotes:
+      615edebf54: The REP prefixes apply only to one string instruction at a time.
 - id: 1ce54b3d4c
   gist: The SDM is explicit that to repeat a block of instructions you…
   support:
-  - {doc: sdm, at: 1852, units: [cc5fe8d90f], part: Description}
+  - doc: sdm
+    at: 1852
+    units: [cc5fe8d90f]
+    part: Description
+    quotes:
+      cc5fe8d90f: To repeat a block of instructions, use the LOOP instruction or another looping construct.
 - id: ca12566237
   gist: The count is tested before each repetition.
   support:
@@ -136,13 +355,22 @@ claims:
     units: [ba50f7f285]
     part: Description
     note: 'From the LOOP entry: the count is decremented, then checked.'
+    quotes:
+      ba50f7f285: Each time the LOOP instruction is executed, the count register is decremented, then
+        checked for 0.
 - id: a78e261457
   gist: For repe/repne a zero count also means the flags are untouched,…
   how: derived
   note: With a zero count the string instruction never runs, so it never sets ZF.
   support:
   - {doc: sdm, at: 1855, units: [db6803bf6f], part: Operation}
-  - {doc: sdm, at: 1855, units: [c946051c07], part: Flags Affected}
+  - doc: sdm
+    at: 1855
+    units: [c946051c07]
+    part: Flags Affected
+    quotes:
+      c946051c07: None by the prefixes; however, the CMPS and SCAS instructions do set the status flags
+        in the EFLAGS register.
 - id: 93ec5a7e4e
   gist: The prefix byte is shared.
   how: editorial
@@ -150,16 +378,43 @@ claims:
 - id: d0330192b4
   gist: F3 means rep before movs/stos/lods and repe before cmps/scas; F…
   support:
-  - {doc: sdm, at: 1852, units: [20668b35cf, e624faefc5, d00490e280], part: Opcode table}
-  - {doc: sdm, at: 1854, units: [62007c85e1, 89796b16b5], part: Opcode table}
-  - {doc: sdm, at: 1856, units: [c4b20615b6, 9c652713cb], part: Opcode table}
+  - doc: sdm
+    at: 1852
+    units: [20668b35cf, e624faefc5, d00490e280]
+    part: Opcode table
+    quotes:
+      20668b35cf: F3 A4 | REP MOVS m8, m8 | ZO | Valid | Valid | Move (count) bytes from (src) to (dest).
+      e624faefc5: F3 AA | REP STOS m8 | ZO | Valid | Valid | Fill (count) bytes at (dest) with AL.
+      d00490e280: F3 AC | REP LODS AL | ZO | Valid | Valid | Load (count) bytes from (src) to AL.
+  - doc: sdm
+    at: 1854
+    units: [62007c85e1, 89796b16b5]
+    part: Opcode table
+    quotes:
+      62007c85e1: F3 A6 | REPE CMPS m8, m8 | ZO | Valid | Valid | Find nonmatching bytes in (src1) and
+        (src2).
+      89796b16b5: F3 AE | REPE SCAS m8 | ZO | Valid | Valid | Find non-AL byte starting at (src2).
+  - doc: sdm
+    at: 1856
+    units: [c4b20615b6, 9c652713cb]
+    part: Opcode table
+    quotes:
+      c4b20615b6: F2 A6 | REPNE CMPS m8, m8 | ZO | Valid | Valid | Find matching bytes in (src1) and (src2).
+      9c652713cb: F2 AE | REPNE SCAS m8 | ZO | Valid | Valid | Find AL, starting at (src2).
 - id: 153defdb96
   gist: rep cmpsb and repe cmpsb therefore produce the same bytes.
   how: derived
   note: REPE CMPS is F3 A6; that an assembler also accepts rep cmpsb and emits the same F3 byte was not
     run here.
   support:
-  - {doc: sdm, at: 1854, units: [62007c85e1, 43fd618f6a], part: Opcode table}
+  - doc: sdm
+    at: 1854
+    units: [62007c85e1, 43fd618f6a]
+    part: Opcode table
+    quotes:
+      62007c85e1: F3 A6 | REPE CMPS m8, m8 | ZO | Valid | Valid | Find nonmatching bytes in (src1) and
+        (src2).
+      43fd618f6a: (The REPZ prefix is a synonymous form of the REPE prefix.)
 - id: 50b973d844
   gist: After the instruction the registers have moved.
   how: editorial
@@ -170,14 +425,26 @@ claims:
   note: The SDM describes this state for a suspended repeat; the same registers are what remain after
     the last repetition.
   support:
-  - {doc: sdm, at: 1853, units: [acbed6f462, 0cc2dc93fa], part: Description}
+  - doc: sdm
+    at: 1853
+    units: [acbed6f462, 0cc2dc93fa]
+    part: Description
+    quotes:
+      acbed6f462: The source and destination registers point to the next string elements to be operated
+        on, the EIP register points to the string instruction, and the ECX register has the value it held
+        following the last successful iteration of the instruction.
 - id: 563629aa31
   gist: After repne scasb finds a match, rdi is one past it.
   how: derived
   note: SCAS advances RDI after each compare, then the ZF test ends the loop.
   support:
   - {doc: sdm, at: 1857, units: [8552245e5c, 0835d176c1], part: Operation}
-  - {doc: sdm, at: 1856, units: [9c652713cb], part: Opcode table}
+  - doc: sdm
+    at: 1856
+    units: [9c652713cb]
+    part: Opcode table
+    quotes:
+      9c652713cb: F2 AE | REPNE SCAS m8 | ZO | Valid | Valid | Find AL, starting at (src2).
 - id: 0a26358a40
   gist: The direction flag decides which way the pointers move, and the…
   support:
@@ -186,11 +453,19 @@ claims:
     units: [151a8cbd68, 521ccda726]
     part: Description
     note: 'From the MOVS entry: DF sets the direction.'
+    quotes:
+      151a8cbd68: After the move operation, the (E)SI and (E)DI registers are incremented or decremented
+        automatically according to the setting of the DF flag in the EFLAGS register.
+      521ccda726: (If the DF flag is 0, the (E)SI and (E)DI register are incremented; if the DF flag is
+        1, the (E)SI and (E)DI registers are decremented.)
   - doc: sysv
     at: 16
     units: [4929d2daf8]
     part: 3.2.1 Registers and the Stack Frame
     note: 'System V ABI 3.2.1: DF must be clear on function entry and return.'
+    quotes:
+      4929d2daf8: 6 The direction flag DF in the %rFLAGS register must be clear (set to "forward" direction)
+        on function entry and return.
 - id: b1181b15b5
   gist: Faults and interrupts.
   how: editorial
@@ -200,8 +475,18 @@ claims:
   how: derived
   note: The entry lists only exceptions generated by the associated instruction.
   support:
-  - {doc: sdm, at: 1853, units: [2f7f57435f], part: Exceptions (All Operating Modes)}
-  - {doc: sdm, at: 1853, units: [999a10c197], part: Description}
+  - doc: sdm
+    at: 1853
+    units: [2f7f57435f]
+    part: Exceptions (All Operating Modes)
+    quotes:
+      2f7f57435f: Exceptions may be generated by an instruction associated with the prefix.
+  - doc: sdm
+    at: 1853
+    units: [999a10c197]
+    part: Description
+    quotes:
+      999a10c197: A repeating string operation can be suspended by an exception or interrupt.
 - id: e4f747c6ec
   gist: 'my_strlen: ; size_t my_strlen(const char s) mov rdx, rdi ; reme…'
   how: run

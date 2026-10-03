@@ -26,12 +26,19 @@
         {% for u in p.units %}{% if u.cited %}<mark class="rounded bg-amber-200/80 px-0.5 text-zinc-900 dark:bg-amber-400/30 dark:text-zinc-100">{{ u.html }}</mark>{% else %}{{ u.html }}{% endif %} {% endfor %}
       </blockquote>
     {% endif %}
+  {% elif p.state == "quoted" %}
+    <blockquote class="mt-1 space-y-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 [&_b]:font-semibold">
+      {% for u in p.units %}<p class="{{ 'font-mono text-xs' if u.kind == 'row' else '' }}"><mark class="rounded bg-amber-200/80 px-0.5 text-zinc-900 dark:bg-amber-400/30 dark:text-zinc-100">{{ u.html }}</mark></p>{% endfor %}
+    </blockquote>
+    <p class="mt-1 text-xs text-zinc-500">Quoted for citation from {{ p.where }}{% if p.unquoted %}; {{ p.unquoted }} more cited
+      {{ "passage is" if p.unquoted == 1 else "passages are" }} a long table or pseudocode block, so only the page is given{% endif %}.
+      The surrounding text is in the document.</p>
   {% elif p.state == "unavailable" %}
-    <p class="mt-1 text-sm italic text-zinc-500">The passage is not shown on this server (the document is copyrighted and is not
-      distributed with doc/x86). Open the document at {{ p.where }}.</p>
+    <p class="mt-1 text-sm italic text-zinc-500">A long table or pseudocode block: cited by page only. Open the document at {{ p.where }}.</p>
   {% else %}
     <p class="mt-1 text-sm text-rose-700 dark:text-rose-400">The cited sentence is no longer at this location. The document or
       the sentence splitter changed; run <code>docx86 evidence check</code>.</p>
+    {% for u in p.units %}<blockquote class="mt-1 text-sm text-zinc-500 line-through decoration-rose-400/60">{{ u.html }}</blockquote>{% endfor %}
   {% endif %}
   {% if p.note %}<p class="mt-1 text-xs text-zinc-500">Note: {{ p.note }}</p>{% endif %}
 </figure>
@@ -64,9 +71,8 @@
       {% endif %}{% endfor %}
     </ul>
     {% if documents_missing %}
-    <p class="mt-3 text-xs text-zinc-500">The passages themselves are copyrighted and are not stored in this project: they are
-      shown only on a machine that has its own copy of the document. Here, a source is a pointer (document, page, kind of
-      section).</p>
+    <p class="mt-3 text-xs text-zinc-500">Each cited sentence is quoted with its document and page. The text around it is
+      shown only on a machine that has its own copy of the document.</p>
     {% endif %}
   </section>
 

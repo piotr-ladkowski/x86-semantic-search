@@ -13,7 +13,13 @@ claims:
   note: The ABI document's Appendix A describes the Linux kernel interface; that most other Unix-like
     systems use the convention is general knowledge, not in the document.
   support:
-  - {doc: sysv, at: 124, units: [6ac0d0f79e], part: Calling Conventions}
+  - doc: sysv
+    at: 124
+    units: [6ac0d0f79e]
+    part: Calling Conventions
+    quotes:
+      6ac0d0f79e: The Linux AMD64 kernel uses internally the same calling conventions as user-level applications
+        (see section 3.2.3 for details).
 - id: c6f70cadb6
   gist: 'It is a software agreement, not part of the CPU: the Intel manu…'
   how: editorial
@@ -26,16 +32,40 @@ claims:
 - id: 317d2ede39
   gist: Integer and pointer arguments 1 to 6 | rdi, rsi, rdx, rcx, r8,…
   support:
-  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [9220da18da]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      9220da18da: 2. If the class is INTEGER, the next available register of the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9 is used13.
 - id: 72668664df
   gist: Floating-point arguments 1 to 8 | xmm0 ... xmm7
   support:
-  - {doc: sysv, at: 21, units: [2645ba506d], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [2645ba506d]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      2645ba506d: 3. If the class is SSE, the next available vector register is used, the registers are
+        taken in the order from %xmm0 to %xmm7.
 - id: 69e145699b
   gist: Everything beyond that | On the stack, pushed right to left; ea…
   support:
-  - {doc: sysv, at: 21, units: [00265e391a, e2f362f778], part: 3.2.3 Parameter Passing}
-  - {doc: sysv, at: 18, units: [4ac531652b], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [00265e391a, e2f362f778]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      00265e391a: Once registers are assigned, the arguments passed in memory are pushed on the stack
+        in reversed (right-to-left15) order.
+      e2f362f778: 1. If the class is MEMORY, pass the argument on the stack.
+  - doc: sysv
+    at: 18
+    units: [4ac531652b]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      4ac531652b: Classification The size of each argument gets rounded up to eightbytes.9
 - id: 222b98bfe5
   gist: The first stack argument is therefore at [rsp + 8] when the cal…
   how: derived
@@ -43,87 +73,212 @@ claims:
     eightbyte apart; at function entry %rsp points at the return address, so that argument is at [rsp
     + 8]. sum7 reads its seventh argument there under `make verify-asm`.
   support:
-  - {doc: sysv, at: 17, units: [c71b6badcd], part: 3.2.1 Registers and the Stack Frame}
-  - {doc: sysv, at: 21, units: [00265e391a], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 17
+    units: [c71b6badcd]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      c71b6badcd: Previous 16(%rbp) memory argument eightbyte 0 8(%rbp) return address 0(%rbp) previous
+        %rbp value -8(%rbp) unspecified Current ...
+  - doc: sysv
+    at: 21
+    units: [00265e391a]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      00265e391a: Once registers are assigned, the arguments passed in memory are pushed on the stack
+        in reversed (right-to-left15) order.
 - id: c91e556108
   gist: There is no shadow space (that is a Windows feature).
   how: derived
   note: Figure 3.3 has the first memory argument directly above the return address, with no reserved space
     between.
   support:
-  - {doc: sysv, at: 17, units: [c71b6badcd], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [c71b6badcd]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      c71b6badcd: Previous 16(%rbp) memory argument eightbyte 0 8(%rbp) return address 0(%rbp) previous
+        %rbp value -8(%rbp) unspecified Current ...
 - id: 405cf2d6c1
   gist: 'Integer and floating-point arguments count separately: the 2nd…'
   support:
-  - {doc: sysv, at: 21, units: [9220da18da, 2645ba506d], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [9220da18da, 2645ba506d]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      9220da18da: 2. If the class is INTEGER, the next available register of the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9 is used13.
+      2645ba506d: 3. If the class is SSE, the next available vector register is used, the registers are
+        taken in the order from %xmm0 to %xmm7.
 - id: 10ffdf6dfb
   gist: 'add3: ; long add3(long a, long b, long c): a=rdi, b=rsi, c=rdx…'
   how: run
   ref: tests/asm/sysv.asm
   note: add3 is assembled and run in `make verify-asm`.
   support:
-  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [9220da18da]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      9220da18da: 2. If the class is INTEGER, the next available register of the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9 is used13.
 - id: c266c6f32f
   gist: 'Integer or pointer: rax; a 128-bit integer uses rax and rdx.'
   how: derived
   note: INTEGER-class results use %rax then %rdx; a 128-bit integer is two eightbytes.
   support:
-  - {doc: sysv, at: 23, units: [0f7d542149], part: 3.2.3 Parameter Passing}
-  - {doc: sysv, at: 19, units: [712aa7f7bd], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 23
+    units: [0f7d542149]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      0f7d542149: 3. If the class is INTEGER, the next available register of the sequence %rax, %rdx is
+        used.
+  - doc: sysv
+    at: 19
+    units: [712aa7f7bd]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      712aa7f7bd: with the exception that arguments of type __int128 that are stored in memory must be
+        aligned on a 16-byte boundary.
 - id: 33b5f5b94c
   gist: 'Floating-point: xmm0 (and xmm1 for a second one).'
   support:
-  - {doc: sysv, at: 23, units: [fe611f153c], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 23
+    units: [fe611f153c]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      fe611f153c: 4. If the class is SSE, the next available vector register of the sequence %xmm0, %xmm1
+        is used.
 - id: e04925c151
   gist: 'A struct too large for registers: the caller allocates the spac…'
   support:
-  - {doc: sysv, at: 23, units: [787a28d551, 5fdf9cc5c9, 006a81343a], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 23
+    units: [787a28d551, 5fdf9cc5c9, 006a81343a]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      787a28d551: 2. If the type has class MEMORY, then the caller provides space for the return value
+        and passes the address of this storage in %rdi as if it were the first argument to the function.
+      5fdf9cc5c9: In effect, this address becomes a "hidden" first argument.
+      006a81343a: On return %rax will contain the address that has been passed in by the caller in %rdi.
 - id: ed5010c92f
   gist: rbx, rbp, r12, r13, r14, r15 (and rsp) | rax, rcx, rdx, rsi, rd…
   support:
-  - {doc: sysv, at: 16, units: [92911cf2d5, 0202d90800], part: 3.2.1 Registers and the Stack Frame}
-  - {doc: sysv, at: 22, units: [158681191a, f62da9fcd4, b3e7188278, e9368e520f, b0118af7c7], part: 3.2.3
-      Parameter Passing}
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5, 0202d90800]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+      0202d90800: Remaining registers "belong" to the called function.5 If a calling function wants to
+        preserve such a register value across a function call, it must save the value in its local stack
+        frame.
+  - doc: sysv
+    at: 22
+    units: [158681191a, f62da9fcd4, b3e7188278, e9368e520f, b0118af7c7]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      158681191a: '%rbx callee-saved register; optionally used as base pointer'
+      f62da9fcd4: '%rsp stack pointer Yes %rbp callee-saved register; optionally used as frame pointer'
+      b3e7188278: '%r11 temporary register No %r12-r15 callee-saved registers Yes %xmm0–%xmm1 used to
+        pass and return floating point arguments No %xmm2–%xmm7 used to pass floating point arguments
+        No %xmm8–%xmm15 temporary registers No %mmx0–%mmx7 temporary registers No %st0,%st1 temporary
+        registers; used to return long double arguments'
+      e9368e520f: Preserved across Register Usage function calls %rax temporary register; with variable
+        arguments passes information about the number of vector registers used; 1st return register
+      b0118af7c7: '%rsi used to pass 2nd argument to functions No %rdi used to pass 1st argument to functions
+        No %r8 used to pass 5th argument to functions No %r9 used to pass 6th argument to functions No
+        %r10 temporary register, used for passing a function''s static chain pointer'
 - id: c6353a16cb
   gist: A function that wants to use a preserved register saves it firs…
   how: derived
   note: The ABI requires the called function to preserve these registers; saving and restoring them is
     how. The compiler prologue was observed (extra_sources).
   support:
-  - {doc: sysv, at: 16, units: [92911cf2d5, 85204c06f9], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5, 85204c06f9]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+      85204c06f9: In other words, a called function must preserve these registers' values for its caller.
 - id: 1145af5588
   gist: The direction flag must be clear on entry and return.
   support:
-  - {doc: sysv, at: 16, units: [4929d2daf8], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 16
+    units: [4929d2daf8]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      4929d2daf8: 6 The direction flag DF in the %rFLAGS register must be clear (set to "forward" direction)
+        on function entry and return.
 - id: dea97fa6b5
   gist: 'keep_rbx: ; long keep_rbx(long x): uses rbx, so it must save an…'
   how: run
   ref: tests/asm/sysv.asm
   note: keep_rbx is assembled and run in `make verify-asm`.
   support:
-  - {doc: sysv, at: 16, units: [92911cf2d5], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
 - id: a5c1195cea
   gist: If a caller needs a scratch register's value to survive a call,…
   support:
-  - {doc: sysv, at: 16, units: [0202d90800], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 16
+    units: [0202d90800]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      0202d90800: Remaining registers "belong" to the called function.5 If a calling function wants to
+        preserve such a register value across a function call, it must save the value in its local stack
+        frame.
 - id: ec74557b6a
   gist: 'Alignment: rsp must be a multiple of 16 immediately before a ca…'
   how: derived
   note: (%rsp + 8) is a multiple of 16 at function entry, which is after the call pushed 8 bytes, so rsp
     was a multiple of 16 before the call.
   support:
-  - {doc: sysv, at: 17, units: [d1956c1de1, 7dfd811182], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [d1956c1de1, 7dfd811182]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      d1956c1de1: The end of the input argument area shall be aligned on a 16 (32, if __m256 is passed
+        on stack) byte boundary.
+      7dfd811182: In other words, the value (%rsp + 8) is always a multiple of 16 (32) when control is
+        transferred to the function entry point.
 - id: dfc60acd96
   gist: Because call pushes the 8-byte return address, rsp is 8 modulo…
   how: derived
   note: A multiple of 16 before the call minus the pushed 8 bytes is 8 modulo 16.
   support:
-  - {doc: sysv, at: 17, units: [7dfd811182], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [7dfd811182]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      7dfd811182: In other words, the value (%rsp + 8) is always a multiple of 16 (32) when control is
+        transferred to the function entry point.
   - doc: sdm
     at: 826
     units: [ca50a95fdd]
     part: Description
     note: 'From the CALL entry: a near call pushes the return address.'
+    quotes:
+      ca50a95fdd: When executing a near call, the processor pushes the value of the EIP register (which
+        contains the offset of the instruction following the CALL instruction) on the stack (for use later
+        as a return-instruction pointer).
 - id: 79d24e7c84
   gist: 'A misaligned call can crash: a call to printf with a floating-p…'
   how: external
@@ -131,56 +286,140 @@ claims:
 - id: c56e8bdb72
   gist: 'Red zone: the 128 bytes below rsp may be used by a leaf functio…'
   support:
-  - {doc: sysv, at: 17, units: [1c525edb6e, 0616474a02, 0c37f534ac], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [1c525edb6e, 0616474a02, 0c37f534ac]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      1c525edb6e: The 128-byte area beyond the location pointed to by %rsp is considered to be reserved
+        and shall not be modified by signal or interrupt handlers.8 Therefore, functions may use this
+        area for temporary data that is not needed across function calls.
+      0616474a02: In particular, leaf functions may use this area for their entire stack frame, rather
+        than adjusting the stack pointer in the prologue and epilogue.
+      0c37f534ac: This area is known as the red zone.
 - id: da2e61796b
   gist: A function that calls others must not rely on it.
   support:
-  - {doc: sysv, at: 17, units: [1c525edb6e], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [1c525edb6e]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      1c525edb6e: The 128-byte area beyond the location pointed to by %rsp is considered to be reserved
+        and shall not be modified by signal or interrupt handlers.8 Therefore, functions may use this
+        area for temporary data that is not needed across function calls.
 - id: f4030e43df
   gist: Variadic functions such as printf also need al set to the numbe…
   support:
-  - {doc: sysv, at: 21, units: [7a65e5edb3, c072292262], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [7a65e5edb3, c072292262]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      7a65e5edb3: For calls that may call functions that use varargs or stdargs (prototype-less calls
+        or calls to functions containing ellipsis (...) in the declaration) %al16 is used as hidden argument
+        to specify the number of vector registers used.
+      c072292262: 16Note that the rest of %rax is undefined, only the contents of %al is defined.
 - id: 155ce90975
   gist: 'say_answer: ; void say_answer(void): printf("answer = %d\n", 42…'
   how: run
   ref: tests/asm/sysv.asm
   note: say_answer is assembled and run in `make verify-asm`.
   support:
-  - {doc: sysv, at: 21, units: [7a65e5edb3], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [7a65e5edb3]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      7a65e5edb3: For calls that may call functions that use varargs or stdargs (prototype-less calls
+        or calls to functions containing ellipsis (...) in the declaration) %al16 is used as hidden argument
+        to specify the number of vector registers used.
 - id: b78fd27803
   gist: The syscall instruction talks to the kernel, not to a function,…
   support:
-  - {doc: sysv, at: 125, units: [7b48560ab1, 4cadd5d06c], part: Miscellaneous Remarks}
-  - {doc: sysv, at: 124, units: [708d3eae80], part: Calling Conventions}
+  - doc: sysv
+    at: 125
+    units: [7b48560ab1, 4cadd5d06c]
+    part: Miscellaneous Remarks
+    quotes:
+      7b48560ab1: 2. A system-call is done via the syscall instruction.
+      4cadd5d06c: The kernel interface uses %rdi, %rsi, %rdx, %r10, %r8 and %r9.
+  - doc: sysv
+    at: 124
+    units: [708d3eae80]
+    part: Calling Conventions
+    quotes:
+      708d3eae80: 'The interface between the C library and the Linux kernel is the same as for the user-level
+        applications with the following differences:'
 - id: 69c498709a
   gist: System call number | rax
   support:
-  - {doc: sysv, at: 125, units: [0fd82f5895], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [0fd82f5895]
+    part: Miscellaneous Remarks
+    quotes:
+      0fd82f5895: 3. The number of the syscall has to be passed in register %rax.
 - id: 1d80acf487
   gist: Arguments 1 to 6 | rdi, rsi, rdx, r10, r8, r9
   support:
-  - {doc: sysv, at: 125, units: [4cadd5d06c], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [4cadd5d06c]
+    part: Miscellaneous Remarks
+    quotes:
+      4cadd5d06c: The kernel interface uses %rdi, %rsi, %rdx, %r10, %r8 and %r9.
 - id: c568bd45a5
   gist: 'Result | rax: a value from -4095 to -1 means an error (it is -e…'
   support:
-  - {doc: sysv, at: 125, units: [b8845329d1, 11685d2e5d], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [b8845329d1, 11685d2e5d]
+    part: Miscellaneous Remarks
+    quotes:
+      b8845329d1: 5. Returning from the syscall, register %rax contains the result of the system-call.
+      11685d2e5d: A value in the range between -4095 and -1 indicates an error, it is -errno.
 - id: 1b4888afa9
   gist: Destroyed | rcx and r11 (the CPU stores the return address and…
   support:
-  - {doc: sysv, at: 125, units: [9c0d3eaec8], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [9c0d3eaec8]
+    part: Miscellaneous Remarks
+    quotes:
+      9c0d3eaec8: The kernel destroys registers %rcx and %r11.
   - doc: sdm
     at: 1988
     units: [9bff1f6ea3, 25e9784d3b]
     part: Description
     note: 'From the SYSCALL entry: RCX receives the next instruction address, R11 the flags.'
+    quotes:
+      9bff1f6ea3: When FRED transitions are not enabled, SYSCALL invokes the OS handler by loading RIP
+        from the IA32_LSTAR MSR (after saving the address of the instruction following SYSCALL into RCX).
+      25e9784d3b: SYSCALL also saves RFLAGS into R11 and then masks RFLAGS using the IA32_FMASK MSR (MSR
+        address C0000084H); specifically, the processor clears in RFLAGS every bit corresponding to a
+        bit that is set in the IA32_FMASK MSR.
 - id: 5d0385a888
   gist: Note r10 where a function call would use rcx.
   support:
-  - {doc: sysv, at: 125, units: [c1c84ca62a, 4cadd5d06c], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [c1c84ca62a, 4cadd5d06c]
+    part: Miscellaneous Remarks
+    quotes:
+      c1c84ca62a: 1. User-level applications use as integer registers for passing the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9.
+      4cadd5d06c: The kernel interface uses %rdi, %rsi, %rdx, %r10, %r8 and %r9.
 - id: 94b0265ae7
   gist: No system call takes more than six arguments, and none passes a…
   support:
-  - {doc: sysv, at: 125, units: [221d13085f], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [221d13085f]
+    part: Miscellaneous Remarks
+    quotes:
+      221d13085f: 4. System-calls are limited to six arguments, no argument is passed directly on the
+        stack.
 - id: 3a145996bf
   gist: See the NASM-on-Linux guide for a complete write + exit program.
   how: editorial
@@ -199,23 +438,68 @@ claims:
   note: The callee must preserve these registers; skipping that changes the caller's values. 'Far from
     the bug' is the author's remark.
   support:
-  - {doc: sysv, at: 16, units: [92911cf2d5, 85204c06f9], part: 3.2.1 Registers and the Stack Frame}
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5, 85204c06f9]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+      85204c06f9: In other words, a called function must preserve these registers' values for its caller.
 - id: 015932816a
   gist: 32-bit tutorials (including most of the Wikibooks examples) pas…
   how: external
   note: The Wikibooks examples are 32-bit (int 0x80, stack arguments), shown here; that they do not apply
     in 64-bit code is the ABI document's convention above.
   support:
-  - {doc: wikibooks, at: Hello World (Linux), units: [e48d91b3b9], part: Hello World (Linux)}
-  - {doc: wikibooks, at: Example I/O (Linux and BSD), units: [ac6f11b2e0], part: Example I/O (Linux and
-      BSD)}
+  - doc: wikibooks
+    at: Hello World (Linux)
+    units: [e48d91b3b9]
+    part: Hello World (Linux)
+    quotes:
+      e48d91b3b9: '; ; Call exit(3) syscall ; void exit(int status) ; mov ebx, 0 ; Arg one: the status
+        mov eax, 1 ; Syscall number: int 0x80'
+  - doc: wikibooks
+    at: Example I/O (Linux and BSD)
+    units: [ac6f11b2e0]
+    part: Example I/O (Linux and BSD)
+    quotes:
+      ac6f11b2e0: ; read a byte from stdin mov eax, 3 ; sys_read system call push dword 1 ; input length
+        push dword variable ; address to pass to push dword 0 ; read from standard input push eax int
+        0x80 ; call the kernel add esp, 16 ; move back the stack pointer
 - id: d0b3fdb427
   gist: In a direct syscall, rcx and r11 are destroyed and the fourth a…
   support:
-  - {doc: sysv, at: 125, units: [9c0d3eaec8, 4cadd5d06c], part: Miscellaneous Remarks}
-  - {doc: sysv, at: 124, units: [edab074ca7], part: Calling Conventions}
+  - doc: sysv
+    at: 125
+    units: [9c0d3eaec8, 4cadd5d06c]
+    part: Miscellaneous Remarks
+    quotes:
+      9c0d3eaec8: The kernel destroys registers %rcx and %r11.
+      4cadd5d06c: The kernel interface uses %rdi, %rsi, %rdx, %r10, %r8 and %r9.
+  - doc: sysv
+    at: 124
+    units: [edab074ca7]
+    part: Calling Conventions
+    quotes:
+      edab074ca7: User-level applications that like to call system calls should use the functions from
+        the C library.
 - id: de84ee3e42
   gist: If you instead call a libc wrapper such as write as an ordinary…
   support:
-  - {doc: sysv, at: 124, units: [edab074ca7, 708d3eae80], part: Calling Conventions}
-  - {doc: sysv, at: 125, units: [c1c84ca62a], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 124
+    units: [edab074ca7, 708d3eae80]
+    part: Calling Conventions
+    quotes:
+      edab074ca7: User-level applications that like to call system calls should use the functions from
+        the C library.
+      708d3eae80: 'The interface between the C library and the Linux kernel is the same as for the user-level
+        applications with the following differences:'
+  - doc: sysv
+    at: 125
+    units: [c1c84ca62a]
+    part: Miscellaneous Remarks
+    quotes:
+      c1c84ca62a: 1. User-level applications use as integer registers for passing the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9.

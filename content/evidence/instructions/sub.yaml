@@ -6,58 +6,144 @@ claims:
 - id: ef6ec9100d
   gist: Subtracts the source from the destination, stores the differenc…
   support:
-  - {doc: sdm, at: 1974, units: [de4ade4bd4], part: Description}
-  - {doc: sdm, at: 1975, units: [58f0d69f7b], part: Flags Affected}
+  - doc: sdm
+    at: 1974
+    units: [de4ade4bd4]
+    part: Description
+    quotes:
+      de4ade4bd4: Subtracts the second operand (source operand) from the first operand (destination operand)
+        and stores the result in the destination operand.
+  - doc: sdm
+    at: 1975
+    units: [58f0d69f7b]
+    part: Flags Affected
+    quotes:
+      58f0d69f7b: The OF, SF, ZF, AF, PF, and CF flags are set according to the result.
 - id: eaa3fc9896
   gist: SUB r/m64, r64 is encoded as REX.W + 29 /r.
   support:
-  - {doc: sdm, at: 1974, units: [3e83c43590], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1974
+    units: [3e83c43590]
+    part: Opcode table
+    by: match
+    quotes:
+      3e83c43590: REX.W + 29 /r | SUB r/m64, r64 | MR | Valid | N.E. | Subtract r64 from r/m64.
 - id: 97b845e0fe
   gist: The 8-, 16- and 32-bit forms have the same shape (drop REX.W).
   support:
-  - {doc: sdm, at: 1974, units: [7b816019d0, f35c0c1925, 64094df78e, 3e83c43590], part: Opcode table}
+  - doc: sdm
+    at: 1974
+    units: [7b816019d0, f35c0c1925, 64094df78e, 3e83c43590]
+    part: Opcode table
+    quotes:
+      7b816019d0: 28 /r | SUB r/m8[1], r8[1] | MR | Valid | Valid | Subtract r8 from r/m8.
+      f35c0c1925: 29 /r | SUB r/m16, r16 | MR | Valid | Valid | Subtract r16 from r/m16.
+      64094df78e: 29 /r | SUB r/m32, r32 | MR | Valid | Valid | Subtract r32 from r/m32.
+      3e83c43590: REX.W + 29 /r | SUB r/m64, r64 | MR | Valid | N.E. | Subtract r64 from r/m64.
 - id: 44297b8134
   gist: SUB r64, r/m64 is encoded as REX.W + 2B /r.
   support:
-  - {doc: sdm, at: 1974, units: [b763c21bb2], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1974
+    units: [b763c21bb2]
+    part: Opcode table
+    by: match
+    quotes:
+      b763c21bb2: REX.W + 2B /r | SUB r64, r/m64 | RM | Valid | N.E. | Subtract r/m64 from r64.
 - id: fdefbd028a
   gist: SUB r/m64, imm8 is encoded as REX.W + 83 /5 ib.
   support:
-  - {doc: sdm, at: 1974, units: [d9e946bb4a], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1974
+    units: [d9e946bb4a]
+    part: Opcode table
+    by: match
+    quotes:
+      d9e946bb4a: REX.W + 83 /5 ib | SUB r/m64, imm8 | MI | Valid | N.E. | Subtract sign-extended imm8
+        from r/m64.
 - id: 51e483d20e
   gist: imm8 is sign-extended to 64 bits.
   support:
-  - {doc: sdm, at: 1974, units: [d9e946bb4a, 44d92f8adc], part: Opcode table}
+  - doc: sdm
+    at: 1974
+    units: [d9e946bb4a, 44d92f8adc]
+    part: Opcode table
+    quotes:
+      d9e946bb4a: REX.W + 83 /5 ib | SUB r/m64, imm8 | MI | Valid | N.E. | Subtract sign-extended imm8
+        from r/m64.
+      44d92f8adc: When an immediate value is used as an operand, it is sign-extended to the length of
+        the destination operand format.
 - id: 6d6927d344
   gist: SUB r/m64, imm32 is encoded as REX.W + 81 /5 id.
   support:
-  - {doc: sdm, at: 1974, units: [bc695e78e0], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1974
+    units: [bc695e78e0]
+    part: Opcode table
+    by: match
+    quotes:
+      bc695e78e0: REX.W + 81 /5 id | SUB r/m64, imm32 | MI | Valid | N.E. | Subtract imm32 sign-extended
+        to 64-bits from r/m64.
 - id: 735d1e8ccd
   gist: imm32 is sign-extended to 64 bits.
   support:
-  - {doc: sdm, at: 1974, units: [bc695e78e0], part: Opcode table}
+  - doc: sdm
+    at: 1974
+    units: [bc695e78e0]
+    part: Opcode table
+    quotes:
+      bc695e78e0: REX.W + 81 /5 id | SUB r/m64, imm32 | MI | Valid | N.E. | Subtract imm32 sign-extended
+        to 64-bits from r/m64.
 - id: c4d834de74
   gist: There is no imm64 form.
   how: derived
   note: The opcode table lists immediates of 8, 16 and 32 bits only; the 64-bit rows take an imm32 that
     is sign-extended.
   support:
-  - {doc: sdm, at: 1974, units: [bc695e78e0, 27cb7dbe81], part: Opcode table}
+  - doc: sdm
+    at: 1974
+    units: [bc695e78e0, 27cb7dbe81]
+    part: Opcode table
+    quotes:
+      bc695e78e0: REX.W + 81 /5 id | SUB r/m64, imm32 | MI | Valid | N.E. | Subtract imm32 sign-extended
+        to 64-bits from r/m64.
+      27cb7dbe81: REX.W + 2D id | SUB RAX, imm32 | I | Valid | N.E. | Subtract imm32 sign-extended to
+        64-bits from RAX.
 - id: d3b59d92b4
   gist: SUB RAX, imm32 is encoded as REX.W + 2D id.
   support:
-  - {doc: sdm, at: 1974, units: [27cb7dbe81], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1974
+    units: [27cb7dbe81]
+    part: Opcode table
+    by: match
+    quotes:
+      27cb7dbe81: REX.W + 2D id | SUB RAX, imm32 | I | Valid | N.E. | Subtract imm32 sign-extended to
+        64-bits from RAX.
 - id: dde1c70266
   gist: Short encoding for the accumulator.
   how: derived
   note: The accumulator row (2D id, operand encoding I) has no ModRM byte, which the general 81 /5 id
     form needs.
   support:
-  - {doc: sdm, at: 1974, units: [27cb7dbe81, 4a4d92ec2a], part: Opcode table}
+  - doc: sdm
+    at: 1974
+    units: [27cb7dbe81, 4a4d92ec2a]
+    part: Opcode table
+    quotes:
+      27cb7dbe81: REX.W + 2D id | SUB RAX, imm32 | I | Valid | N.E. | Subtract imm32 sign-extended to
+        64-bits from RAX.
+      4a4d92ec2a: I | AL/AX/EAX/RAX | imm8/16/32 | N/A | N/A
 - id: 2e16fbec7c
   gist: 'Flags modified: OF, SF, ZF, AF, CF, PF.'
   support:
-  - {doc: sdm, at: 1975, units: [58f0d69f7b], part: Flags Affected}
+  - doc: sdm
+    at: 1975
+    units: [58f0d69f7b]
+    part: Flags Affected
+    quotes:
+      58f0d69f7b: The OF, SF, ZF, AF, PF, and CF flags are set according to the result.
 - id: bc309def59
   gist: CF is set when an unsigned borrow occurs (the source is larger…
   support:
@@ -66,21 +152,42 @@ claims:
     units: [cdf1356938]
     part: 3.4.3.1 Status Flags
     note: Status flags (Vol. 1, 3.4.3.1).
+    quotes:
+      cdf1356938: CF (bit 0) Carry flag — Set if an arithmetic operation generates a carry or a borrow
+        out of the most-significant bit of the result; cleared otherwise.
   - doc: sdm
     at: 82
     units: [426ef97feb]
     part: 3.4.3.1 Status Flags
     note: Status flags (Vol. 1, 3.4.3.1).
+    quotes:
+      426ef97feb: OF (bit 11) Overflow flag — Set if the integer result is too large a positive number
+        or too small a negative number (excluding the sign-bit) to fit in the destination operand; cleared
+        otherwise.
   - doc: sdm
     at: 82
     units: [de682806f5]
     part: 3.4.3.1 Status Flags
     note: Status flags (Vol. 1, 3.4.3.1).
-  - {doc: sdm, at: 1974, units: [90a715b8dd], part: Description}
+    quotes:
+      de682806f5: ZF (bit 6) Zero flag — Set if the result is zero; cleared otherwise.
+  - doc: sdm
+    at: 1974
+    units: [90a715b8dd]
+    part: Description
+    quotes:
+      90a715b8dd: It evaluates the result for both signed and unsigned integer operands and sets the OF
+        and CF flags to indicate an overflow in the signed or unsigned result, respectively.
 - id: 0b18e4eb93
   gist: sub dst, src computes dst = dst - src and stores the result in…
   support:
-  - {doc: sdm, at: 1974, units: [de4ade4bd4], part: Description}
+  - doc: sdm
+    at: 1974
+    units: [de4ade4bd4]
+    part: Description
+    quotes:
+      de4ade4bd4: Subtracts the second operand (source operand) from the first operand (destination operand)
+        and stores the result in the destination operand.
   - {doc: sdm, at: 1975, units: [4d448cdc5a], part: Operation}
 - id: f2e6ab1c54
   gist: Signed and unsigned subtraction produce the same bits, and the…
@@ -88,12 +195,22 @@ claims:
   note: The SDM says the result is evaluated for both signed and unsigned operands; the identical bit
     patterns are a property of two's-complement subtraction.
   support:
-  - {doc: sdm, at: 1974, units: [4633c0bbb5, 90a715b8dd, 7af48abefd], part: Description}
+  - doc: sdm
+    at: 1974
+    units: [4633c0bbb5, 90a715b8dd, 7af48abefd]
+    part: Description
+    quotes:
+      4633c0bbb5: The SUB instruction performs integer subtraction.
+      90a715b8dd: It evaluates the result for both signed and unsigned integer operands and sets the OF
+        and CF flags to indicate an overflow in the signed or unsigned result, respectively.
+      7af48abefd: The SF flag indicates the sign of the signed result.
   - doc: sdm
     at: 82
     units: [de682806f5]
     part: 3.4.3.1 Status Flags
     note: Status flags (Vol. 1, 3.4.3.1).
+    quotes:
+      de682806f5: ZF (bit 6) Zero flag — Set if the result is zero; cleared otherwise.
 - id: 77ef45b4a4
   gist: 'Subtracting two integers, or a constant from a register: sub ra…'
   how: editorial
@@ -103,8 +220,20 @@ claims:
   how: derived
   note: The destination may be memory, and the SDM allows a LOCK prefix for atomic execution.
   support:
-  - {doc: sdm, at: 1974, units: [837deb3af0], part: Description}
-  - {doc: sdm, at: 1975, units: [7618c9e8a1], part: Description}
+  - doc: sdm
+    at: 1974
+    units: [837deb3af0]
+    part: Description
+    quotes:
+      837deb3af0: The destination operand can be a register or a memory location; the source operand can
+        be an immediate, register, or memory location.
+  - doc: sdm
+    at: 1975
+    units: [7618c9e8a1]
+    part: Description
+    quotes:
+      7618c9e8a1: This instruction can be used with a LOCK prefix to allow the instruction to be executed
+        atomically.
 - id: 8dc3413c70
   gist: 'Multi-word arithmetic: sub the low halves, then sbb the high ha…'
   support:
@@ -113,6 +242,9 @@ claims:
     units: [155dc76317]
     part: Description
     note: From the SBB entry.
+    quotes:
+      155dc76317: The SBB instruction is usually executed as part of a multibyte or multiword subtraction
+        in which a SUB instruction is followed by a SBB instruction.
 - id: f040ff7c50
   gist: If you only want the flags and not the result, use cmp, which i…
   support:
@@ -121,6 +253,9 @@ claims:
     units: [3bb9b063e1]
     part: Description
     note: From the CMP entry.
+    quotes:
+      3bb9b063e1: The comparison is performed by subtracting the second operand from the first operand
+        and then setting the status flags in the same manner as the SUB instruction.
 - id: 25456590de
   gist: Operand order matters.
   how: editorial
@@ -128,26 +263,58 @@ claims:
 - id: 67c28dccae
   gist: sub rax, rbx is rax - rbx, not rbx - rax.
   support:
-  - {doc: sdm, at: 1974, units: [de4ade4bd4], part: Description}
+  - doc: sdm
+    at: 1974
+    units: [de4ade4bd4]
+    part: Description
+    quotes:
+      de4ade4bd4: Subtracts the second operand (source operand) from the first operand (destination operand)
+        and stores the result in the destination operand.
 - id: 16631dc74c
   gist: At most one memory operand.
   support:
-  - {doc: sdm, at: 1974, units: [afd25ca2b2], part: Description}
+  - doc: sdm
+    at: 1974
+    units: [afd25ca2b2]
+    part: Description
+    quotes:
+      afd25ca2b2: (However, two memory operands cannot be used in one instruction.)
 - id: 8c3205e971
   gist: The destination can be a register or memory; the source a regis…
   support:
-  - {doc: sdm, at: 1974, units: [837deb3af0, afd25ca2b2], part: Description}
+  - doc: sdm
+    at: 1974
+    units: [837deb3af0, afd25ca2b2]
+    part: Description
+    quotes:
+      837deb3af0: The destination operand can be a register or a memory location; the source operand can
+        be an immediate, register, or memory location.
+      afd25ca2b2: (However, two memory operands cannot be used in one instruction.)
 - id: e71791be0d
   gist: Immediates are sign-extended.
   support:
-  - {doc: sdm, at: 1974, units: [44d92f8adc], part: Description}
+  - doc: sdm
+    at: 1974
+    units: [44d92f8adc]
+    part: Description
+    quotes:
+      44d92f8adc: When an immediate value is used as an operand, it is sign-extended to the length of
+        the destination operand format.
 - id: 20d966f5e4
   gist: The 64-bit forms take only a 32-bit immediate; to subtract a la…
   how: derived
   note: The 64-bit rows list an imm32 (or imm8) operand; the advice to mov a larger constant first is
     the author's.
   support:
-  - {doc: sdm, at: 1974, units: [bc695e78e0, 27cb7dbe81], part: Opcode table}
+  - doc: sdm
+    at: 1974
+    units: [bc695e78e0, 27cb7dbe81]
+    part: Opcode table
+    quotes:
+      bc695e78e0: REX.W + 81 /5 id | SUB r/m64, imm32 | MI | Valid | N.E. | Subtract imm32 sign-extended
+        to 64-bits from r/m64.
+      27cb7dbe81: REX.W + 2D id | SUB RAX, imm32 | I | Valid | N.E. | Subtract imm32 sign-extended to
+        64-bits from RAX.
 - id: 586f765144
   gist: 32-bit operations zero the upper half.
   support:
@@ -156,6 +323,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 9d3e2af236
   gist: sub eax, ebx clears bits 63:32 of rax; 8- and 16-bit versions l…
   support:
@@ -164,6 +334,11 @@ claims:
     units: [f25a5adc20, b4a4d677a2]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for operand sizes in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
+      b4a4d677a2: The upper 56 bits or 48 bits (respectively) of the destination general-purpose register
+        are not modified by the operation.
 - id: 3af6b0784d
   gist: lock sub needs a memory destination.
   support:
@@ -172,6 +347,8 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
 - id: fd7a914af1
   gist: 'With a register destination the lock prefix raises #UD.'
   support:
@@ -180,6 +357,8 @@ claims:
     units: [47552c0032]
     part: 64-Bit Mode Exceptions
     note: 'The SDM lists #UD for a LOCK prefix with a destination that is not memory.'
+    quotes:
+      47552c0032: '#UD If the LOCK prefix is used but the destination is not a memory operand.'
 - id: c19bdd4189
   gist: sub rax, rbx ; rax -= rbx sub rsp, 32 ; reserve 32 bytes of sta…
   how: illustrative

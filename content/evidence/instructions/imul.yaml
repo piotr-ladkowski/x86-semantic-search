@@ -6,28 +6,79 @@ claims:
 - id: 9dbb27635f
   gist: Signed multiply with one-, two- or three-operand forms; the mul…
   support:
-  - {doc: sdm, at: 1155, units: [29fced48e4, c0bc920325], part: Description}
-  - {doc: sdm, at: 1156, units: [dc0aca86bb], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [29fced48e4, c0bc920325]
+    part: Description
+    quotes:
+      29fced48e4: Performs a signed multiplication of two operands.
+      c0bc920325: This instruction has three forms, depending on the number of operands.
+  - doc: sdm
+    at: 1156
+    units: [dc0aca86bb]
+    part: Description
+    quotes:
+      dc0aca86bb: With the two-and three-operand forms, however, the result is truncated to the length
+        of the destination before it is stored in the destination register.
 - id: 1008699af2
   gist: IMUL r64, r/m64 is encoded as REX.W + 0F AF /r.
   support:
-  - {doc: sdm, at: 1155, units: [707718d6b6], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1155
+    units: [707718d6b6]
+    part: Opcode table
+    by: match
+    quotes:
+      707718d6b6: REX.W + 0F AF /r | IMUL r64, r/m64 | RM | Valid | N.E. | Quadword register := Quadword
+        register ∗ r/m64.
 - id: aba7734028
   gist: dst = dst src, truncated to 64 bits.
   support:
-  - {doc: sdm, at: 1155, units: [1c427b5098, f44ec58bd7], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [1c427b5098, f44ec58bd7]
+    part: Description
+    quotes:
+      1c427b5098: Two-operand form — With this form the destination operand (the first operand) is multiplied
+        by the source operand (second operand).
+      f44ec58bd7: The intermediate product (twice the size of the input operand) is truncated and stored
+        in the destination operand location.
 - id: 62e627f8cb
   gist: 16- and 32-bit versions exist; there is no 8-bit version of thi…
   support:
-  - {doc: sdm, at: 1155, units: [71f39eb84e, 6a4923f8af, 707718d6b6], part: Opcode table}
+  - doc: sdm
+    at: 1155
+    units: [71f39eb84e, 6a4923f8af, 707718d6b6]
+    part: Opcode table
+    quotes:
+      71f39eb84e: 0F AF /r | IMUL r16, r/m16 | RM | Valid | Valid | Word register := word register ∗ r/m16.
+      6a4923f8af: 0F AF /r | IMUL r32, r/m32 | RM | Valid | Valid | Doubleword register := doubleword
+        register ∗ r/m32.
+      707718d6b6: REX.W + 0F AF /r | IMUL r64, r/m64 | RM | Valid | N.E. | Quadword register := Quadword
+        register ∗ r/m64.
 - id: 000a474de0
   gist: IMUL r64, r/m64, imm8 is encoded as REX.W + 6B /r ib.
   support:
-  - {doc: sdm, at: 1155, units: [b0a30c9484], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1155
+    units: [b0a30c9484]
+    part: Opcode table
+    by: match
+    quotes:
+      b0a30c9484: REX.W + 6B /r ib | IMUL r64, r/m64, imm8 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ sign-extended immediate byte.
 - id: 6b5326247d
   gist: dst = src imm8 (sign-extended).
   support:
-  - {doc: sdm, at: 1155, units: [b0a30c9484, 0527f7241f], part: Opcode table}
+  - doc: sdm
+    at: 1155
+    units: [b0a30c9484, 0527f7241f]
+    part: Opcode table
+    quotes:
+      b0a30c9484: REX.W + 6B /r ib | IMUL r64, r/m64, imm8 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ sign-extended immediate byte.
+      0527f7241f: Three-operand form — This form requires a destination operand (the first operand) and
+        two source operands (the second and the third operands).
 - id: b9b6665729
   gist: Does not modify the source.
   support:
@@ -36,63 +87,188 @@ claims:
     units: [3540a75f5f, d402f37a3d, 177b77852a]
     part: Operand encoding
     note: The source r/m is marked (r) only.
+    quotes:
+      3540a75f5f: RMI | ModRM:reg (r, w) | ModRM:r/m (r) | imm8/16/32 | N/A
+      d402f37a3d: Here, the first source operand (which can be a general-purpose register or a memory
+        location) is multiplied by the second source operand (an immediate value).
+      177b77852a: The intermediate product (twice the size of the first source operand) is truncated and
+        stored in the destination operand (a general-purpose register).
 - id: 120fb116e4
   gist: IMUL r64, r/m64, imm32 is encoded as REX.W + 69 /r id.
   support:
-  - {doc: sdm, at: 1155, units: [52a9b97a0d], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1155
+    units: [52a9b97a0d]
+    part: Opcode table
+    by: match
+    quotes:
+      52a9b97a0d: REX.W + 69 /r id | IMUL r64, r/m64, imm32 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ immediate doubleword.
 - id: ef31b497d1
   gist: dst = src imm32 (sign-extended).
   support:
-  - {doc: sdm, at: 1155, units: [52a9b97a0d], part: Opcode table}
-  - {doc: sdm, at: 1156, units: [4eb6aec65b], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [52a9b97a0d]
+    part: Opcode table
+    quotes:
+      52a9b97a0d: REX.W + 69 /r id | IMUL r64, r/m64, imm32 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ immediate doubleword.
+  - doc: sdm
+    at: 1156
+    units: [4eb6aec65b]
+    part: Description
+    quotes:
+      4eb6aec65b: If the source operand is an immediate, it is sign extended to 64 bits.
 - id: c4d834de74
   gist: There is no imm64 form.
   how: derived
   note: The immediate rows list imm8, imm16 and imm32 only.
   support:
-  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a, 9576ed014e], part: Opcode table}
-  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a, 9576ed014e], part: Opcode table}
+  - doc: sdm
+    at: 1155
+    units: [52a9b97a0d, 164e13fe9a, 9576ed014e]
+    part: Opcode table
+    quotes:
+      52a9b97a0d: REX.W + 69 /r id | IMUL r64, r/m64, imm32 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ immediate doubleword.
+      164e13fe9a: 69 /r id | IMUL r32, r/m32, imm32 | RMI | Valid | Valid | Doubleword register := r/m32
+        ∗ immediate doubleword.
+      9576ed014e: 69 /r iw | IMUL r16, r/m16, imm16 | RMI | Valid | Valid | Word register := r/m16 ∗ immediate
+        word.
+  - doc: sdm
+    at: 1155
+    units: [52a9b97a0d, 164e13fe9a, 9576ed014e]
+    part: Opcode table
+    quotes:
+      52a9b97a0d: REX.W + 69 /r id | IMUL r64, r/m64, imm32 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ immediate doubleword.
+      164e13fe9a: 69 /r id | IMUL r32, r/m32, imm32 | RMI | Valid | Valid | Doubleword register := r/m32
+        ∗ immediate doubleword.
+      9576ed014e: 69 /r iw | IMUL r16, r/m16, imm16 | RMI | Valid | Valid | Word register := r/m16 ∗ immediate
+        word.
 - id: 086c145a6f
   gist: IMUL r/m64 is encoded as REX.W + F7 /5.
   support:
-  - {doc: sdm, at: 1155, units: [97b151ad0a], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1155
+    units: [97b151ad0a]
+    part: Opcode table
+    by: match
+    quotes:
+      97b151ad0a: REX.W + F7 /5 | IMUL r/m64 | M | Valid | N.E. | RDX:RAX := RAX ∗ r/m64.
 - id: a0d23eb5b3
   gist: 'One-operand form: RDX:RAX := RAX r/m64, the signed counterpart…'
   support:
-  - {doc: sdm, at: 1155, units: [97b151ad0a, 07730dc140], part: Opcode table}
+  - doc: sdm
+    at: 1155
+    units: [97b151ad0a, 07730dc140]
+    part: Opcode table
+    quotes:
+      97b151ad0a: REX.W + F7 /5 | IMUL r/m64 | M | Valid | N.E. | RDX:RAX := RAX ∗ r/m64.
+      07730dc140: One-operand form — This form is identical to that used by the MUL instruction.
 - id: 1f1aa91256
   gist: 'Flags modified: OF, CF; undefined: SF, ZF, AF, PF.'
   support:
-  - {doc: sdm, at: 1157, units: [ae9ccff032, db5611f02c, 90e3d2cc23], part: Flags Affected}
+  - doc: sdm
+    at: 1157
+    units: [ae9ccff032, db5611f02c, 90e3d2cc23]
+    part: Flags Affected
+    quotes:
+      ae9ccff032: For the one operand form of the instruction, the CF and OF flags are set when significant
+        bits are carried into the upper half of the result and cleared when the result fits exactly in
+        the lower half of the result.
+      db5611f02c: For the two-and three-operand forms of the instruction, the CF and OF flags are set
+        when the result must be truncated to fit in the destination operand size and cleared when the
+        result fits exactly in the destination operand size.
+      90e3d2cc23: The SF, ZF, AF, and PF flags are undefined.
 - id: 14572ed562
   gist: 'Two- and three-operand forms: CF and OF are set when the result…'
   support:
-  - {doc: sdm, at: 1157, units: [db5611f02c], part: Flags Affected}
+  - doc: sdm
+    at: 1157
+    units: [db5611f02c]
+    part: Flags Affected
+    quotes:
+      db5611f02c: For the two-and three-operand forms of the instruction, the CF and OF flags are set
+        when the result must be truncated to fit in the destination operand size and cleared when the
+        result fits exactly in the destination operand size.
 - id: c1485bdb86
   gist: 'One-operand form: set when the product does not fit in the lowe…'
   support:
-  - {doc: sdm, at: 1157, units: [ae9ccff032], part: Flags Affected}
+  - doc: sdm
+    at: 1157
+    units: [ae9ccff032]
+    part: Flags Affected
+    quotes:
+      ae9ccff032: For the one operand form of the instruction, the CF and OF flags are set when significant
+        bits are carried into the upper half of the result and cleared when the result fits exactly in
+        the lower half of the result.
 - id: b598694834
   gist: imul multiplies signed integers.
   support:
-  - {doc: sdm, at: 1155, units: [29fced48e4], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [29fced48e4]
+    part: Description
+    quotes:
+      29fced48e4: Performs a signed multiplication of two operands.
 - id: fb8e68cc35
   gist: 'It has three forms:'
   support:
-  - {doc: sdm, at: 1155, units: [c0bc920325], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [c0bc920325]
+    part: Description
+    quotes:
+      c0bc920325: This instruction has three forms, depending on the number of operands.
 - id: 15841f991b
   gist: 'Two operands: imul dst, src computes dst = dst src, keeping onl…'
   support:
-  - {doc: sdm, at: 1155, units: [1c427b5098, f44ec58bd7], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [1c427b5098, f44ec58bd7]
+    part: Description
+    quotes:
+      1c427b5098: Two-operand form — With this form the destination operand (the first operand) is multiplied
+        by the source operand (second operand).
+      f44ec58bd7: The intermediate product (twice the size of the input operand) is truncated and stored
+        in the destination operand location.
 - id: b5d108032f
   gist: 'Three operands: imul dst, src, imm computes dst = src imm witho…'
   support:
-  - {doc: sdm, at: 1155, units: [0527f7241f, d402f37a3d, 177b77852a], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [0527f7241f, d402f37a3d, 177b77852a]
+    part: Description
+    quotes:
+      0527f7241f: Three-operand form — This form requires a destination operand (the first operand) and
+        two source operands (the second and the third operands).
+      d402f37a3d: Here, the first source operand (which can be a general-purpose register or a memory
+        location) is multiplied by the second source operand (an immediate value).
+      177b77852a: The intermediate product (twice the size of the first source operand) is truncated and
+        stored in the destination operand (a general-purpose register).
 - id: 83cb1d90c4
   gist: 'One operand: imul src is the signed twin of mul: rdx:rax = rax…'
   support:
-  - {doc: sdm, at: 1155, units: [07730dc140, a48af4d695], part: Description}
-  - {doc: sdm, at: 1156, units: [949789b518], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [07730dc140, a48af4d695]
+    part: Description
+    quotes:
+      07730dc140: One-operand form — This form is identical to that used by the MUL instruction.
+      a48af4d695: Here, the source operand (in a general-purpose register or memory location) is multiplied
+        by the value in the AL, AX, EAX, or RAX register (depending on the operand size) and the product
+        (twice the size of the input operand) is stored in the AX, DX:AX, EDX:EAX, or RDX:RAX registers,
+        respectively.
+  - doc: sdm
+    at: 1156
+    units: [949789b518]
+    part: Description
+    quotes:
+      949789b518: One-operand form —The source operand (in a 64-bit general-purpose register or memory
+        location) is multiplied by the value in the RAX register and the product is stored in the RDX:RAX
+        registers.
 - id: 4ac7731a95
   gist: The everyday multiply of two integers, or of an integer by a co…
   how: editorial
@@ -103,8 +279,22 @@ claims:
   note: In the two- and three-operand forms the destination is any general-purpose register; the one-operand
     form is fixed to rdx:rax.
   support:
-  - {doc: sdm, at: 1155, units: [75fc930d10, 3540a75f5f], part: Description}
-  - {doc: sdm, at: 1155, units: [75fc930d10, 3540a75f5f], part: Description}
+  - doc: sdm
+    at: 1155
+    units: [75fc930d10, 3540a75f5f]
+    part: Description
+    quotes:
+      75fc930d10: The destination operand is a general-purpose register and the source operand is an immediate
+        value, a general-purpose register, or a memory location.
+      3540a75f5f: RMI | ModRM:reg (r, w) | ModRM:r/m (r) | imm8/16/32 | N/A
+  - doc: sdm
+    at: 1155
+    units: [75fc930d10, 3540a75f5f]
+    part: Description
+    quotes:
+      75fc930d10: The destination operand is a general-purpose register and the source operand is an immediate
+        value, a general-purpose register, or a memory location.
+      3540a75f5f: RMI | ModRM:reg (r, w) | ModRM:r/m (r) | imm8/16/32 | N/A
 - id: cb5d073f7f
   gist: The one-operand form when you need the full signed 128-bit prod…
   how: editorial
@@ -116,7 +306,18 @@ claims:
 - id: 98bcbed536
   gist: The two- and three-operand forms drop the high half, and CF/OF…
   support:
-  - {doc: sdm, at: 1156, units: [dc0aca86bb, e971fbf5ef, 4d76483166], part: Description}
+  - doc: sdm
+    at: 1156
+    units: [dc0aca86bb, e971fbf5ef, 4d76483166]
+    part: Description
+    quotes:
+      dc0aca86bb: With the two-and three-operand forms, however, the result is truncated to the length
+        of the destination before it is stored in the destination register.
+      e971fbf5ef: Because of this truncation, the CF or OF flag should be tested to ensure that no significant
+        bits are lost.
+      4d76483166: The CF and OF flags are set when the signed integer value of the intermediate product
+        differs from the sign extended operand-size-truncated product, otherwise the CF and OF flags are
+        cleared.
 - id: 37e716c7c8
   gist: For a multiply that cannot overflow you can ignore them.
   how: editorial
@@ -128,36 +329,112 @@ claims:
 - id: f360457542
   gist: The low 64 bits of a product are identical for signed and unsig…
   support:
-  - {doc: sdm, at: 1156, units: [70668e9485], part: Description}
+  - doc: sdm
+    at: 1156
+    units: [70668e9485]
+    part: Description
+    quotes:
+      70668e9485: The two-and three-operand forms may also be used with unsigned operands because the
+        lower half of the product is the same regardless if the operands are signed or unsigned.
 - id: 7bbe861f32
   gist: CF/OF then describe signed overflow, so use mul if you need uns…
   support:
-  - {doc: sdm, at: 1156, units: [f4332a97fd], part: Description}
+  - doc: sdm
+    at: 1156
+    units: [f4332a97fd]
+    part: Description
+    quotes:
+      f4332a97fd: The CF and OF flags, however, cannot be used to determine if the upper half of the result
+        is non-zero.
 - id: '5576604025'
   gist: Immediates are sign-extended, at most 32 bits.
   support:
-  - {doc: sdm, at: 1156, units: [44d92f8adc, 4eb6aec65b], part: Description}
-  - {doc: sdm, at: 1155, units: [52a9b97a0d], part: Opcode table}
+  - doc: sdm
+    at: 1156
+    units: [44d92f8adc, 4eb6aec65b]
+    part: Description
+    quotes:
+      44d92f8adc: When an immediate value is used as an operand, it is sign-extended to the length of
+        the destination operand format.
+      4eb6aec65b: If the source operand is an immediate, it is sign extended to 64 bits.
+  - doc: sdm
+    at: 1155
+    units: [52a9b97a0d]
+    part: Opcode table
+    quotes:
+      52a9b97a0d: REX.W + 69 /r id | IMUL r64, r/m64, imm32 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ immediate doubleword.
 - id: 64f94cc1a7
   gist: There is no imul r64, r/m64, imm64.
   how: derived
   note: No row has a 64-bit immediate.
   support:
-  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a], part: Opcode table}
-  - {doc: sdm, at: 1155, units: [52a9b97a0d, 164e13fe9a], part: Opcode table}
+  - doc: sdm
+    at: 1155
+    units: [52a9b97a0d, 164e13fe9a]
+    part: Opcode table
+    quotes:
+      52a9b97a0d: REX.W + 69 /r id | IMUL r64, r/m64, imm32 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ immediate doubleword.
+      164e13fe9a: 69 /r id | IMUL r32, r/m32, imm32 | RMI | Valid | Valid | Doubleword register := r/m32
+        ∗ immediate doubleword.
+  - doc: sdm
+    at: 1155
+    units: [52a9b97a0d, 164e13fe9a]
+    part: Opcode table
+    quotes:
+      52a9b97a0d: REX.W + 69 /r id | IMUL r64, r/m64, imm32 | RMI | Valid | N.E. | Quadword register :=
+        r/m64 ∗ immediate doubleword.
+      164e13fe9a: 69 /r id | IMUL r32, r/m32, imm32 | RMI | Valid | Valid | Doubleword register := r/m32
+        ∗ immediate doubleword.
 - id: 4135943ef8
   gist: Only CF and OF are defined; SF, ZF, AF and PF are undefined aft…
   support:
-  - {doc: sdm, at: 1157, units: [ae9ccff032, db5611f02c, 90e3d2cc23], part: Flags Affected}
+  - doc: sdm
+    at: 1157
+    units: [ae9ccff032, db5611f02c, 90e3d2cc23]
+    part: Flags Affected
+    quotes:
+      ae9ccff032: For the one operand form of the instruction, the CF and OF flags are set when significant
+        bits are carried into the upper half of the result and cleared when the result fits exactly in
+        the lower half of the result.
+      db5611f02c: For the two-and three-operand forms of the instruction, the CF and OF flags are set
+        when the result must be truncated to fit in the destination operand size and cleared when the
+        result fits exactly in the destination operand size.
+      90e3d2cc23: The SF, ZF, AF, and PF flags are undefined.
 - id: ee4adcb76d
   gist: No 8-bit two- or three-operand forms.
   how: derived
   note: The two- and three-operand rows list 16-, 32- and 64-bit registers only.
   support:
-  - {doc: sdm, at: 1155, units: [71f39eb84e, 6a4923f8af, 707718d6b6, 4d0071f7ba, 9576ed014e], part: Opcode
-      table}
-  - {doc: sdm, at: 1155, units: [71f39eb84e, 6a4923f8af, 707718d6b6, 4d0071f7ba, 9576ed014e], part: Opcode
-      table}
+  - doc: sdm
+    at: 1155
+    units: [71f39eb84e, 6a4923f8af, 707718d6b6, 4d0071f7ba, 9576ed014e]
+    part: Opcode table
+    quotes:
+      71f39eb84e: 0F AF /r | IMUL r16, r/m16 | RM | Valid | Valid | Word register := word register ∗ r/m16.
+      6a4923f8af: 0F AF /r | IMUL r32, r/m32 | RM | Valid | Valid | Doubleword register := doubleword
+        register ∗ r/m32.
+      707718d6b6: REX.W + 0F AF /r | IMUL r64, r/m64 | RM | Valid | N.E. | Quadword register := Quadword
+        register ∗ r/m64.
+      4d0071f7ba: 6B /r ib | IMUL r16, r/m16, imm8 | RMI | Valid | Valid | Word register := r/m16 ∗ sign-extended
+        immediate byte.
+      9576ed014e: 69 /r iw | IMUL r16, r/m16, imm16 | RMI | Valid | Valid | Word register := r/m16 ∗ immediate
+        word.
+  - doc: sdm
+    at: 1155
+    units: [71f39eb84e, 6a4923f8af, 707718d6b6, 4d0071f7ba, 9576ed014e]
+    part: Opcode table
+    quotes:
+      71f39eb84e: 0F AF /r | IMUL r16, r/m16 | RM | Valid | Valid | Word register := word register ∗ r/m16.
+      6a4923f8af: 0F AF /r | IMUL r32, r/m32 | RM | Valid | Valid | Doubleword register := doubleword
+        register ∗ r/m32.
+      707718d6b6: REX.W + 0F AF /r | IMUL r64, r/m64 | RM | Valid | N.E. | Quadword register := Quadword
+        register ∗ r/m64.
+      4d0071f7ba: 6B /r ib | IMUL r16, r/m16, imm8 | RMI | Valid | Valid | Word register := r/m16 ∗ sign-extended
+        immediate byte.
+      9576ed014e: 69 /r iw | IMUL r16, r/m16, imm16 | RMI | Valid | Valid | Word register := r/m16 ∗ immediate
+        word.
 - id: b2437967b8
   gist: Use the 16-, 32- or 64-bit registers.
   how: editorial
@@ -170,6 +447,9 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 66cd7069cc
   gist: imul rax, rbx ; rax = rax rbx (low 64 bits) imul rax, rbx, 10 ;…
   how: illustrative

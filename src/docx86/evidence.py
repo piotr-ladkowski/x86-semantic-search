@@ -6,11 +6,14 @@ and reports how much of the page is covered. The ledger is a sidecar file,
 
 What a ledger holds (see docs/EVIDENCE.md for the full story):
 
-  * pointers, never source text: (document, page or section, fingerprint of the sentence). The
-    reference documents are copyrighted, so the repository cannot republish them; the text appears
-    only where the reader has their own copy (`sources.py`);
+  * pointers: (document, page or section, fingerprint of the sentence), plus a short attributed
+    quotation of each cited sentence (`quotes`, at most MAX_QUOTE characters, never pseudocode), so
+    the page can show the very sentence a claim rests on without anyone's copy of the document. The
+    surrounding text is rendered only from a copy of the document on the reader's machine;
   * claims are identified by the fingerprint of their wording, so editing a sentence orphans its
     evidence and `check` says so, instead of letting a stale citation vouch for new words;
+  * a quote is checked against its own fingerprint, so a quote cannot drift from, or be swapped for,
+    the sentence it claims to be;
   * who made each link (`by`): `auto` (a similarity suggestion, unconfirmed), `match` (an exact
     mechanical match, such as the same opcode and syntax in an SDM table row), `llm` or `human`.
 """
@@ -26,11 +29,11 @@ from typing import TYPE_CHECKING, Literal
 
 import yaml
 from markupsafe import Markup, escape
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 from .claims import Claim, claims_for_article, claims_for_instruction
 from .sources import DOCUMENT_SOURCES, Located, Source, SourceRegistry
-from .textunits import SPLITTER_VERSION
+from .textunits import SPLITTER_VERSION, digest
 
 if TYPE_CHECKING:
     from .content import Content
@@ -80,6 +83,29 @@ class Support(_Model):
     part: str | None = Field(default=None, description="Display hint: 'Description', 'Table'.")
     by: By = "llm"
     note: str | None = None
+    quotes: dict[str, str] = Field(
+        default_factory=dict,
+        description="The cited sentences themselves, by fingerprint (see MAX_QUOTE).",
+    )
+
+    @model_validator(mode="after")
+    def _quotes_are_of_cited_units(self) -> Support:
+        stray = set(self.quotes) - set(self.units)
+        if stray:
+            raise ValueError(f"quotes for sentences that are not cited: {sorted(stray)}")
+        return self
+
+
+# Quotation, not reproduction: one sentence or table row at a time, kept short, with its source.
+# Pseudocode blocks and run-on table extractions are cited by pointer only.
+MAX_QUOTE = 400
+QUOTABLE_KINDS = ("sentence", "row")
+ROW_PARTS = ("Opcode table", "Operand encoding", "Table")
+
+
+def quotable(unit) -> bool:
+    """Whether a source unit may be quoted in the ledger."""
+    return unit.kind in QUOTABLE_KINDS and len(unit.text) <= MAX_QUOTE
 
 
 class Entry(_Model):
@@ -218,15 +244,15 @@ _Dumper.add_representer(
 
 HEADER = (
     "# Evidence ledger: which sentence of which document supports which claim of this page.\n"
-    "# Pointers only (document, page or section, fingerprint); never source text. Managed by\n"
-    "# `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.\n"
+    "# Pointers (document, page or section, fingerprint) with a short quotation of each cited\n"
+    "# sentence. Managed by `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.\n"
 )
 
 
 def _support_dict(s: Support) -> dict:
     data = s.model_dump(exclude_defaults=True, exclude_none=True)
-    if not s.note:
-        return _Flow(data)  # one line per pointer; a note makes it a block, units still on one line
+    if not s.note and not s.quotes:
+        return _Flow(data)  # one line per bare pointer; notes and quotes make it a block
     data["units"] = _FlowList(data["units"])
     return data
 
@@ -353,8 +379,15 @@ def _merge(old: Entry | None, new: Entry) -> Entry:
         o = supports[same]
         units = o.units + [u for u in s.units if u not in o.units]
         by = s.by if rank[s.by] >= rank[o.by] else o.by
+        quotes = {u: q for u, q in {**o.quotes, **s.quotes}.items() if u in units}
         supports[same] = o.model_copy(
-            update={"units": units, "by": by, "note": s.note or o.note, "part": s.part or o.part}
+            update={
+                "units": units,
+                "by": by,
+                "note": s.note or o.note,
+                "part": s.part or o.part,
+                "quotes": quotes,
+            }
         )
     return old.model_copy(update={"support": supports, "note": new.note or old.note})
 
@@ -370,6 +403,42 @@ def record(page: PageEvidence, entries: list[Entry]) -> Ledger:
     order = {v.claim.id: i for i, v in enumerate(page.claims)}
     kept = sorted(by_id.values(), key=lambda e: order.get(e.id, len(order)))
     return Ledger(splitter=SPLITTER_VERSION, claims=kept)
+
+
+def quotes_for(support: Support, registry: SourceRegistry | None, *, refresh: bool = False) -> dict:
+    """The quotes `support` should carry, taken from the local document (empty if it is absent)."""
+    source = registry[support.doc] if registry else None
+    if source is None or not source.available:
+        return dict(support.quotes)
+    found = {}
+    for loc in source.units(support.at):
+        if loc.unit.id in support.units and quotable(loc.unit):
+            found.setdefault(loc.unit.id, loc.unit.text)
+    kept = {} if refresh else dict(support.quotes)
+    return {u: kept.get(u) or found[u] for u in support.units if u in found or u in kept}
+
+
+def attach_quotes(
+    page: PageEvidence, registry: SourceRegistry | None, *, refresh: bool = False
+) -> tuple[Ledger, int]:
+    """The page's ledger with a quote on every pointer whose sentence is quotable and known.
+
+    Returns the ledger and how many quotes were added or changed. Needs the local documents.
+    """
+    changed = 0
+    entries = []
+    for v in page.claims:
+        if v.entry is None:
+            continue
+        supports = []
+        for s in v.entry.support:
+            quotes = quotes_for(s, registry, refresh=refresh)
+            changed += sum(1 for u, q in quotes.items() if s.quotes.get(u) != q)
+            supports.append(s.model_copy(update={"quotes": quotes}))
+        entries.append(v.entry.model_copy(update={"support": supports}))
+    kept = {e.id for e in entries}
+    entries += [e for e in page.stale if e.id not in kept]
+    return Ledger(splitter=page.splitter, claims=entries), changed
 
 
 def save(page: PageEvidence, ledger: Ledger) -> None:
@@ -388,6 +457,7 @@ class Report:
     notices: list[str] = field(default_factory=list)
     resolved: int = 0  # pointers confirmed against a local document
     unchecked: int = 0  # pointers that could not be looked up here (document missing)
+    quotes_ok: int = 0  # stored quotes whose fingerprint matches the sentence they cite
 
 
 def _closest(page: PageEvidence, entry: Entry) -> str:
@@ -460,6 +530,19 @@ def _check_support(s: Support, label: str, rep: Report, registry: SourceRegistry
     if s.doc not in DOCUMENT_SOURCES:  # pragma: no cover - the Literal already rejects this
         rep.problems.append(f"{label}: unknown document {s.doc!r}")
         return
+    for unit_id, quote in s.quotes.items():
+        if len(quote) > MAX_QUOTE:
+            rep.problems.append(
+                f"{label}: quote of {unit_id} is {len(quote)} characters; "
+                f"quotations are limited to {MAX_QUOTE} (cite long passages by pointer only)"
+            )
+        elif digest(quote) != unit_id:
+            rep.problems.append(
+                f"{label}: the quote stored for {unit_id} is not that sentence "
+                "(its fingerprint differs; re-run `docx86 evidence quote --refresh`)"
+            )
+        else:
+            rep.quotes_ok += 1
     source: Source | None = registry[s.doc] if registry else None
     wants_page = s.doc in ("sdm", "sysv")
     if wants_page != isinstance(s.at, int):
@@ -568,10 +651,11 @@ class PassageView:
     by: str
     note: str | None
     where: str  # "PDF page 1234" / "section “Parameter passing”"
-    state: str  # "shown" | "unavailable" | "missing"
+    state: str  # "shown" | "quoted" | "unavailable" | "missing"
     download: str
     units: tuple[UnitView, ...] = ()
     header: tuple[str, ...] = ()
+    unquoted: int = 0  # cited sentences with no quote (long tables, pseudocode)
 
 
 CONTEXT_LIMIT = 14  # paragraphs longer than this are cut to a window around the cited units
@@ -591,6 +675,15 @@ def _unit_html(loc_unit, cited: bool, terms: set[str]) -> UnitView:
     return UnitView(html, text, cited, loc_unit.kind)
 
 
+def _quote_views(s: Support, terms: set[str]) -> tuple[UnitView, ...]:
+    kind = "row" if (s.part or "") in ROW_PARTS else "sentence"
+    return tuple(
+        UnitView(emphasise(s.quotes[u], terms), s.quotes[u], True, kind)
+        for u in s.units
+        if u in s.quotes
+    )
+
+
 def passages(entry: Entry, claim: Claim, registry: SourceRegistry | None) -> list[PassageView]:
     """For each pointer, the paragraph it cites with the cited sentences marked."""
     terms = key_terms(claim.text)
@@ -606,12 +699,22 @@ def passages(entry: Entry, claim: Claim, registry: SourceRegistry | None) -> lis
             "where": _where(s.doc, s.at),
             "download": source.download if source else "",
         }
+        quoted = _quote_views(s, terms)
         if source is None or not source.available:
-            views.append(PassageView(part=s.part or "", state="unavailable", **base))
+            state = "quoted" if quoted else "unavailable"
+            views.append(
+                PassageView(
+                    part=s.part or "",
+                    state=state,
+                    units=quoted,
+                    unquoted=len(s.units) - len(quoted),
+                    **base,
+                )
+            )
             continue
         located: list[Located] = [loc for loc in source.units(s.at) if loc.unit.id in s.units]
         if not located:
-            views.append(PassageView(part=s.part or "", state="missing", **base))
+            views.append(PassageView(part=s.part or "", state="missing", units=quoted, **base))
             continue
         # One block per paragraph that holds a cited unit. The SDM repeats sentences under
         # several headings (the exception lists), so `part` says which occurrence is meant.
@@ -651,7 +754,8 @@ def passages(entry: Entry, claim: Claim, registry: SourceRegistry | None) -> lis
 
 
 def page_to_dict(page: PageEvidence, registry: SourceRegistry | None = None) -> dict:
-    """JSON form. Source text appears only when the documents exist on this machine."""
+    """JSON form. Each support carries its short `quotes`; the surrounding `passage` appears only
+    when the document exists on this machine."""
     claims = []
     for i, v in enumerate(page.claims, 1):
         item: dict = {

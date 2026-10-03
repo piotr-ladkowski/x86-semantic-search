@@ -16,7 +16,7 @@ trace service name).
 ## Progress
 
 <!-- progress:start -->
-**Instructions documented: 32 / 102 (31%)** · reviewed: 0 · draft: 32 · articles: 10
+**Instructions documented: 32 / 102 (31%)** · reviewed: 0 · draft: 32 · articles: 11
 
 | Category | Documented | Total | Reviewed |
 |---|---:|---:|---:|
@@ -69,7 +69,8 @@ wget https://learn.microsoft.com/en-us/cpp/build/stack-usage -O ./docs/ms_x64_st
 ```
 
 They are only used while authoring and reviewing; they are not needed to run or test the app.
-They are copyrighted, so the repository stores only pointers to their sentences, never their text.
+They are copyrighted: the repository stores pointers to their sentences and, for the evidence pages, a short attributed
+quotation of each cited sentence (see [docs/EVIDENCE.md](docs/EVIDENCE.md)); never the surrounding text.
 
 Requirements: [uv](https://docs.astral.sh/uv/) (Python 3.12+), Node 20+ (Tailwind build only), and
 Docker/kubectl for deployment.

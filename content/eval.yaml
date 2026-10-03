@@ -57,6 +57,9 @@ queries:
   - {query: "which pointers do the string instructions use", kind: article, expect: rsi-rdi-string-registers}
   - {query: "what is a stack frame and what is rbp for", kind: article, expect: rsp-rbp-stack-and-frame}
   - {query: "which registers are special and why", kind: article, expect: registers-cheat-sheet}
+  - {query: "my program died with a general protection fault, what does that mean", kind: article, expect: cpu-exceptions}
+  - {query: "what does the processor do when an instruction cannot be executed", kind: article, expect: cpu-exceptions}
+  - {query: "why did my assembly program crash with sigfpe", kind: article, expect: cpu-exceptions}
   # batch 5: string instructions
   - {query: "copy the memory at rsi to the address in rdi", expect: movs}
   - {query: "fill an array with the same value quickly", expect: stos}

@@ -7,6 +7,7 @@ from docx86 import evidence as ev
 from docx86.config import Settings
 from docx86.content import load_content
 from docx86.main import create_app
+from docx86.sources import SourceRegistry
 from docx86.textunits import digest
 
 SOURCE_HTML = """<html><body><h1>Population count</h1>
@@ -103,13 +104,30 @@ def test_an_unconfirmed_suggestion_is_labelled_as_such(app_client, content_dir):
     assert "border-dashed" in r.text
 
 
-def test_without_the_document_only_the_pointer_is_shown(app_client, content_dir):
+def test_without_the_document_or_a_quote_only_the_pointer_is_shown(app_client, content_dir):
     write_ledger(content_dir, [(0, {"support": [wiki()]})])
     r = get(app_client, "/instructions/popcnt/evidence", with_source=False)
     assert r.status_code == 200
-    assert "The passage is not shown on this server" in r.text
-    assert "The instruction counts the bits" not in r.text  # never republished
+    assert "cited by page only" in r.text
+    assert "The instruction counts the bits" not in r.text  # nothing was quoted
     assert "section “Population count”" in r.text  # but the pointer is
+
+
+def test_a_quoted_sentence_is_shown_even_without_the_document(app_client, content_dir, tmp_path):
+    ids = write_ledger(content_dir, [(0, {"support": [wiki()]})])
+    store = ev.EvidenceStore(load_content(content_dir), content_dir / "evidence")
+    page = store.get("instruction", "popcnt")
+    registry = SourceRegistry(make_settings(tmp_path, content_dir), tmp_path / "cache")
+    ledger, changed = ev.attach_quotes(page, registry)
+    assert changed == 1
+    ev.save(page, ledger)
+    r = get(app_client, "/instructions/popcnt/evidence", with_source=False)
+    assert "The instruction counts the bits set to 1." in r.text and "<mark" in r.text
+    assert "Quoted for citation" in r.text and "cited by page only" not in r.text
+    assert "It stores the count in a register." not in r.text  # the surrounding text is not shipped
+    data = get(app_client, "/api/evidence/instructions/popcnt", with_source=False).json()
+    assert data["claims"][0]["support"][0]["quotes"]
+    assert ids  # the claim ids used above exist
 
 
 def test_derived_claims_show_their_note(app_client, content_dir):
@@ -146,7 +164,7 @@ def test_the_overview_lists_every_page_and_explains_the_states(app_client):
     assert r.status_code == 200
     for needle in ("Title of POPCNT", "About registers", "/instructions/popcnt/evidence", "Traced"):
         assert needle in r.text, needle
-    assert "copyrighted" in r.text and "never their text" in r.text
+    assert "quoted" in r.text and "cited by page only" in r.text
 
 
 def test_the_existing_pages_get_one_small_link(app_client, content_dir):

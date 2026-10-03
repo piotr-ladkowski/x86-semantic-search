@@ -218,3 +218,40 @@ def test_check_no_sources_does_not_need_the_files_run_evidence_names(env, capsys
     assert code == 1 and "tests/asm/missing.asm" in err
     code, out, _ = run(capsys, "check", "--no-sources")
     assert code == 0 and out.startswith("OK:")
+
+
+def test_cite_stores_a_quote_of_the_cited_sentence(env, capsys):
+    cite_summary(capsys)
+    (entry,) = ledger(env)["claims"]
+    assert entry["support"][0]["quotes"] == {COUNTS: "The instruction counts the bits set to 1."}
+
+
+def test_quote_fills_in_missing_quotes_and_refresh_replaces_them(env, capsys):
+    cite_summary(capsys)
+    path = env / "evidence" / "instructions" / "popcnt.yaml"
+    data = yaml.safe_load(path.read_text())
+    del data["claims"][0]["support"][0]["quotes"]
+    path.write_text(yaml.safe_dump(data))
+    assert "quotes" not in ledger(env)["claims"][0]["support"][0]
+    code, out, _ = run(capsys, "quote", "popcnt")
+    assert code == 0 and "1 quote(s) stored" in out
+    assert ledger(env)["claims"][0]["support"][0]["quotes"][COUNTS].startswith("The instruction")
+    code, out, _ = run(capsys, "quote", "--all")
+    assert code == 0 and "0 quote(s) stored or updated" in out  # idempotent
+    with pytest.raises(SystemExit):
+        run(capsys, "quote")  # a slug or --all is required
+
+
+def test_suggest_write_stores_quotes_with_its_guesses(env, capsys):
+    run(
+        capsys,
+        "suggest",
+        "popcnt",
+        "--scope",
+        "wikibooks:Population count",
+        "--write",
+        "--min",
+        "0.0",
+    )
+    quotes = [q for e in ledger(env)["claims"] for s in e["support"] for q in s["quotes"].values()]
+    assert quotes and all(len(q) <= 400 for q in quotes)

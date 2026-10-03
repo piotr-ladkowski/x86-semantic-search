@@ -14,15 +14,33 @@ claims:
     __preserve_none as variants, which is why the article says 'one default'. That x64 has no cdecl/stdcall
     split is not stated in the indexed pages.
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [21cb785bf5], part: Calling convention defaults}
-  - {doc: msx64, at: In this article, units: [0adea46e72, 25754db2d6], part: In this article}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [21cb785bf5]
+    part: Calling convention defaults
+    quotes:
+      21cb785bf5: The x64 Application Binary Interface (ABI) uses a four-register, fast-call calling convention
+        by default.
+  - doc: msx64
+    at: In this article
+    units: [0adea46e72, 25754db2d6]
+    part: In this article
+    quotes:
+      0adea46e72: For more information about the __vectorcall calling convention, see __vectorcall.
+      25754db2d6: For more information about the __preserve_none calling convention, see __preserve_none.
 - id: 4bbe19f5b1
   gist: It is a software agreement, not part of the CPU.
   how: derived
   note: The page calls it 'standard processes and conventions' between caller and callee; 'not part of
     the CPU' is the inference.
   support:
-  - {doc: msx64, at: In this article, units: [53fa0b027e], part: In this article}
+  - doc: msx64
+    at: In this article
+    units: [53fa0b027e]
+    part: In this article
+    quotes:
+      53fa0b027e: This article describes the standard processes and conventions that one function (the
+        caller) uses to make calls into another function (the callee) in x64 code.
 - id: 0d3ec3ab6f
   gist: For Linux see the System V convention.
   how: editorial
@@ -30,105 +48,278 @@ claims:
 - id: 86084ec637
   gist: Integer and pointer arguments 1 to 4 | rcx, rdx, r8, r9
   support:
-  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
-  - {doc: msx64, at: Calling convention defaults, units: [f0eb39dfdd], part: Calling convention defaults}
+  - doc: msx64
+    at: Parameter passing
+    units: [d7665e1c32]
+    part: Parameter passing
+    quotes:
+      d7665e1c32: Integer valued arguments in the leftmost four positions are passed in left-to-right
+        order in RCX, RDX, R8, and R9, respectively.
+  - doc: msx64
+    at: Calling convention defaults
+    units: [f0eb39dfdd]
+    part: Calling convention defaults
+    quotes:
+      f0eb39dfdd: Integer arguments are passed in registers RCX, RDX, R8, and R9.
 - id: 5946a7bc49
   gist: Floating-point arguments 1 to 4 | xmm0 ... xmm3
   support:
-  - {doc: msx64, at: Parameter passing, units: [f81d760d4d], part: Parameter passing}
+  - doc: msx64
+    at: Parameter passing
+    units: [f81d760d4d]
+    part: Parameter passing
+    quotes:
+      f81d760d4d: Any floating-point and double-precision arguments in the first four parameters are passed
+        in XMM0 - XMM3, depending on position.
 - id: cdb2b5b8b9
   gist: Argument 5 and later | On the stack, right to left, 8-byte alig…
   support:
-  - {doc: msx64, at: Parameter passing, units: [6426d4e0a2, f16ffc37db], part: Parameter passing}
+  - doc: msx64
+    at: Parameter passing
+    units: [6426d4e0a2, f16ffc37db]
+    part: Parameter passing
+    quotes:
+      6426d4e0a2: Remaining arguments are passed on the stack in right-to-left order.
+      f16ffc37db: The caller reserves the required stack space and writes these arguments to stack memory
+        using store or move instructions, maintaining 8-byte alignment for each argument.
 - id: 21f1a9bdfd
   gist: 'Registers are assigned by position, not by type: the 2nd argume…'
   support:
-  - {doc: msx64, at: Parameter passing, units: [f734695aa9, 95a2e2971b, eac0ce96c3, 767a622322], part: Parameter
-      passing}
+  - doc: msx64
+    at: Parameter passing
+    units: [f734695aa9, 95a2e2971b, eac0ce96c3, 767a622322]
+    part: Parameter passing
+    quotes:
+      f734695aa9: The registers used for these arguments depend on the position and type of the argument.
+      95a2e2971b: Similarly, the XMM0 - XMM3 registers are ignored when the corresponding argument is
+        an integer or pointer type.
+      eac0ce96c3: integer stack R9 R8 RDX RCX
+      767a622322: floating-point stack XMM3 XMM2 XMM1 XMM0
 - id: b85403afa9
   gist: Anything that is not 1, 2, 4 or 8 bytes wide is passed by point…
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [f7c414172e], part: Calling convention defaults}
-  - {doc: msx64, at: Parameter passing, units: [10c0933f2e], part: Parameter passing}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [f7c414172e]
+    part: Calling convention defaults
+    quotes:
+      f7c414172e: Any argument that doesn't fit in 8 bytes, or isn't 1, 2, 4, or 8 bytes, must be passed
+        by reference.
+  - doc: msx64
+    at: Parameter passing
+    units: [10c0933f2e]
+    part: Parameter passing
+    quotes:
+      10c0933f2e: Structs or unions of other sizes are passed as a pointer to memory allocated by the
+        caller.
 - id: 4a1a6f392d
   gist: The caller always reserves 32 bytes (room for four 8-byte value…
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [7dbddec935, 3891038b3c], part: Calling convention
-      defaults}
-  - {doc: msstack, at: Stack allocation, units: [146e48eea7, bb6e937918], part: Stack allocation}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [7dbddec935, 3891038b3c]
+    part: Calling convention defaults
+    quotes:
+      7dbddec935: The caller must always allocate sufficient space to store four register parameters,
+        even if the callee doesn't take that many parameters.
+      3891038b3c: The caller is responsible for allocating space for the callee's parameters.
+  - doc: msstack
+    at: Stack allocation
+    units: [146e48eea7, bb6e937918]
+    part: Stack allocation
+    quotes:
+      146e48eea7: The parameter area is always at the bottom of the stack (even if alloca is used), so
+        that it will always be adjacent to the return address during any function call.
+      bb6e937918: Even if the called function has fewer than 4 parameters, these 4 stack locations are
+        effectively owned by the called function, and may be used by the called function for other purposes
+        besides saving parameter register values.
 - id: 080efa8fa1
   gist: The callee owns that space and may spill its register arguments…
   support:
-  - {doc: msstack, at: Stack allocation, units: [bb6e937918], part: Stack allocation}
-  - {doc: msx64, at: Parameter passing, units: [2200b628d3], part: Parameter passing}
+  - doc: msstack
+    at: Stack allocation
+    units: [bb6e937918]
+    part: Stack allocation
+    quotes:
+      bb6e937918: Even if the called function has fewer than 4 parameters, these 4 stack locations are
+        effectively owned by the called function, and may be used by the called function for other purposes
+        besides saving parameter register values.
+  - doc: msx64
+    at: Parameter passing
+    units: [2200b628d3]
+    part: Parameter passing
+    quotes:
+      2200b628d3: The callee is responsible for dumping the register parameters into their shadow space
+        if needed.
 - id: 1894dfa1b6
   gist: It follows that the first stack argument sits at [rsp + 40] on…
   how: derived
   note: 'Stack arguments follow the shadow store, which sits next to the return address: 8 + 32 = 40.'
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
-  - {doc: msstack, at: Stack allocation, units: [146e48eea7], part: Stack allocation}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [4587ba77ca]
+    part: Calling convention defaults
+    quotes:
+      4587ba77ca: Any parameters beyond the first four must be stored on the stack after the shadow store
+        before the call.
+  - doc: msstack
+    at: Stack allocation
+    units: [146e48eea7]
+    part: Stack allocation
+    quotes:
+      146e48eea7: The parameter area is always at the bottom of the stack (even if alloca is used), so
+        that it will always be adjacent to the return address during any function call.
 - id: de01485f3d
   gist: 'add3: ; long long add3(long long a, long long b, long long c):…'
   how: run
   ref: tests/asm/win64.asm
   note: Assembled and run under Wine in `make verify-asm` (add3, sum5).
   support:
-  - {doc: msx64, at: Parameter passing, units: [d7665e1c32], part: Parameter passing}
-  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
+  - doc: msx64
+    at: Parameter passing
+    units: [d7665e1c32]
+    part: Parameter passing
+    quotes:
+      d7665e1c32: Integer valued arguments in the leftmost four positions are passed in left-to-right
+        order in RCX, RDX, R8, and R9, respectively.
+  - doc: msx64
+    at: Calling convention defaults
+    units: [4587ba77ca]
+    part: Calling convention defaults
+    quotes:
+      4587ba77ca: Any parameters beyond the first four must be stored on the stack after the shadow store
+        before the call.
 - id: ea7c4a2c82
   gist: An integer or pointer that fits in 64 bits is returned in rax;…
   support:
-  - {doc: msx64, at: Return values, units: [1db94555cc, 75540e0945], part: Return values}
+  - doc: msx64
+    at: Return values
+    units: [1db94555cc, 75540e0945]
+    part: Return values
+    quotes:
+      1db94555cc: A scalar return value that can fit into 64 bits, including the __m64 type, is returned
+        through RAX.
+      75540e0945: Nonscalar types including floats, doubles, and vector types such as __m128, __m128i,
+        __m128d are returned in XMM0.
 - id: c0464330bb
   gist: A structure that is not 1, 2, 4 or 8 bytes wide is returned thr…
   support:
-  - {doc: msx64, at: Return values, units: [4cd37afae0, 405293962d, 4910c054e8, b07caee600], part: Return
-      values}
+  - doc: msx64
+    at: Return values
+    units: [4cd37afae0, 405293962d, 4910c054e8, b07caee600]
+    part: Return values
+    quotes:
+      4cd37afae0: Otherwise, the caller must allocate memory for the return value and pass a pointer to
+        it as the first argument.
+      405293962d: The remaining arguments are then shifted one argument to the right.
+      4910c054e8: The same pointer must be returned by the callee in RAX.
+      b07caee600: To return a user-defined type by value in RAX, it must have a length of 1, 2, 4, 8,
+        16, 32, or 64 bits.
 - id: 56dcfc105b
   gist: rbx, rbp, rdi, rsi, rsp, r12 ... r15, xmm6 ... xmm15 | rax, rcx…
   support:
-  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, befd0ad03e], part: Caller/callee
-      saved registers}
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1, befd0ad03e]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
+      befd0ad03e: The x64 ABI considers the registers RAX, RCX, RDX, R8, R9, R10, R11, and XMM0-XMM5 volatile.
 - id: b271c3057a
   gist: 'The bold entries are what differs from Linux: rdi, rsi and xmm6…'
   support:
-  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1], part: Caller/callee saved registers}
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
   - doc: sysv
     at: 16
     units: [92911cf2d5, 0202d90800, 9592e208d5]
     part: 3.2.1 Registers and the Stack Frame
     note: 'System V: only rbp, rbx and r12-r15 are preserved; rdi and rsi belong to the called function.'
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+      0202d90800: Remaining registers "belong" to the called function.5 If a calling function wants to
+        preserve such a register value across a function call, it must save the value in its local stack
+        frame.
+      9592e208d5: 5Note that in contrast to the Intel386 ABI, %rdi, and %rsi belong to the called function,
+        not the caller.
 - id: 856a64c80b
   gist: 'keep_rsi: ; rsi and rdi are callee-saved on Windows (not on Lin…'
   how: run
   ref: tests/asm/win64.asm
   note: keep_rsi is assembled and run under Wine in `make verify-asm`.
   support:
-  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, a0664dcfae], part: Caller/callee
-      saved registers}
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1, a0664dcfae]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
+      a0664dcfae: They must be saved and restored by a function that uses them.
 - id: 4ec72d6bda
   gist: 'Alignment: rsp must be 16-byte aligned except inside a prologue…'
   how: derived
   note: 16-byte alignment between prologue and epilogue is stated; 8 modulo 16 on entry follows because
     the call pushed an 8-byte return address.
   support:
-  - {doc: msx64, at: Unwindability, units: [5a04ae41cd], part: Unwindability}
-  - {doc: msstack, at: Stack allocation, units: [fa4bffc063], part: Stack allocation}
+  - doc: msx64
+    at: Unwindability
+    units: [5a04ae41cd]
+    part: Unwindability
+    quotes:
+      5a04ae41cd: The stack pointer must remain 16-byte aligned in any region of code that isn't part
+        of an epilog or prolog, except within leaf functions.
+  - doc: msstack
+    at: Stack allocation
+    units: [fa4bffc063]
+    part: Stack allocation
+    quotes:
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
 - id: 5bd4367065
   gist: A function that calls others therefore subtracts 32 bytes of sh…
   how: derived
   note: Shadow space (32) plus stack arguments (8 each), padded to keep rsp 16-byte aligned after the
     call pushes the return address.
   support:
-  - {doc: msstack, at: Stack allocation, units: [146e48eea7, '5185225641', fa4bffc063], part: Stack allocation}
+  - doc: msstack
+    at: Stack allocation
+    units: [146e48eea7, '5185225641', fa4bffc063]
+    part: Stack allocation
+    quotes:
+      146e48eea7: The parameter area is always at the bottom of the stack (even if alloca is used), so
+        that it will always be adjacent to the return address during any function call.
+      '5185225641': Note that space is always allocated for the register parameters, even if the parameters
+        themselves are never homed to the stack; a callee is guaranteed that space has been allocated
+        for all its parameters.
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
 - id: 652b7d01e2
   gist: With no or one stack argument that is sub rsp, 40; with two it…
   how: derived
   note: 'Arithmetic: 32 + 8k for k stack arguments, rounded up to 8 modulo 16 (k = 0 or 1: 40; k = 2:
     56).'
   support:
-  - {doc: msstack, at: Stack allocation, units: [146e48eea7, fa4bffc063], part: Stack allocation}
+  - doc: msstack
+    at: Stack allocation
+    units: [146e48eea7, fa4bffc063]
+    part: Stack allocation
+    quotes:
+      146e48eea7: The parameter area is always at the bottom of the stack (even if alloca is used), so
+        that it will always be adjacent to the return address during any function call.
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
 - id: 5d768e470f
   gist: It ends with the matching add.
   how: editorial
@@ -136,27 +327,65 @@ claims:
 - id: ab7f32e9a9
   gist: 'No red zone: memory below rsp may be overwritten at any time, s…'
   support:
-  - {doc: msstack, at: In this article, units: [88224d0aec, 28e4ac6eec], part: In this article}
+  - doc: msstack
+    at: In this article
+    units: [88224d0aec, 28e4ac6eec]
+    part: In this article
+    quotes:
+      88224d0aec: 'All memory beyond the current address of RSP is considered volatile: The OS, or a debugger,
+        may overwrite this memory during a user debug session, or an interrupt handler.'
+      28e4ac6eec: Thus, RSP must always be set before attempting to read or write values to a stack frame.
 - id: 2d92abd21e
   gist: 'say_answer: ; void say_answer(void): printf("answer = %d\n", 42…'
   how: run
   ref: tests/asm/win64.asm
   note: say_answer is assembled and run under Wine in `make verify-asm`.
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [7dbddec935], part: Calling convention defaults}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [7dbddec935]
+    part: Calling convention defaults
+    quotes:
+      7dbddec935: The caller must always allocate sufficient space to store four register parameters,
+        even if the callee doesn't take that many parameters.
 - id: 66bb6114a1
   gist: For WriteFile(hFile, buf, len, &written, NULL) the fifth argume…
   how: derived
   note: WriteFile takes five arguments (Windows API documentation, not indexed); the fifth is the first
     stack argument, which goes right after the shadow store.
   support:
-  - {doc: msx64, at: Calling convention defaults, units: [4587ba77ca], part: Calling convention defaults}
-  - {doc: msstack, at: Stack allocation, units: [fa4bffc063], part: Stack allocation}
+  - doc: msx64
+    at: Calling convention defaults
+    units: [4587ba77ca]
+    part: Calling convention defaults
+    quotes:
+      4587ba77ca: Any parameters beyond the first four must be stored on the stack after the shadow store
+        before the call.
+  - doc: msstack
+    at: Stack allocation
+    units: [fa4bffc063]
+    part: Stack allocation
+    quotes:
+      fa4bffc063: The stack will always be maintained 16-byte aligned, except within the prolog (for example,
+        after the return address is pushed), and except where indicated in Function Types for a certain
+        class of frame functions.
 - id: 7f9d3151fd
   gist: For variadic functions, floating-point arguments must be copied…
   support:
-  - {doc: msx64, at: Varargs, units: [b6d77b92d4], part: Varargs}
-  - {doc: msx64, at: Calling convention defaults, units: [154aa878d4], part: Calling convention defaults}
+  - doc: msx64
+    at: Varargs
+    units: [b6d77b92d4]
+    part: Varargs
+    quotes:
+      b6d77b92d4: For floating-point values only, both the integer register and the floating-point register
+        must contain the value, in case the callee expects the value in the integer registers.
+  - doc: msx64
+    at: Calling convention defaults
+    units: [154aa878d4]
+    part: Calling convention defaults
+    quotes:
+      154aa878d4: For vararg or unprototyped functions, any floating point values must be duplicated in
+        the corresponding general-purpose register.
 - id: 4e9bf28ddf
   gist: On Linux long is 64 bits.
   support:
@@ -173,16 +402,39 @@ claims:
 - id: d92a09a603
   gist: 'Forgetting the shadow space: the callee may write into those 32…'
   support:
-  - {doc: msstack, at: Stack allocation, units: [bb6e937918, 05a680551a], part: Stack allocation}
+  - doc: msstack
+    at: Stack allocation
+    units: [bb6e937918, 05a680551a]
+    part: Stack allocation
+    quotes:
+      bb6e937918: Even if the called function has fewer than 4 parameters, these 4 stack locations are
+        effectively owned by the called function, and may be used by the called function for other purposes
+        besides saving parameter register values.
+      05a680551a: Thus the caller may not save information in this region of stack across a function call.
 - id: 4b25db6176
   gist: 'Using rdi/rsi freely: harmless on Linux, but corrupts the calle…'
   how: derived
   note: rdi and rsi are nonvolatile on Windows but belong to the called function on Linux, so code that
     clobbers them is correct there and wrong here.
   support:
-  - {doc: msx64, at: Caller/callee saved registers, units: [fa6a8ec5c1, a0664dcfae], part: Caller/callee
-      saved registers}
-  - {doc: sysv, at: 16, units: [9592e208d5, 0202d90800], part: 3.2.1 Registers and the Stack Frame}
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1, a0664dcfae]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
+      a0664dcfae: They must be saved and restored by a function that uses them.
+  - doc: sysv
+    at: 16
+    units: [9592e208d5, 0202d90800]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      9592e208d5: 5Note that in contrast to the Intel386 ABI, %rdi, and %rsi belong to the called function,
+        not the caller.
+      0202d90800: Remaining registers "belong" to the called function.5 If a calling function wants to
+        preserve such a register value across a function call, it must save the value in its local stack
+        frame.
 - id: 6e13af4e6b
   gist: '32-bit examples: the stack-passed arguments, stdcall names such…'
   how: external

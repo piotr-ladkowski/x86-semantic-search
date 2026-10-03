@@ -143,6 +143,7 @@ Roster against Intel SDM `325462-093`. **32 / 102** instruction pages written (0
 
 - [Calling convention on Windows: the Microsoft x64 ABI](articles/abi-microsoft-x64-windows.md) — draft
 - [Calling convention on Linux: the System V AMD64 ABI](articles/abi-system-v-linux.md) — draft
+- [CPU exceptions: what #UD, #DE, #GP, #PF and the others are, and what the CPU does](articles/cpu-exceptions.md) — draft
 - [Assemble, link and run a NASM program on Linux](articles/nasm-linux.md) — draft
 - [Assemble, link and run a NASM program on Windows](articles/nasm-windows.md) — draft
 - [Why writing EAX clears the top half of RAX](articles/partial-register-writes.md) — draft

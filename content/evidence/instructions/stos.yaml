@@ -6,89 +6,244 @@ claims:
 - id: 548945b5f7
   gist: Stores AL, AX, EAX or RAX at [RDI] and advances RDI; with REP i…
   support:
-  - {doc: sdm, at: 1966, units: [01b4684e50, d9130a29c0], part: Description}
-  - {doc: sdm, at: 1967, units: [95f4efeacd, 8c5e8134b4], part: Description}
+  - doc: sdm
+    at: 1966
+    units: [01b4684e50, d9130a29c0]
+    part: Description
+    quotes:
+      01b4684e50: In non-64-bit and default 64-bit mode; stores a byte, word, or doubleword from the AL,
+        AX, or EAX register (respectively) into the destination operand.
+      d9130a29c0: After the byte, word, or doubleword is transferred from the register to the memory location,
+        the (E)DI register is incremented or decremented according to the setting of the DF flag in the
+        EFLAGS register.
+  - doc: sdm
+    at: 1967
+    units: [95f4efeacd, 8c5e8134b4]
+    part: Description
+    quotes:
+      95f4efeacd: STOSQ (and its explicit operands variant) store a quadword from the RAX register into
+        the destination addressed by RDI or EDI.
+      8c5e8134b4: The STOS, STOSB, STOSW, STOSD, STOSQ instructions can be preceded by the REP prefix
+        for block stores of ECX bytes, words, or doublewords.
 - id: bd3e7056ac
   gist: Also written as STOSB, STOSW, STOSD, STOSQ.
   support:
-  - {doc: sdm, at: 1966, units: [dd79bd9da0, 07cdbc948d, 3e6b0ed67d, 118885e7b9], part: Opcode table}
+  - doc: sdm
+    at: 1966
+    units: [dd79bd9da0, 07cdbc948d, 3e6b0ed67d, 118885e7b9]
+    part: Opcode table
+    quotes:
+      dd79bd9da0: AA | STOSB | ZO | Valid | Valid | For legacy mode, store AL at address ES:(E)DI; For
+        64- bit mode store AL at address RDI or EDI.
+      07cdbc948d: AB | STOSW | ZO | Valid | Valid | For legacy mode, store AX at address ES:(E)DI; For
+        64- bit mode store AX at address RDI or EDI.
+      3e6b0ed67d: AB | STOSD | ZO | Valid | Valid | For legacy mode, store EAX at address ES:(E)DI; For
+        64-bit mode store EAX at address RDI or EDI.
+      118885e7b9: REX.W + AB | STOSQ | ZO | Valid | N.E. | Store RAX at address RDI or EDI.
 - id: fc8c7588a0
   gist: STOSB (STOS m8) is encoded as AA.
   support:
-  - {doc: sdm, at: 1966, units: [15363e8642], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1966
+    units: [15363e8642]
+    part: Opcode table
+    by: match
+    quotes:
+      15363e8642: AA | STOS m8 | ZO | Valid | Valid | For legacy mode, store AL at address ES:(E)DI; For
+        64- bit mode store AL at address RDI or EDI.
 - id: 90831566ac
   gist: Store AL at [rdi].
   support:
-  - {doc: sdm, at: 1966, units: [15363e8642, dd79bd9da0], part: Opcode table}
+  - doc: sdm
+    at: 1966
+    units: [15363e8642, dd79bd9da0]
+    part: Opcode table
+    quotes:
+      15363e8642: AA | STOS m8 | ZO | Valid | Valid | For legacy mode, store AL at address ES:(E)DI; For
+        64- bit mode store AL at address RDI or EDI.
+      dd79bd9da0: AA | STOSB | ZO | Valid | Valid | For legacy mode, store AL at address ES:(E)DI; For
+        64- bit mode store AL at address RDI or EDI.
 - id: 2cf0fb3e9c
   gist: STOSD (STOS m32) is encoded as AB.
   support:
-  - {doc: sdm, at: 1966, units: [6cd1b54934], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1966
+    units: [6cd1b54934]
+    part: Opcode table
+    by: match
+    quotes:
+      6cd1b54934: AB | STOS m32 | ZO | Valid | Valid | For legacy mode, store EAX at address ES:(E)DI;
+        For 64-bit mode store EAX at address RDI or EDI.
 - id: 3639fce655
   gist: Store EAX at [rdi].
   support:
-  - {doc: sdm, at: 1966, units: [6cd1b54934, 3e6b0ed67d], part: Opcode table}
+  - doc: sdm
+    at: 1966
+    units: [6cd1b54934, 3e6b0ed67d]
+    part: Opcode table
+    quotes:
+      6cd1b54934: AB | STOS m32 | ZO | Valid | Valid | For legacy mode, store EAX at address ES:(E)DI;
+        For 64-bit mode store EAX at address RDI or EDI.
+      3e6b0ed67d: AB | STOSD | ZO | Valid | Valid | For legacy mode, store EAX at address ES:(E)DI; For
+        64-bit mode store EAX at address RDI or EDI.
 - id: 2f94dbe19c
   gist: STOSW (store AX) is the same opcode with the 66h prefix.
   how: derived
   note: STOSW and STOSD share opcode AB; the operand-size prefix selects 16 bits.
   support:
-  - {doc: sdm, at: 1966, units: [727d26e7c9, 6cd1b54934, 07cdbc948d], part: Opcode table}
+  - doc: sdm
+    at: 1966
+    units: [727d26e7c9, 6cd1b54934, 07cdbc948d]
+    part: Opcode table
+    quotes:
+      727d26e7c9: AB | STOS m16 | ZO | Valid | Valid | For legacy mode, store AX at address ES:(E)DI;
+        For 64- bit mode store AX at address RDI or EDI.
+      6cd1b54934: AB | STOS m32 | ZO | Valid | Valid | For legacy mode, store EAX at address ES:(E)DI;
+        For 64-bit mode store EAX at address RDI or EDI.
+      07cdbc948d: AB | STOSW | ZO | Valid | Valid | For legacy mode, store AX at address ES:(E)DI; For
+        64- bit mode store AX at address RDI or EDI.
 - id: f4523fae58
   gist: STOSQ (STOS m64) is encoded as REX.W + AB.
   support:
-  - {doc: sdm, at: 1966, units: [d025f6823f], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1966
+    units: [d025f6823f]
+    part: Opcode table
+    by: match
+    quotes:
+      d025f6823f: REX.W + AB | STOS m64 | ZO | Valid | N.E. | Store RAX at address RDI or EDI.
 - id: ed4e35e041
   gist: Store RAX at [rdi].
   support:
-  - {doc: sdm, at: 1966, units: [d025f6823f, 118885e7b9], part: Opcode table}
+  - doc: sdm
+    at: 1966
+    units: [d025f6823f, 118885e7b9]
+    part: Opcode table
+    quotes:
+      d025f6823f: REX.W + AB | STOS m64 | ZO | Valid | N.E. | Store RAX at address RDI or EDI.
+      118885e7b9: REX.W + AB | STOSQ | ZO | Valid | N.E. | Store RAX at address RDI or EDI.
 - id: 6da199390e
   gist: No flags are affected.
   support:
-  - {doc: sdm, at: 1968, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1968
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 9786419a17
   gist: DF (the direction flag) is read, not changed.
   support:
-  - {doc: sdm, at: 1966, units: [d9130a29c0, b044682ee4], part: Description}
-  - {doc: sdm, at: 1968, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1966
+    units: [d9130a29c0, b044682ee4]
+    part: Description
+    quotes:
+      d9130a29c0: After the byte, word, or doubleword is transferred from the register to the memory location,
+        the (E)DI register is incremented or decremented according to the setting of the DF flag in the
+        EFLAGS register.
+      b044682ee4: If the DF flag is 0, the register is incremented; if the DF flag is 1, the register
+        is decremented (the register is incremented or decremented by 1 for byte operations, by 2 for
+        word operations, by 4 for doubleword operations).
+  - doc: sdm
+    at: 1968
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 657d20b854
   gist: stos stores the accumulator (al, ax, eax or rax, depending on t…
   support:
-  - {doc: sdm, at: 1966, units: [01b4684e50, 8427d70552, b044682ee4], part: Description}
-  - {doc: sdm, at: 1967, units: [95f4efeacd], part: Description}
+  - doc: sdm
+    at: 1966
+    units: [01b4684e50, 8427d70552, b044682ee4]
+    part: Description
+    quotes:
+      01b4684e50: In non-64-bit and default 64-bit mode; stores a byte, word, or doubleword from the AL,
+        AX, or EAX register (respectively) into the destination operand.
+      8427d70552: The destination operand is a memory location, the address of which is read from either
+        the ES:EDI or ES:DI register (depending on the address-size attribute of the instruction and the
+        mode of operation).
+      b044682ee4: If the DF flag is 0, the register is incremented; if the DF flag is 1, the register
+        is decremented (the register is incremented or decremented by 1 for byte operations, by 2 for
+        word operations, by 4 for doubleword operations).
+  - doc: sdm
+    at: 1967
+    units: [95f4efeacd]
+    part: Description
+    quotes:
+      95f4efeacd: STOSQ (and its explicit operands variant) store a quadword from the RAX register into
+        the destination addressed by RDI or EDI.
 - id: 596475b999
   gist: With the rep prefix and a count in rcx it fills a whole block w…
   support:
-  - {doc: sdm, at: 1967, units: [8c5e8134b4], part: Description}
+  - doc: sdm
+    at: 1967
+    units: [8c5e8134b4]
+    part: Description
+    quotes:
+      8c5e8134b4: The STOS, STOSB, STOSW, STOSD, STOSQ instructions can be preceded by the REP prefix
+        for block stores of ECX bytes, words, or doublewords.
   - doc: sdm
     at: 1853
     units: [f6b7d75b16]
     part: Description
     note: 'From the REP entry: REP STOS is the fastest way to initialize a large block.'
+    quotes:
+      f6b7d75b16: Note that a REP STOS instruction is the fastest way to initialize a large block of memory.
 - id: 5a82e3876d
   gist: 'Filling or clearing memory: xor eax, eax then rep stosq zeroes…'
   how: derived
   note: xor eax, eax zeroes rax (32-bit writes zero-extend); STOSQ stores RAX; REP repeats it.
   support:
-  - {doc: sdm, at: 1967, units: [95f4efeacd, 8c5e8134b4], part: Description}
+  - doc: sdm
+    at: 1967
+    units: [95f4efeacd, 8c5e8134b4]
+    part: Description
+    quotes:
+      95f4efeacd: STOSQ (and its explicit operands variant) store a quadword from the RAX register into
+        the destination addressed by RDI or EDI.
+      8c5e8134b4: The STOS, STOSB, STOSW, STOSD, STOSQ instructions can be preceded by the REP prefix
+        for block stores of ECX bytes, words, or doublewords.
   - doc: sdm
     at: 79
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: 6fadf78e7f
   gist: 'Filling with a repeating byte pattern: put the byte in al and u…'
   how: derived
   note: STOSB stores AL and REP repeats it.
   support:
-  - {doc: sdm, at: 1966, units: [dd79bd9da0], part: Opcode table}
-  - {doc: sdm, at: 1967, units: [8c5e8134b4], part: Description}
+  - doc: sdm
+    at: 1966
+    units: [dd79bd9da0]
+    part: Opcode table
+    quotes:
+      dd79bd9da0: AA | STOSB | ZO | Valid | Valid | For legacy mode, store AL at address ES:(E)DI; For
+        64- bit mode store AL at address RDI or EDI.
+  - doc: sdm
+    at: 1967
+    units: [8c5e8134b4]
+    part: Description
+    quotes:
+      8c5e8134b4: The STOS, STOSB, STOSW, STOSD, STOSQ instructions can be preceded by the REP prefix
+        for block stores of ECX bytes, words, or doublewords.
 - id: ec4f03fe8f
   gist: Writing a sequence of values one at a time while walking a poin…
   how: derived
   note: The SDM says STOS is more often used inside a loop where the accumulator is reloaded between stores.
   support:
-  - {doc: sdm, at: 1967, units: [f2e771a9c0], part: Description}
+  - doc: sdm
+    at: 1967
+    units: [f2e771a9c0]
+    part: Description
+    quotes:
+      f2e771a9c0: More often, however, these instructions are used within a LOOP construct because data
+        needs to be moved into the AL, AX, or EAX register before it can be stored.
 - id: c4e7645b39
   gist: The registers are fixed.
   how: editorial
@@ -96,12 +251,21 @@ claims:
 - id: 4faa15a748
   gist: The value comes from the accumulator, the address from rdi, and…
   support:
-  - {doc: sdm, at: 1966, units: [f53d7e8d80], part: Description}
+  - doc: sdm
+    at: 1966
+    units: [f53d7e8d80]
+    part: Description
+    quotes:
+      f53d7e8d80: Here also ES:(E)DI is assumed to be the destination operand and AL, AX, or EAX is assumed
+        to be the source operand.
   - doc: sdm
     at: 1852
     units: [7340ea2c83]
     part: Description
     note: 'From the REP entry: the count register is RCX.'
+    quotes:
+      7340ea2c83: Thus, the default count register in 64-bit mode is RCX; REX.W has no effect on the address
+        size and the count register.
 - id: 4c10629fdb
   gist: rcx counts elements, not bytes.
   how: derived
@@ -112,18 +276,33 @@ claims:
     units: [06e40ebb3c]
     part: Description
     note: From the REP entry.
+    quotes:
+      06e40ebb3c: The REP prefixes causes the associated instruction to be repeated until the count in
+        register is decremented to 0.
 - id: 02c562af71
   gist: rep stosq with rcx = 64 writes 512 bytes.
   how: derived
   note: 64 repetitions of 8 bytes.
   support:
-  - {doc: sdm, at: 1967, units: [95f4efeacd], part: Description}
+  - doc: sdm
+    at: 1967
+    units: [95f4efeacd]
+    part: Description
+    quotes:
+      95f4efeacd: STOSQ (and its explicit operands variant) store a quadword from the RAX register into
+        the destination addressed by RDI or EDI.
 - id: 69b2d103b8
   gist: stosq stores all of rax, so to fill with a byte value using the…
   how: derived
   note: STOSQ stores all of RAX; a byte pattern must already fill it.
   support:
-  - {doc: sdm, at: 1967, units: [95f4efeacd], part: Description}
+  - doc: sdm
+    at: 1967
+    units: [95f4efeacd]
+    part: Description
+    quotes:
+      95f4efeacd: STOSQ (and its explicit operands variant) store a quadword from the RAX register into
+        the destination addressed by RDI or EDI.
 - id: 57077e9850
   gist: Direction.
   how: editorial
@@ -131,12 +310,22 @@ claims:
 - id: 0f76397895
   gist: With DF = 1 the pointer walks downward; the System V ABI guaran…
   support:
-  - {doc: sdm, at: 1966, units: [b044682ee4], part: Description}
+  - doc: sdm
+    at: 1966
+    units: [b044682ee4]
+    part: Description
+    quotes:
+      b044682ee4: If the DF flag is 0, the register is incremented; if the DF flag is 1, the register
+        is decremented (the register is incremented or decremented by 1 for byte operations, by 2 for
+        word operations, by 4 for doubleword operations).
   - doc: sysv
     at: 16
     units: [4929d2daf8]
     part: 3.2.1 Registers and the Stack Frame
     note: 'System V ABI 3.2.1: DF must be clear on function entry and return.'
+    quotes:
+      4929d2daf8: 6 The direction flag DF in the %rFLAGS register must be clear (set to "forward" direction)
+        on function entry and return.
 - id: fd4a019142
   gist: Faults.
   how: editorial
@@ -144,7 +333,13 @@ claims:
 - id: 2cdc2e0f1f
   gist: 'A non-canonical address raises #GP(0) and an unmapped page a pa…'
   support:
-  - {doc: sdm, at: 1968, units: [33920ea836, 9bf63f56fc], part: 64-Bit Mode Exceptions}
+  - doc: sdm
+    at: 1968
+    units: [33920ea836, 9bf63f56fc]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      33920ea836: '#GP(0) If the memory address is in a non-canonical form.'
+      9bf63f56fc: '#PF(fault-code) If a page fault occurs.'
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -153,10 +348,17 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 46be064fa9
   gist: It never changes the flags.
   support:
-  - {doc: sdm, at: 1968, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1968
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: c9eac521fb
   gist: 'fill_bytes: ; void fill_bytes(void dst, int byte, size_t n) mov…'
   how: illustrative

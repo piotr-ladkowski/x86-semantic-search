@@ -41,7 +41,12 @@ claims:
   ref: tests/asm/run.sh
   note: Checked by `make verify-asm` (tests/asm/run.sh, Debian 12 toolchain image).
   support:
-  - {doc: wikibooks, at: NASM Syntax, units: [1e7a5adedc], part: NASM Syntax}
+  - doc: wikibooks
+    at: NASM Syntax
+    units: [1e7a5adedc]
+    part: NASM Syntax
+    quotes:
+      1e7a5adedc: ELF32/64
 - id: 098ccf804c
   gist: 'Link: ld hello.o -o hello (or gcc hello.o -o hello when the pro…'
   how: run
@@ -60,7 +65,13 @@ claims:
 - id: f53895f7e5
   gist: The system call number goes in rax and the arguments in rdi, rs…
   support:
-  - {doc: sysv, at: 125, units: [0fd82f5895, 4cadd5d06c], part: Miscellaneous Remarks}
+  - doc: sysv
+    at: 125
+    units: [0fd82f5895, 4cadd5d06c]
+    part: Miscellaneous Remarks
+    quotes:
+      0fd82f5895: 3. The number of the syscall has to be passed in register %rax.
+      4cadd5d06c: The kernel interface uses %rdi, %rsi, %rdx, %r10, %r8 and %r9.
 - id: b2573f4d1d
   gist: '; hello.asm - Linux x86-64, no C library: talks to the kernel w…'
   how: run
@@ -91,6 +102,9 @@ claims:
     units: [9bff1f6ea3]
     part: Description
     note: From the SYSCALL entry.
+    quotes:
+      9bff1f6ea3: When FRED transitions are not enabled, SYSCALL invokes the OS handler by loading RIP
+        from the IA32_LSTAR MSR (after saving the address of the instruction following SYSCALL into RCX).
 - id: 38a9387499
   gist: A ret there crashes the program with a segmentation fault.
   how: run
@@ -107,6 +121,9 @@ claims:
     units: [7acbd2fb16]
     part: 3.5.1 Instruction Pointer in 64-Bit Mode
     note: RIP-relative addressing (Vol. 1, 3.5.1).
+    quotes:
+      7acbd2fb16: Using this technique, the effective address is determined by adding a displacement to
+        the RIP of the next instruction.
 - id: 221915fe37
   gist: In the disassembly it becomes lea rsi, [rip+0xfef].
   how: run
@@ -125,8 +142,20 @@ claims:
 - id: d76fd15af2
   gist: 'Now you follow the function-calling convention: the first argum…'
   support:
-  - {doc: sysv, at: 21, units: [9220da18da], part: 3.2.3 Parameter Passing}
-  - {doc: sysv, at: 23, units: [0f7d542149], part: 3.2.3 Parameter Passing}
+  - doc: sysv
+    at: 21
+    units: [9220da18da]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      9220da18da: 2. If the class is INTEGER, the next available register of the sequence %rdi, %rsi,
+        %rdx, %rcx, %r8 and %r9 is used13.
+  - doc: sysv
+    at: 23
+    units: [0f7d542149]
+    part: 3.2.3 Parameter Passing
+    quotes:
+      0f7d542149: 3. If the class is INTEGER, the next available register of the sequence %rax, %rdx is
+        used.
 - id: 8bf75a2d24
   gist: ; hello_libc.asm - Linux x86-64, uses the C library (the C runt…
   how: run
@@ -154,7 +183,13 @@ claims:
     main until the push. That a missing push 'may crash' is hedged; the ABI article records a crash with
     floating-point arguments.
   support:
-  - {doc: sysv, at: 17, units: [7dfd811182], part: 3.2.2 The Stack Frame}
+  - doc: sysv
+    at: 17
+    units: [7dfd811182]
+    part: 3.2.2 The Stack Frame
+    quotes:
+      7dfd811182: In other words, the value (%rsp + 8) is always a multiple of 16 (32) when control is
+        transferred to the function entry point.
 - id: 2297af1fd3
   gist: Without the last line of the second listing, gcc prints this wh…
   how: run
@@ -197,6 +232,8 @@ claims:
     units: [eb0ffa6710]
     part: Opcode table
     note: 'From the MOV entry: B8+ rd id.'
+    quotes:
+      eb0ffa6710: B8+ rd id | MOV r32, imm32 | OI | Valid | Valid | Move imm32 to r32.
 - id: 2dfffb10bf
   gist: Copying a 32-bit tutorial.
   how: editorial
@@ -204,8 +241,18 @@ claims:
 - id: 52f4b68c6a
   gist: Older examples (including the Wikibooks hello-world) use nasm -…
   support:
-  - {doc: wikibooks, at: Hello World (Linux), units: [276939b983, b0bfcdcd4f, e48d91b3b9], part: Hello
-      World (Linux)}
+  - doc: wikibooks
+    at: Hello World (Linux)
+    units: [276939b983, b0bfcdcd4f, e48d91b3b9]
+    part: Hello World (Linux)
+    quotes:
+      276939b983: $ nasm -f elf32 -g helloWorld.asm $ ld -g helloWorld.o $ ./a.out
+      b0bfcdcd4f: '; ; op dst, src ; ; ; Call write(2) syscall: ; ssize_t write(int fd, const void *buf,
+        size_t count) ; mov edx, strLen ; Arg three: the length of the string mov ecx, str ; Arg two:
+        the address of the string mov ebx, 1 ; Arg one: file descriptor, in this case stdout mov eax,
+        4 ; Syscall number, in this case the write(2) syscall: int 0x80 ; Interrupt 0x80'
+      e48d91b3b9: '; ; Call exit(3) syscall ; void exit(int status) ; mov ebx, 0 ; Arg one: the status
+        mov eax, 1 ; Syscall number: int 0x80'
 - id: cee11cb389
   gist: In 64-bit code use -f elf64, syscall, and write = 1, exit = 60…
   how: run
@@ -234,6 +281,9 @@ claims:
     units: [9bff1f6ea3]
     part: Description
     note: From the SYSCALL entry.
+    quotes:
+      9bff1f6ea3: When FRED transitions are not enabled, SYSCALL invokes the OS handler by loading RIP
+        from the IA32_LSTAR MSR (after saving the address of the instruction following SYSCALL into RCX).
 - id: b7347c6a3a
   gist: 'Forgetting the stack alignment before calling C functions: see…'
   how: editorial

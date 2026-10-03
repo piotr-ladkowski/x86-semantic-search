@@ -6,6 +6,7 @@ from docx86 import evidence as ev
 from docx86.config import PROJECT_ROOT, get_settings
 from docx86.content import load_content
 from docx86.sources import SourceRegistry
+from docx86.textunits import digest
 
 
 @pytest.fixture(scope="module")
@@ -20,8 +21,9 @@ def test_every_ledger_is_valid_and_matches_its_page(store):
     assert not rep.problems, "\n".join(rep.problems)
 
 
-def test_no_ledger_contains_source_text(store):
-    """Ledgers hold pointers. A long free-text field would be a sign of pasted source prose."""
+def test_ledgers_quote_only_short_sentences(store):
+    """Quotations, not reproductions: short, one sentence or row, matching their fingerprint."""
+    quotes = 0
     for page in store.pages():
         for view in page.claims:
             e = view.entry
@@ -31,6 +33,28 @@ def test_no_ledger_contains_source_text(store):
             for s in e.support:
                 assert len(s.note or "") <= 300, f"{page.slug}: support note on {e.id} is long"
                 assert all(len(u) == 10 for u in s.units)
+                for unit, quote in s.quotes.items():
+                    quotes += 1
+                    assert len(quote) <= ev.MAX_QUOTE and digest(quote) == unit, (page.slug, unit)
+    assert quotes > 1000  # the ledgers do carry their quotations
+
+
+def test_every_quotable_cited_sentence_is_quoted(store):
+    """If this fails, run `docx86 evidence quote --all` (needs the local documents)."""
+    registry = SourceRegistry(get_settings(), PROJECT_ROOT / ".cache")
+    if not all(s.available for s in registry.all()):
+        pytest.skip("needs every reference document downloaded")
+    missing = []
+    for page in store.pages():
+        for view in page.claims:
+            for s in view.entry.support if view.entry else []:
+                wanted = {
+                    loc.unit.id
+                    for loc in registry[s.doc].units(s.at)
+                    if loc.unit.id in s.units and ev.quotable(loc.unit)
+                }
+                missing += [(page.slug, u) for u in wanted - set(s.quotes)]
+    assert not missing, f"{len(missing)} cited sentences are not quoted yet, e.g. {missing[:3]}"
 
 
 def test_no_instruction_page_has_open_claims(store):

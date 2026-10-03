@@ -6,19 +6,43 @@ claims:
 - id: cb1cdfe2bb
   gist: Copies a byte or word into a larger register and fills the uppe…
   support:
-  - {doc: sdm, at: 1419, units: [398bac2a5d, 60a424ba63], part: Description}
+  - doc: sdm
+    at: 1419
+    units: [398bac2a5d, 60a424ba63]
+    part: Description
+    quotes:
+      398bac2a5d: Copies the contents of the source operand (register or memory location) to the destination
+        operand (register) and zero extends the value.
 - id: 40a05525c8
   gist: MOVZX r64, r/m8 is encoded as REX.W + 0F B6 /r.
   support:
-  - {doc: sdm, at: 1419, units: [038da44443], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1419
+    units: [038da44443]
+    part: Opcode table
+    by: match
+    quotes:
+      038da44443: REX.W + 0F B6 /r | MOVZX r64, r/m8[1] | RM | Valid | N.E. | Move byte to quadword, zero-extension.
 - id: ccd571d85a
   gist: MOVZX r64, r/m16 is encoded as REX.W + 0F B7 /r.
   support:
-  - {doc: sdm, at: 1419, units: [466bc72f88], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1419
+    units: [466bc72f88]
+    part: Opcode table
+    by: match
+    quotes:
+      466bc72f88: REX.W + 0F B7 /r | MOVZX r64, r/m16 | RM | Valid | N.E. | Move word to quadword, zero-extension.
 - id: b5d364d7eb
   gist: MOVZX r32, r/m8 is encoded as 0F B6 /r.
   support:
-  - {doc: sdm, at: 1419, units: [a48a751f99], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1419
+    units: [a48a751f99]
+    part: Opcode table
+    by: match
+    quotes:
+      a48a751f99: 0F B6 /r | MOVZX r32, r/m8[1] | RM | Valid | Valid | Move byte to doubleword, zero-extension.
 - id: d248529452
   gist: Also zeroes bits 63:32 of the 64-bit register.
   support:
@@ -27,32 +51,72 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
-  - {doc: sdm, at: 1419, units: [a48a751f99], part: Opcode table}
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
+  - doc: sdm
+    at: 1419
+    units: [a48a751f99]
+    part: Opcode table
+    quotes:
+      a48a751f99: 0F B6 /r | MOVZX r32, r/m8[1] | RM | Valid | Valid | Move byte to doubleword, zero-extension.
 - id: c1d0b7082b
   gist: MOVZX r32, r/m16 is encoded as 0F B7 /r.
   support:
-  - {doc: sdm, at: 1419, units: [2b233ada82], part: Opcode table, by: match}
+  - doc: sdm
+    at: 1419
+    units: [2b233ada82]
+    part: Opcode table
+    by: match
+    quotes:
+      2b233ada82: 0F B7 /r | MOVZX r32, r/m16 | RM | Valid | Valid | Move word to doubleword, zero-extension.
 - id: 6da199390e
   gist: No flags are affected.
   support:
-  - {doc: sdm, at: 1419, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1419
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 6cea4141df
   gist: movzx dst, src copies a byte or word from a register or memory…
   support:
-  - {doc: sdm, at: 1419, units: [398bac2a5d, 60a424ba63], part: Description}
+  - doc: sdm
+    at: 1419
+    units: [398bac2a5d, 60a424ba63]
+    part: Description
+    quotes:
+      398bac2a5d: Copies the contents of the source operand (register or memory location) to the destination
+        operand (register) and zero extends the value.
 - id: d8dbb3f2b8
   gist: The source is read-only; the destination must be wider than the…
   how: derived
   note: The destination is marked (w) and the source (r) in the operand encoding; every row has a destination
     wider than its source.
   support:
-  - {doc: sdm, at: 1419, units: [d31eea6db8, '9311052513', a48a751f99, 2b233ada82], part: Operand encoding}
+  - doc: sdm
+    at: 1419
+    units: [d31eea6db8, '9311052513', a48a751f99, 2b233ada82]
+    part: Operand encoding
+    quotes:
+      d31eea6db8: RM | ModRM:reg (w) | ModRM:r/m (r) | N/A | N/A
+      '9311052513': 0F B6 /r | MOVZX r16, r/m8[1] | RM | Valid | Valid | Move byte to word with zero-extension.
+      a48a751f99: 0F B6 /r | MOVZX r32, r/m8[1] | RM | Valid | Valid | Move byte to doubleword, zero-extension.
+      2b233ada82: 0F B7 /r | MOVZX r32, r/m16 | RM | Valid | Valid | Move word to doubleword, zero-extension.
 - id: 8db099ef7a
   gist: Loading an unsigned byte or 16-bit value from memory into a ful…
   how: derived
   note: The 0F B6 /r row zero-extends a byte from r/m8, which can be memory.
   support:
-  - {doc: sdm, at: 1419, units: [a48a751f99, 398bac2a5d], part: Opcode table}
+  - doc: sdm
+    at: 1419
+    units: [a48a751f99, 398bac2a5d]
+    part: Opcode table
+    quotes:
+      a48a751f99: 0F B6 /r | MOVZX r32, r/m8[1] | RM | Valid | Valid | Move byte to doubleword, zero-extension.
+      398bac2a5d: Copies the contents of the source operand (register or memory location) to the destination
+        operand (register) and zero extends the value.
 - id: ee52bb4f6e
   gist: Widening a small unsigned value before arithmetic or before usi…
   how: editorial
@@ -62,14 +126,29 @@ claims:
   how: derived
   note: Zero-extending a register from its own low byte is the same operation.
   support:
-  - {doc: sdm, at: 1419, units: [a48a751f99, 398bac2a5d], part: Opcode table}
+  - doc: sdm
+    at: 1419
+    units: [a48a751f99, 398bac2a5d]
+    part: Opcode table
+    quotes:
+      a48a751f99: 0F B6 /r | MOVZX r32, r/m8[1] | RM | Valid | Valid | Move byte to doubleword, zero-extension.
+      398bac2a5d: Copies the contents of the source operand (register or memory location) to the destination
+        operand (register) and zero extends the value.
 - id: 96b5efcc68
   gist: There is no 32-bit to 64-bit movzx.
   how: derived
   note: The opcode table lists sources of 8 and 16 bits only; no row has an r/m32 source.
   support:
-  - {doc: sdm, at: 1419, units: ['9311052513', a48a751f99, 038da44443, 2b233ada82, 466bc72f88], part: Opcode
-      table}
+  - doc: sdm
+    at: 1419
+    units: ['9311052513', a48a751f99, 038da44443, 2b233ada82, 466bc72f88]
+    part: Opcode table
+    quotes:
+      '9311052513': 0F B6 /r | MOVZX r16, r/m8[1] | RM | Valid | Valid | Move byte to word with zero-extension.
+      a48a751f99: 0F B6 /r | MOVZX r32, r/m8[1] | RM | Valid | Valid | Move byte to doubleword, zero-extension.
+      038da44443: REX.W + 0F B6 /r | MOVZX r64, r/m8[1] | RM | Valid | N.E. | Move byte to quadword, zero-extension.
+      2b233ada82: 0F B7 /r | MOVZX r32, r/m16 | RM | Valid | Valid | Move word to doubleword, zero-extension.
+      466bc72f88: REX.W + 0F B7 /r | MOVZX r64, r/m16 | RM | Valid | N.E. | Move word to quadword, zero-extension.
 - id: c716e7b754
   gist: Zero-extending a doubleword to a quadword needs no special inst…
   support:
@@ -78,12 +157,24 @@ claims:
     units: [f25a5adc20]
     part: 3.4.1.1 General-Purpose Registers in 64-Bit Mode
     note: General rule for 32-bit operands in 64-bit mode (Vol. 1, 3.4.1.1).
+    quotes:
+      f25a5adc20: 32-bit operands generate a 32-bit result, zero-extended to a 64-bit result in the destination
+        general-purpose register.
 - id: e5d9a810fb
   gist: The destination must be wider than the source, and the source i…
   how: derived
   note: The description says the source is a register or memory; no row has an immediate.
   support:
-  - {doc: sdm, at: 1419, units: [398bac2a5d, a48a751f99, 2b233ada82, 466bc72f88], part: Description}
+  - doc: sdm
+    at: 1419
+    units: [398bac2a5d, a48a751f99, 2b233ada82, 466bc72f88]
+    part: Description
+    quotes:
+      398bac2a5d: Copies the contents of the source operand (register or memory location) to the destination
+        operand (register) and zero extends the value.
+      a48a751f99: 0F B6 /r | MOVZX r32, r/m8[1] | RM | Valid | Valid | Move byte to doubleword, zero-extension.
+      2b233ada82: 0F B7 /r | MOVZX r32, r/m16 | RM | Valid | Valid | Move word to doubleword, zero-extension.
+      466bc72f88: REX.W + 0F B7 /r | MOVZX r64, r/m16 | RM | Valid | N.E. | Move word to quadword, zero-extension.
 - id: 91097b004b
   gist: For signed values use movsx.
   how: derived
@@ -94,12 +185,22 @@ claims:
     units: [40f37d4273]
     part: Description
     note: 'From the MOVSX entry: sign-extends the value.'
+    quotes:
+      40f37d4273: Copies the contents of the source operand (register or memory location) to the destination
+        operand (register) and sign extends the value to 16 or 32 bits (see Figure 7-6 in the Intel® 64
+        and IA-32 Architectures Software Devel-oper's Manual, Volume 1).
 - id: abad811dbd
   gist: movzx on a negative byte gives a positive number (0xFF becomes…
   how: derived
   note: Zero extension always yields a non-negative value.
   support:
-  - {doc: sdm, at: 1419, units: [398bac2a5d, 60a424ba63], part: Description}
+  - doc: sdm
+    at: 1419
+    units: [398bac2a5d, 60a424ba63]
+    part: Description
+    quotes:
+      398bac2a5d: Copies the contents of the source operand (register or memory location) to the destination
+        operand (register) and zero extends the value.
 - id: fffaa8082b
   gist: Byte registers.
   how: editorial
@@ -112,10 +213,18 @@ claims:
     units: [06b14e969c]
     part: Opcode table
     note: Footnote on the byte registers in the opcode table.
+    quotes:
+      06b14e969c: 'NOTES: [1] With a REX prefix in 64-bit mode, attempts to access AH, BH, CH, or DH will
+        instead access SPL, DIL, BPL, or SIL, respectively.'
 - id: 46be064fa9
   gist: It never changes the flags.
   support:
-  - {doc: sdm, at: 1419, units: [71f8e7976e], part: Flags Affected}
+  - doc: sdm
+    at: 1419
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
 - id: 6d53df94d4
   gist: A lock prefix is invalid (#UD).
   support:
@@ -124,6 +233,8 @@ claims:
     units: [2166ae34ad]
     part: 64-Bit Mode Exceptions
     note: '#UD if the LOCK prefix is used.'
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
 - id: 860aa9ef99
   gist: movzx eax, byte [rsi] ; eax = unsigned byte at [rsi]; bits 63:3…
   how: illustrative

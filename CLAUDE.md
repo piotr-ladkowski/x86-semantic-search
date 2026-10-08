@@ -12,6 +12,7 @@ work in this repo is *writing instruction pages* (`content/`), largely by LLMs, 
 
 Read before working: `docs/SCOPE.md` (what is in scope and the rule for deciding),
 `docs/CONTENT_GUIDE.md` (how to write a page, step by step), `docs/ARCHITECTURE.md` (search, config, k8s).
+`docs/ROADMAP.md` is the ranked list of what to build next; tick items there as they are finished.
 
 ## Commands
 

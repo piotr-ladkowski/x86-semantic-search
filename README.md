@@ -45,6 +45,7 @@ The docs are written to be read by LLMs as well as people. Start with `CLAUDE.md
 | [docs/CONTENT_GUIDE.md](docs/CONTENT_GUIDE.md) | How to write or review an instruction page or article. Schema, workflow, definition of done. |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How search works, the data flow, configuration, and how it runs on Kubernetes. |
 | [docs/EVIDENCE.md](docs/EVIDENCE.md) | How each statement on a page is traced to the sentence of a reference document it comes from, and how to record and review that. |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | What to build next, ranked, with a snapshot of where the project stood when it was written. |
 | [content/README.md](content/README.md) | Generated per-instruction checklist (what exists, what is next). |
 | [CLAUDE.md](CLAUDE.md) | Commands and conventions for coding agents. |
 

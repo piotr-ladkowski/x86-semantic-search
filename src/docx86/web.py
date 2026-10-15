@@ -16,7 +16,15 @@ from .evidence import STATE_LABELS, STATES, passages
 from .models import EXCLUSION_LABELS, Category
 from .scope import scope_hint
 
-templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
+
+def _build_context(request: Request) -> dict:
+    """Every page's footer says which commit is running (see build.py)."""
+    return {"build": getattr(request.app.state, "build", None)}
+
+
+templates = Jinja2Templates(
+    directory=Path(__file__).parent / "templates", context_processors=[_build_context]
+)
 router = APIRouter(include_in_schema=False)
 
 _inline_md = MarkdownIt("commonmark", {"html": False})

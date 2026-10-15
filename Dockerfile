@@ -49,6 +49,19 @@ ENV PATH="/app/.venv/bin:$PATH" \
     DOCX86_MODEL_OFFLINE=1 \
     DOCX86_INDEX_DIR=/app/index
 
+# Which version this is, passed by CI (.github/workflows/ci.yaml) and shown in the page footer and at
+# /api/version. Declared last, so a new commit only changes these metadata layers. A build without
+# the arguments (`docker build .`) leaves them empty and the site says "development build".
+ARG GIT_COMMIT=""
+ARG BUILD_DATE=""
+ARG SOURCE_URL=""
+LABEL org.opencontainers.image.revision=$GIT_COMMIT \
+      org.opencontainers.image.created=$BUILD_DATE \
+      org.opencontainers.image.source=$SOURCE_URL
+ENV DOCX86_GIT_COMMIT=$GIT_COMMIT \
+    DOCX86_BUILD_DATE=$BUILD_DATE \
+    DOCX86_SOURCE_URL=$SOURCE_URL
+
 USER 10001:10001
 EXPOSE 8000
 # One worker per pod: scale with replicas, not processes (the pod CPU limit is the budget).

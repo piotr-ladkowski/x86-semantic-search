@@ -20,6 +20,7 @@ from opentelemetry.trace import NoOpTracer, Tracer
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from . import __version__, api, telemetry, web
+from .build import build_info
 from .config import Settings, get_settings
 from .content import load_content
 from .embedding import get_embedder
@@ -109,6 +110,7 @@ def create_app(
         lifespan=lifespan,
         telemetry=telemetry.fastapi_config(provider),
     )
+    app.state.build = build_info(settings)  # commit and build time; started_at is now
     app.mount("/static", StaticFiles(directory=PACKAGE_DIR / "static"), name="static")
     app.include_router(web.router)
     app.include_router(api.router, prefix="/api")

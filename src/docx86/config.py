@@ -1,8 +1,10 @@
 """Runtime configuration. Every setting is an env var with the DOCX86_ prefix (see deploy/k8s)."""
 
+from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -53,7 +55,19 @@ class Settings(BaseSettings):
     # default spans carry no search text and no client address; this opts in to both.
     trace_user_data: bool = False
 
+    # Which version is running (see build.py): set by the image build from CI build arguments, unset
+    # in development. Shown in the page footer and at /api/version.
+    git_commit: str | None = None
+    build_date: datetime | None = None
+    source_url: str | None = None  # repository URL, for the commit link
+
     log_level: str = "INFO"
+
+    @field_validator("git_commit", "build_date", "source_url", mode="before")
+    @classmethod
+    def _empty_is_unset(cls, value):
+        # The Dockerfile always sets these; a build without the arguments leaves them empty.
+        return None if value == "" else value
 
 
 def get_settings() -> Settings:

@@ -33,6 +33,7 @@ brute-force cosine similarity over an in-memory `numpy` matrix is exact and take
 | `search.py` | Query-time ranking (see below). |
 | `scope.py` | Out-of-scope word hints for queries (`xmm`, `avx`, `float`, `msr`, ...): the relevance floor cannot tell such queries from in-scope ones, vocabulary can. |
 | `main.py` | App factory, lifespan (loads the engine once), `/healthz`, `/readyz`, 404 handling. |
+| `build.py` | Which version is running: commit, build time and process start time for the footer and `/api/version` (see *Container image*). |
 | `web.py` / `api.py` | HTML routes / JSON routes under `/api`. Handlers are sync `def`, so FastAPI runs them in its threadpool and embedding does not block the event loop. |
 | `progress.py` | Generates the README progress block and `content/README.md` from roster + pages. |
 | `sdm.py` | Authoring aid: maps instruction mnemonics to page ranges of the local SDM PDF using its bookmark outline. Not imported by the web app. |
@@ -114,6 +115,7 @@ Verified: running the image against edited content without rebuilding exits with
 | `GET /api/search?q=&kind=&limit=` | JSON. `q` 1-200 chars, `limit` 1-25 (default 8). Intended for tools and agents. Returns `floor`, `roster` (planned/deferred/excluded, or null), `scope_hint` (or null) and per hit `via`, `via_kind`, `weak`. |
 | `GET /api/instructions`, `/api/instructions/{name}` | JSON list / full page (no rendered HTML). |
 | `GET /api/evidence`, `/api/evidence/{instructions\|articles}/{slug}` | JSON coverage totals / one page's claims with their sources. |
+| `GET /api/version` | JSON: `commit`, `commit_url`, `built_at` (null outside a CI-built image) and `started_at`, when this server process started. Every page's footer shows the same. See *Container image*. |
 | `GET /healthz` | Liveness: process is serving. |
 | `GET /readyz` | Readiness: content and index loaded (returns counts). |
 | `GET /docs` | FastAPI's generated OpenAPI UI. |
@@ -140,6 +142,9 @@ All settings are environment variables (`src/docx86/config.py`, prefix `DOCX86_`
 | `DOCX86_MS_CALLING_CONVENTION_HTML` | `docs/ms_x64_calling_convention.html` | Microsoft x64 calling convention page; evidence tooling only. |
 | `DOCX86_MS_STACK_USAGE_HTML` | `docs/ms_x64_stack_usage.html` | Microsoft x64 stack usage page; evidence tooling only. |
 | `DOCX86_CACHE_DIR` | `<repo>/.cache` | Extracted source sentences (`units/`); safe to delete. Unwritable is fine. |
+| `DOCX86_GIT_COMMIT` | unset | Commit the image was built from. Set by the image build (see *Container image*), not by hand. |
+| `DOCX86_BUILD_DATE` | unset | When the image was built (ISO 8601, UTC). Set by the image build. |
+| `DOCX86_SOURCE_URL` | unset | Repository URL, used to link the commit. Set by the image build. |
 | `DOCX86_LOG_LEVEL` | `INFO` | Python log level. |
 
 Tracing is configured with the standard `OTEL_*` variables instead; see *Observability*.
@@ -235,6 +240,16 @@ Multi-stage `Dockerfile` (about 640 MB):
 
 Verified: the image runs with `--network none --read-only --cap-drop ALL --user 10001 --memory 512m`, becomes
 ready, serves search in about 9 ms, uses about 256 MiB, and logs no warnings.
+
+**Which version is running.** CI (`.github/workflows/ci.yaml`) passes the build arguments `GIT_COMMIT`
+(`github.sha`), `BUILD_DATE` and `SOURCE_URL`; the last stage turns them into `DOCX86_GIT_COMMIT`,
+`DOCX86_BUILD_DATE`, `DOCX86_SOURCE_URL` and the OCI labels `org.opencontainers.image.revision`, `.created` and
+`.source`. The page footer and `GET /api/version` show the commit (linked), the build time and when the server
+process started. That start time stands in for the deployment time, which a pod cannot see: it has no Kubernetes
+API token (on purpose) and the Downward API does not expose the pod's creation time. When Argo CD Image Updater
+rolls out a new image, the new pods start, so the start time is when that version went live; a pod restarted
+later for another reason (eviction, node drain) shows the later time. `make image` and a plain `docker build .`
+pass no arguments, and such an image says "development build", which is honest for a build from a working tree.
 
 ## Kubernetes (`deploy/k8s`, kustomize)
 

@@ -2,6 +2,7 @@ import re
 
 from fastapi.testclient import TestClient
 
+from docx86.config import Settings
 from docx86.main import create_app
 
 
@@ -174,3 +175,43 @@ def test_about_page_explains_the_search_with_live_numbers(client):
 def test_about_is_reachable_from_the_navigation(client):
     assert 'href="/about"' in client.get("/").text
     assert 'href="/about"' in client.get("/instructions/popcnt").text
+
+
+def test_evidence_is_reachable_from_the_navigation(client):
+    nav = re.search(r"<nav.*?</nav>", client.get("/").text, re.S).group(0)
+    assert 'href="/evidence"' in nav
+    assert client.get("/evidence").status_code == 200
+
+
+def test_footer_and_api_say_which_version_runs(settings):
+    commit = "b6dbd06f0a1b2c3d4e5f60718293a4b5c6d7e8f9"
+    built = settings.model_validate(
+        settings.model_dump()
+        | {
+            "git_commit": commit,
+            "build_date": "2026-10-15T12:03:04Z",  # as CI passes it
+            "source_url": "https://github.com/example/x86-semantic-search/",
+        }
+    )
+    with TestClient(create_app(built)) as c:
+        page = c.get("/instructions/popcnt").text
+        url = f"https://github.com/example/x86-semantic-search/commit/{commit}"
+        assert f'<a href="{url}"' in page and ">b6dbd06</a>" in page
+        assert "built <time" in page and "2026-10-15 12:03 UTC" in page and "running since" in page
+        api = c.get("/api/version").json()
+        assert api["commit"] == commit and api["commit_url"] == url
+        assert api["built_at"] == "2026-10-15T12:03:04Z"
+        assert api["started_at"].endswith("Z") and api["version"]
+
+
+def test_a_build_without_version_arguments_says_development_build(client):
+    assert "Development build" in client.get("/").text
+    api = client.get("/api/version").json()
+    assert api["commit"] is None and api["commit_url"] is None and api["built_at"] is None
+    assert api["started_at"]
+
+
+def test_empty_version_variables_count_as_unset():
+    # The Dockerfile always defines them; `docker build .` without arguments leaves them empty.
+    s = Settings(git_commit="", build_date="", source_url="")
+    assert (s.git_commit, s.build_date, s.source_url) == (None, None, None)

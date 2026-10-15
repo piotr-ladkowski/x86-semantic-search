@@ -16,6 +16,7 @@
       <nav class="flex gap-4 text-sm text-zinc-600 dark:text-zinc-400">
         <a href="/instructions" class="hover:text-indigo-600 dark:hover:text-indigo-400">Instructions</a>
         <a href="/articles" class="hover:text-indigo-600 dark:hover:text-indigo-400">Articles</a>
+        <a href="/evidence" class="hover:text-indigo-600 dark:hover:text-indigo-400">Evidence</a>
         <a href="/about" class="hover:text-indigo-600 dark:hover:text-indigo-400">About</a>
       </nav>
       {% block header_search %}
@@ -35,6 +36,16 @@
     Scope: x86-64 long mode, user-space, scalar integer instructions. Summaries are original and
     AI-assisted; the authority is the Intel&reg; 64 and IA-32 Architectures Software Developer&rsquo;s Manual.
     Not affiliated with Intel. <a href="/evidence" class="underline hover:text-indigo-600 dark:hover:text-indigo-400">Evidence</a>
+    {% if build %}
+    <p class="mt-2">
+      {% if build.commit %}Commit
+        {% if build.commit_url %}<a href="{{ build.commit_url }}" class="font-mono underline hover:text-indigo-600 dark:hover:text-indigo-400">{{ build.short_commit }}</a>{% else %}<span class="font-mono">{{ build.short_commit }}</span>{% endif %}
+        {%- if build.built_at %}, built <time datetime="{{ build.built_at.isoformat(timespec='seconds') }}">{{ build.built_at.strftime("%Y-%m-%d %H:%M") }} UTC</time>{% endif %}
+      {%- else %}Development build{% endif %}
+      &middot; <span title="When the server process that answered this page started; after a deployment, that is when the new version went live.">running since
+        <time datetime="{{ build.started_at.isoformat(timespec='seconds') }}">{{ build.started_at.strftime("%Y-%m-%d %H:%M") }} UTC</time></span>
+    </p>
+    {% endif %}
   </footer>
 </body>
 </html>

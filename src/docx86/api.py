@@ -6,6 +6,7 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
+from .build import BuildInfo
 from .content import RosterLookup
 from .evidence import EvidenceStore, page_to_dict
 from .models import EXCLUSION_LABELS
@@ -32,9 +33,14 @@ def get_sources(request: Request) -> SourceRegistry:
     return request.app.state.sources
 
 
+def get_build(request: Request) -> BuildInfo:
+    return request.app.state.build
+
+
 Engine = Annotated[SearchEngine, Depends(get_engine)]
 Evidence = Annotated[EvidenceStore, Depends(get_evidence)]
 Sources = Annotated[SourceRegistry, Depends(get_sources)]
+Build = Annotated[BuildInfo, Depends(get_build)]
 
 
 def roster_to_dict(lookup: RosterLookup | None) -> dict | None:
@@ -173,3 +179,13 @@ def evidence_for_page(
     if page is None:
         raise HTTPException(404, f"No {kind[:-1]} '{slug}'")
     return page_to_dict(page, sources)
+
+
+@router.get("/version")
+def version(build: Build) -> dict:
+    """Which commit this server runs, when its image was built and when this server started.
+
+    `commit`, `commit_url` and `built_at` are null outside a CI-built image. `started_at` is the
+    nearest thing to a deployment time a pod can see (see `docx86/build.py`).
+    """
+    return build.to_dict()

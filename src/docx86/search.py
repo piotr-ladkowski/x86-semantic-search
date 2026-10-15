@@ -1,4 +1,4 @@
-"""Query-time search: dense retrieval with an exact-mnemonic override and boost."""
+"""Query-time search: dense retrieval with an exact-mnemonic override, a boost and a floor."""
 
 from __future__ import annotations
 
@@ -25,7 +25,9 @@ class Hit:
     kind: str
     score: float  # cosine similarity (+ boost). Ranking only; not a calibrated probability.
     match: Literal["mnemonic", "semantic"]
-    via: str | None = None  # the indexed text that matched best (useful when debugging relevance)
+    via: str | None = None  # the indexed text that matched best (None for an exact-mnemonic pin)
+    via_kind: Literal["phrase", "summary"] | None = None  # a `search_phrases` entry, or the summary
+    weak: bool = False  # below the relevance floor: shown only as "closest pages anyway"
 
 
 class SearchEngine:
@@ -35,16 +37,25 @@ class SearchEngine:
         index: Index,
         embedder: Embedder,
         *,
+        floor: float = 0.0,
         tracer: Tracer | None = None,
         record_query: bool = False,
     ):
         self.content = content
         self.index = index
         self.embedder = embedder
+        self.floor = floor
         self.tracer = tracer or NoOpTracer()
         self.record_query = record_query  # put the user's query text on spans (off: privacy)
         self._slugs = np.array([u.slug for u in index.units])
         self._kinds = np.array([u.kind for u in index.units])
+        # Which rows embed a `search_phrases` entry (as opposed to the page's summary unit), so a
+        # result can say *what* matched. Phrases are indexed verbatim, so text equality is exact.
+        phrases: dict[tuple[str, str], set[str]] = {
+            **{("instruction", s): set(i.search_phrases) for s, i in content.instructions.items()},
+            **{("article", s): set(a.search_phrases) for s, a in content.articles.items()},
+        }
+        self._is_phrase = [u.text in phrases.get((u.kind, u.slug), ()) for u in index.units]
         # The HTML results page searches twice (instructions, then articles) for one query, and
         # popular queries repeat. Cache query vectors; a trace with no `embed_query` span under
         # `search` was served from this cache.
@@ -70,6 +81,7 @@ class SearchEngine:
                 span.set_attribute("docx86.search.query", query)
             hits = self._search(query, kind, limit)
             span.set_attribute("docx86.search.results", len(hits))
+            span.set_attribute("docx86.search.strong", sum(not h.weak for h in hits))
             if hits:
                 span.set_attribute("docx86.search.top_slug", hits[0].slug)
                 span.set_attribute("docx86.search.top_score", round(hits[0].score, 4))
@@ -101,13 +113,16 @@ class SearchEngine:
         hits = []
         for (hit_kind, slug), (score, row) in best.items():
             boosted = hit_kind == "instruction" and slug in token_slugs
+            score += MNEMONIC_TOKEN_BOOST if boosted else 0.0
             hits.append(
                 Hit(
                     slug,
                     hit_kind,
-                    score + (MNEMONIC_TOKEN_BOOST if boosted else 0.0),
+                    score,
                     "mnemonic" if boosted else "semantic",
                     self.index.units[row].text,
+                    "phrase" if self._is_phrase[row] else "summary",
+                    weak=score < self.floor,
                 )
             )
         hits.sort(key=lambda h: h.score, reverse=True)

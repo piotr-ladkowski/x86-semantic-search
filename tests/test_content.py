@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+import yaml
 
 from conftest import ARTICLE, DEFAULT_PAGES, page_md, write_content
 from docx86.content import ContentError, load_content, split_front_matter
@@ -27,11 +28,53 @@ def test_loads_valid_content(content_dir):
     }
 
 
+def test_resolve_roster_answers_for_names_without_a_page(tmp_path):
+    root = write_content(tmp_path)  # popcnt, lea, shl written; rol in the roster only
+    path = root / "roster.yaml"
+    roster = yaml.safe_load(path.read_text(encoding="utf-8"))
+    roster["instructions"] += [
+        {"slug": "setcc", "mnemonic": "SETCC", "category": "bit-byte", "sdm": ["SETcc—Set Byte"]},
+        {"slug": "movs", "mnemonic": "MOVS", "category": "string", "sdm": ["MOVS—Move String"]},
+        {"slug": "rep", "mnemonic": "REP", "category": "string", "sdm": ["REP—Repeat"]},
+    ]
+    roster["deferred"] = [{"mnemonics": ["MFENCE", "PREFETCHh"], "reason": "ordering, undecided"}]
+    roster["excluded"] = [
+        {"reason": "privileged", "mnemonics": ["HLT", "MOV Sreg"], "note": "ring 0 only"},
+        {"reason": "non-scalar-or-non-integer", "mnemonics": ["SSE/SSE2", "x87 FPU (F*)"]},
+    ]
+    path.write_text(yaml.safe_dump(roster, allow_unicode=True), encoding="utf-8")
+    c = load_content(root)
+
+    planned = c.resolve_roster(" ROL ")
+    assert (planned.status, planned.name, planned.entry.slug) == ("planned", "ROL", "rol")
+    assert planned.entry.title == "Test"  # from "ROL—Test"
+    assert c.resolve_roster("sete").entry.slug == "setcc"  # condition-code family
+    assert c.resolve_roster("cmovne") is None  # no CMOVCC in this roster
+    assert c.resolve_roster("movsb").entry.slug == "movs"  # string width variants
+    assert c.resolve_roster("repne").entry.slug == "rep"
+    assert c.resolve_roster("setcc").entry.title == "Set Byte"
+
+    deferred = c.resolve_roster("mfence")
+    assert (deferred.status, deferred.reason) == ("deferred", "ordering, undecided")
+    excluded = c.resolve_roster("HLT")
+    assert (excluded.status, excluded.reason, excluded.note) == (
+        "excluded",
+        "privileged",
+        "ring 0 only",
+    )
+    assert c.resolve_roster("sse2").reason == "non-scalar-or-non-integer"  # split on "/"
+
+    for name in ("prefetchh", "mov sreg", "x87 fpu (f*)"):  # not a plain mnemonic
+        assert c.resolve_roster(name) is None, name
+    for name in ("popcnt", "sal", "SHL", "nothing"):  # written pages and unknown names
+        assert c.resolve_roster(name) is None, name
+
+
 def test_missing_required_section(tmp_path):
     root = write_content(tmp_path)
     secs = {"What it does": "x", "When to use it": "y", "Example": "```nasm\nnop\n```"}
     (root / "instructions" / "lea.md").write_text(
-        page_md("lea", sections=secs, category="miscellaneous")
+        page_md("lea", sections=secs, category="miscellaneous"), encoding="utf-8"
     )
     assert "missing or empty required section '## Gotchas'" in problems(root)
 
@@ -40,7 +83,7 @@ def test_example_needs_code_fence(tmp_path):
     root = write_content(tmp_path)
     secs = {"What it does": "x", "When to use it": "y", "Gotchas": "z", "Example": "just prose"}
     (root / "instructions" / "lea.md").write_text(
-        page_md("lea", sections=secs, category="miscellaneous")
+        page_md("lea", sections=secs, category="miscellaneous"), encoding="utf-8"
     )
     assert "must contain a fenced code block" in problems(root)
 
@@ -48,7 +91,7 @@ def test_example_needs_code_fence(tmp_path):
 def test_h1_in_body_rejected(tmp_path):
     root = write_content(tmp_path)
     (root / "instructions" / "lea.md").write_text(
-        page_md("lea", body_prefix="# Heading\n\n", category="miscellaneous")
+        page_md("lea", body_prefix="# Heading\n\n", category="miscellaneous"), encoding="utf-8"
     )
     assert "must not contain an H1" in problems(root)
 
@@ -61,7 +104,9 @@ def test_filename_must_match_slug(tmp_path):
 
 def test_page_must_be_in_roster(tmp_path):
     root = write_content(tmp_path)
-    (root / "instructions" / "mov.md").write_text(page_md("mov", category="data-transfer"))
+    (root / "instructions" / "mov.md").write_text(
+        page_md("mov", category="data-transfer"), encoding="utf-8"
+    )
     assert "mov: not in content/roster.yaml" in problems(root)
 
 
@@ -83,7 +128,7 @@ def test_schema_errors_are_all_reported(tmp_path):
         "category: miscellaneous", "category: nope"
     )
     bad = bad.replace("mnemonic: LEA", "mnemonic: lea")
-    (root / "instructions" / "lea.md").write_text(bad)
+    (root / "instructions" / "lea.md").write_text(bad, encoding="utf-8")
     msg = problems(root)
     assert "category" in msg and "mnemonic" in msg  # both problems in one report
 
@@ -102,7 +147,7 @@ def test_raw_html_in_markdown_is_escaped(tmp_path):
         "Example": "```nasm\nnop\n```",
     }
     (root / "instructions" / "lea.md").write_text(
-        page_md("lea", sections=secs, category="miscellaneous")
+        page_md("lea", sections=secs, category="miscellaneous"), encoding="utf-8"
     )
     html = load_content(root).instructions["lea"].body_html
     assert "<script>" not in html and "&lt;script&gt;" in html

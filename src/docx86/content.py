@@ -8,15 +8,83 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from markdown_it import MarkdownIt
 from pydantic import ValidationError
 
 from .highlight import highlight_code
-from .models import Article, ArticleMeta, Instruction, InstructionMeta, Roster
+from .models import (
+    MNEMONIC_RE,
+    Article,
+    ArticleMeta,
+    Category,
+    Instruction,
+    InstructionMeta,
+    Roster,
+    RosterEntry,
+)
 
 REQUIRED_SECTIONS = ("What it does", "When to use it", "Gotchas", "Example")
+
+# Names a visitor may type for a roster entry whose page is not written yet. A written page carries
+# its own `aliases`, which always win; these rules only fill the gap until then, and they mirror the
+# family notes in content/roster.yaml (the condition codes are the ones the JCC page lists).
+_CONDITION_CODES = (
+    "A", "AE", "B", "BE", "C", "E", "G", "GE", "L", "LE", "NA", "NAE", "NB", "NBE", "NC",
+    "NE", "NG", "NGE", "NL", "NLE", "NO", "NP", "NS", "NZ", "O", "P", "PE", "PO", "S", "Z",
+)  # fmt: skip
+_STRING_WIDTHS = ("B", "W", "D", "Q")
+_REP_SUFFIXES = ("E", "Z", "NE", "NZ")
+
+
+def planned_names(entry: RosterEntry) -> list[str]:
+    """Mnemonics that should lead to `entry` while its page does not exist (uppercase)."""
+    m = entry.mnemonic
+    names = [entry.slug.upper(), m]
+    if m.endswith("CC"):  # JCC, SETCC, CMOVCC: one family page, one mnemonic per condition
+        names += [m[:-2] + cc for cc in _CONDITION_CODES]
+    elif entry.category is Category.STRING:
+        names += [m + s for s in (_REP_SUFFIXES if m == "REP" else _STRING_WIDTHS)]
+    return names
+
+
+@dataclass(frozen=True)
+class RosterLookup:
+    """What the roster says about a name that has no written page (see docs/SCOPE.md)."""
+
+    status: Literal["planned", "deferred", "excluded"]
+    name: str  # the mnemonic as the roster spells it, uppercase
+    entry: RosterEntry | None = None  # planned: the roster entry (slug, category, SDM title)
+    reason: str | None = None  # deferred: free text; excluded: the closed-set reason code
+    note: str | None = None
+
+
+def _roster_names(roster: Roster, written: dict[str, str]) -> dict[str, RosterLookup]:
+    """lowercase name -> lookup, for every roster name that no written page already claims."""
+    names: dict[str, RosterLookup] = {}
+
+    def claim(name: str, lookup: RosterLookup) -> None:
+        key = name.lower()
+        if key not in written:
+            names.setdefault(key, lookup)
+
+    for entry in roster.instructions:
+        if entry.slug in written:
+            continue
+        for name in planned_names(entry):
+            claim(name, RosterLookup("planned", name, entry=entry, note=entry.note))
+    for group in roster.deferred:
+        for m in group.mnemonics:
+            if MNEMONIC_RE.match(m):
+                claim(m, RosterLookup("deferred", m, reason=group.reason))
+    for group in roster.excluded:
+        # "SSE/SSE2/SSE3" or "x87 FPU (F*)" name families; keep only the parts that are mnemonics.
+        for m in (part.strip() for item in group.mnemonics for part in item.split("/")):
+            if MNEMONIC_RE.match(m):
+                claim(m, RosterLookup("excluded", m, reason=group.reason, note=group.note))
+    return names
 
 
 def _highlight_fence(code: str, lang: str, _attrs: str) -> str:
@@ -39,11 +107,21 @@ class Content:
     articles: dict[str, Article]
     roster: Roster
     _by_name: dict[str, str] = field(default_factory=dict, repr=False)
+    _roster_names: dict[str, RosterLookup] = field(default_factory=dict, repr=False)
 
     def resolve(self, name: str) -> Instruction | None:
         """Find an instruction by slug, mnemonic or alias (case-insensitive)."""
         slug = self._by_name.get(name.strip().lower())
         return self.instructions.get(slug) if slug else None
+
+    def resolve_roster(self, name: str) -> RosterLookup | None:
+        """What the roster says about `name` when no written page answers to it.
+
+        `planned` (in scope, page not written), `deferred` (scope undecided) or `excluded` (out
+        of scope, with the reason). None when a page exists for the name or the roster never
+        mentions it.
+        """
+        return self._roster_names.get(name.strip().lower())
 
     @property
     def mnemonic_index(self) -> dict[str, str]:
@@ -221,4 +299,10 @@ def load_content(content_dir: Path) -> Content:
     problems.extend(xref_problems)
     if problems:
         raise ContentError(problems)
-    return Content(instructions=instructions, articles=articles, roster=roster, _by_name=names)
+    return Content(
+        instructions=instructions,
+        articles=articles,
+        roster=roster,
+        _by_name=names,
+        _roster_names=_roster_names(roster, names),
+    )

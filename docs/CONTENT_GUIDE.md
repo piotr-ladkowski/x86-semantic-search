@@ -15,7 +15,7 @@ done. Never hand-edit generated files (`content/README.md`, the progress block i
 | `content/roster.yaml` | The in-scope instruction list (`instructions`), plus `deferred` and `excluded`. | Owner / scope decisions only |
 | `content/instructions/<slug>.md` | One page per instruction. Front matter + four fixed sections. | Authors |
 | `content/articles/<slug>.md` | Rare short explainers spanning several instructions. | Authors |
-| `content/eval.yaml` | Search regression queries (`query` -> `expect` slug). | Authors |
+| `content/eval.yaml` | Search regression queries (`query` -> `expect` slug, optional `top: 1`) and off-topic `negatives`. | Authors |
 | `content/README.md`, progress block in `README.md` | Generated checklist. | `make progress` only |
 | `docs/docs.x86.pdf` | The Intel SDM (git-ignored, local only). | - |
 
@@ -55,7 +55,9 @@ done. Never hand-edit generated files (`content/README.md`, the progress block i
    Read each cited sentence against the claim before citing it. Reword the page rather than cite a sentence
    that says something different. Leave a claim open rather than guess; report how many are open.
 8. **Add 2-3 lines to `content/eval.yaml`** with queries phrased as a user would, not copied from your
-   `search_phrases`. For an article add `kind: article` to the line and `expect` the article's slug.
+   `search_phrases`. For an article add `kind: article` to the line and `expect` the article's slug. Run
+   `make eval`: where the page wins at rank 1 with a lead of at least 0.02 over the next page, add `top: 1`
+   so a later page cannot quietly take the spot; leave near ties at the default top-3.
 9. **Run the gate:**
    ```bash
    make validate    # schema, cross-references, roster consistency
@@ -146,7 +148,9 @@ they are the biggest lever on search quality.
   "number" from its phrases; adding "count the 1 bits in a number" fixed it. Scores within about 0.01 are a tie, so a
   page needs a phrase that is clearly closer, not merely similar.
 - **Re-run `make eval` after adding a page.** A new page can steal queries from older ones; if `hit@1` drops, rewrite the
-  new page's phrases (not the old ones) first. To compare candidate phrases, embed them and look at their similarity to the
+  new page's phrases (not the old ones) first. The same run checks the off-topic `negatives`: if one of them now
+  scores above the relevance floor, a new phrase attracts nonsense ("put a 64-bit number in a register" was that
+  kind of phrase); fix the phrase, do not raise the floor. To compare candidate phrases, embed them and look at their similarity to the
   queries they should and should not win; do not tune against the eval until it passes by memorising it.
 - Never include the mnemonic alone: exact mnemonic and alias lookups are handled separately and win automatically.
 - Do not copy phrases into `content/eval.yaml`: that file must test *unseen* wording.

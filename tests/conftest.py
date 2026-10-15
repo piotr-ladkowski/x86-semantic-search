@@ -138,6 +138,7 @@ def settings(tmp_path: Path, content_dir: Path) -> Settings:
         index_dir=tmp_path / "index",
         embedder="hash",
         rebuild_stale_index=True,
+        search_floor=0.0,  # hash scores are lexical; tests that need a floor set their own
     )
 
 

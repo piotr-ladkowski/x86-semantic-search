@@ -179,20 +179,38 @@ class RosterEntry(_Model):
     sdm: list[str] = Field(min_length=1, description="Exact SDM outline titles.")
     note: str | None = None
 
+    @property
+    def title(self) -> str:
+        """Human name taken from the first SDM title: 'CALL—Call Procedure' -> 'Call Procedure'."""
+        _, dash, tail = self.sdm[0].partition("—")
+        return tail.strip() if dash else self.sdm[0]
+
 
 class DeferredEntry(_Model):
     mnemonics: list[str]
     reason: str
 
 
+ExclusionReason = Literal[
+    "invalid-in-64-bit-mode",
+    "privileged",
+    "segmentation",
+    "non-scalar-or-non-integer",
+    "extended-state",
+]
+
+# Shown to a visitor who searches for an excluded instruction (docs/SCOPE.md, inclusion test).
+EXCLUSION_LABELS: dict[str, str] = {
+    "invalid-in-64-bit-mode": "it is not valid in 64-bit mode",
+    "privileged": "it needs kernel privilege (ring 0), so user-space code cannot run it",
+    "segmentation": "it loads segment registers, which long mode does not use",
+    "non-scalar-or-non-integer": "it is a vector, floating-point or x87 instruction",
+    "extended-state": "it saves or restores extended processor state",
+}
+
+
 class ExcludedEntry(_Model):
-    reason: Literal[
-        "invalid-in-64-bit-mode",
-        "privileged",
-        "segmentation",
-        "non-scalar-or-non-integer",
-        "extended-state",
-    ]
+    reason: ExclusionReason
     mnemonics: list[str]
     note: str | None = None
 

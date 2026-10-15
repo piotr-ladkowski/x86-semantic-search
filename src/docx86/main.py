@@ -64,7 +64,12 @@ def build_engine(settings: Settings, tracer: Tracer | None = None) -> SearchEngi
         embedder.id,
     )
     return SearchEngine(
-        content, index, embedder, tracer=tracer, record_query=settings.trace_user_data
+        content,
+        index,
+        embedder,
+        floor=settings.search_floor,
+        tracer=tracer,
+        record_query=settings.trace_user_data,
     )
 
 

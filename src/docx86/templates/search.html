@@ -4,10 +4,45 @@
 {% block content %}
 <h1 class="text-xl font-semibold">Results for &ldquo;{{ q }}&rdquo;</h1>
 
+{% if roster %}
+<div class="mt-5 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-3 text-indigo-950 dark:border-indigo-900 dark:bg-indigo-950 dark:text-indigo-100" role="note">
+  {% if roster.status == "planned" %}
+  <p><span class="font-mono font-bold">{{ roster.name }}</span>{% if roster.entry.title %} ({{ roster.entry.title }}){% endif %}
+    is in scope, but its page is not written yet.</p>
+  <p class="mt-1 text-sm">Category: {{ roster.entry.category.label }}. {{ documented }} of {{ total }} planned pages exist;
+    <a href="/instructions" class="underline">browse what is written</a>. The results below are the closest pages that do exist.</p>
+  {% elif roster.status == "deferred" %}
+  <p><span class="font-mono font-bold">{{ roster.name }}</span> is not covered yet: whether it belongs in scope is still undecided.</p>
+  <p class="mt-1 text-sm">{{ roster.reason }}</p>
+  {% else %}
+  <p><span class="font-mono font-bold">{{ roster.name }}</span> is out of scope for doc/x86: {{ exclusion_labels[roster.reason] }}.</p>
+  {% if roster.note %}<p class="mt-1 text-sm">{{ roster.note }}</p>{% endif %}
+  <p class="mt-1 text-sm">This site covers x86-64 user-space scalar integer instructions only (<a href="/about" class="underline">about</a>).</p>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if hint %}
+<div class="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100" role="note">
+  <p>Your search mentions &ldquo;{{ hint.word }}&rdquo;, which points at {{ hint.about }}.
+    doc/x86 covers only x86-64 user-space <em>scalar integer</em> instructions, so the results below are
+    probably not what you need (<a href="/about" class="underline">about</a>).</p>
+</div>
+{% endif %}
+
+{% if no_good_match %}
+<div class="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100" role="note">
+  <p class="font-medium">No good match.</p>
+  <p class="mt-1 text-sm">Nothing documented here is close to this search. Either the instruction is not written yet
+    ({{ documented }} of {{ total }} planned pages exist) or it is out of scope: vector, floating-point and
+    operating-system instructions are not covered. The closest pages are listed anyway.</p>
+</div>
+{% endif %}
+
 {% if instructions %}
 <ol class="mt-5 space-y-3">
   {% for hit, ins in instructions %}
-  <li>{{ instruction_card(ins) }}</li>
+  <li>{{ instruction_card(ins, hit) }}</li>
   {% endfor %}
 </ol>
 {% else %}
@@ -20,13 +55,14 @@
 <h2 class="mt-10 text-sm font-semibold uppercase tracking-wide text-zinc-500">Related articles</h2>
 <ul class="mt-3 space-y-3">
   {% for hit, art in articles %}
-  <li>{{ article_card(art) }}</li>
+  <li>{{ article_card(art, hit) }}</li>
   {% endfor %}
 </ul>
 {% endif %}
 
 <p class="mt-10 text-xs text-zinc-500">
-  Results are ranked by semantic similarity and can include weak matches &mdash; not every
-  x86-64 instruction is documented yet.
+  Results are ranked by semantic similarity. Each one says which indexed phrase it matched; a result marked
+  <em>weak match</em> scored below the relevance floor and is probably unrelated. Not every x86-64 instruction is
+  documented yet.
 </p>
 {% endblock %}

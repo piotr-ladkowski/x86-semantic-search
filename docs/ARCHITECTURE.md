@@ -31,6 +31,7 @@ brute-force cosine similarity over an in-memory `numpy` matrix is exact and take
 | `embedding.py` | `Embedder` protocol with `FastEmbedEmbedder` (production) and `HashEmbedder` (tests/offline dev only, lexical, never deploy). |
 | `index.py` | Build, save, load the index; `ensure_fresh()` detects a stale index (content or embedder changed). |
 | `search.py` | Query-time ranking (see below). |
+| `scope.py` | Out-of-scope word hints for queries (`xmm`, `avx`, `float`, `msr`, ...): the relevance floor cannot tell such queries from in-scope ones, vocabulary can. |
 | `main.py` | App factory, lifespan (loads the engine once), `/healthz`, `/readyz`, 404 handling. |
 | `web.py` / `api.py` | HTML routes / JSON routes under `/api`. Handlers are sync `def`, so FastAPI runs them in its threadpool and embedding does not block the event loop. |
 | `progress.py` | Generates the README progress block and `content/README.md` from roster + pages. |
@@ -55,14 +56,27 @@ brute-force cosine similarity over an in-memory `numpy` matrix is exact and take
    `+0.08` (`what does lea do`). The boost is deliberately small because `AND`, `OR`, `NOT`, `CALL`,
    `TEST`, `LOOP` are also ordinary English words.
 5. Results are sorted by score. `kind=instruction|article` filters; the HTML search page shows up to 8
-   instructions plus up to 3 related articles.
+   instructions plus up to 3 related articles. Every hit records **what matched** (`via`: the phrase or the
+   summary unit, `via_kind`), and the page shows it ("Matched 'count the set bits'", "Exact mnemonic match").
+6. **Relevance floor.** A hit whose score (after the boost) is below `DOCX86_SEARCH_FLOOR` is `weak`. The page
+   labels weak results and dims them rather than hiding them, drops weak *articles*, and says **"No good match"**
+   when nothing clears the floor. The API returns `weak` per hit and the `floor`.
+7. **Honesty notices before results.** If the whole query names an instruction that has no page, the roster
+   answers instead of the ranking: `planned` (in scope, not written; the family rules in `content.planned_names`
+   make `sete`, `cmovne`, `scasb` resolve while their pages do not exist), `deferred` (scope undecided, with the
+   reason) or `excluded` (out of scope, with the reason). Otherwise, if the query contains a word from
+   `scope.SCOPE_WORDS` (`xmm0`, `avx`, `float`, `cr3`, ...), the page says that word points at something out of
+   scope. `/instructions/{name}` for such a name is a 404 that says the same.
 
 Scores are cosine similarities for ranking only. They are not probabilities.
 
-**Known limitation: no relevance floor.** With the default model, unrelated queries still score about
-0.6-0.77 against *something*, which overlaps the scores of genuine but weak matches (verified with 4 pages).
-So the app always shows the top results and says they may be weak. Revisit once there are 50+ pages, by
-calibrating a threshold with `content/eval.yaml` plus negative examples.
+**Why the floor is where it is (measured 2026-10-08, 32 pages, 11 articles).** Every expected page of
+`content/eval.yaml` scored 0.649 or more; clearly off-topic queries ("weather tomorrow in berlin", "best pizza in
+warsaw") scored 0.46-0.62. The floor is 0.64, so it only catches those. **x86 queries that are out of scope are not
+caught by it**: "add two packed floats in xmm registers" scores 0.86 against ADD and "save all vector registers with
+xsave" 0.80 against PUSH, above many genuine matches, so no threshold separates them. That is what the roster
+notices and the out-of-scope word hint are for. `make eval` prints the weakest expected page, the strongest
+negative and each query's lead on every run; re-measure when the model or the search units change.
 
 ### Why these choices
 
@@ -92,12 +106,12 @@ Verified: running the image against edited content without rebuilding exits with
 | Route | Purpose |
 |---|---|
 | `GET /` | Home with search box and example queries (taken from real `search_phrases`). |
-| `GET /search?q=` | Ranked instruction results + related articles. Empty `q` redirects to `/`. |
-| `GET /instructions`, `/instructions/{name}` | Browse by category; page. `{name}` may be a slug, mnemonic or alias in any case; non-canonical names 301 to the slug. |
+| `GET /search?q=` | Ranked instruction results + related articles, each saying what it matched; weak results labelled; a notice when `q` names a planned/deferred/excluded instruction or mentions an out-of-scope word. Empty `q` redirects to `/`. |
+| `GET /instructions`, `/instructions/{name}` | Browse by category; page. `{name}` may be a slug, mnemonic or alias in any case; non-canonical names 301 to the slug. A roster name without a page is a 404 that says whether it is planned, deferred or excluded. |
 | `GET /articles`, `/articles/{slug}` | Articles. |
 | `GET /about` | Plain-language ("explain like I'm five") description of the search. The page counts and one real example search are computed at request time, so it cannot drift from the code; if you change how ranking works, update the wording in `templates/about.html`. |
 | `GET /evidence`, `/instructions/{name}/evidence`, `/articles/{slug}/evidence` | Which source sentence supports which statement of a page (overview / per page, `?state=` filter). Pointers always; source passages only where the reader has the documents locally. See `docs/EVIDENCE.md`. |
-| `GET /api/search?q=&kind=&limit=` | JSON. `q` 1-200 chars, `limit` 1-25 (default 8). Intended for tools and agents. |
+| `GET /api/search?q=&kind=&limit=` | JSON. `q` 1-200 chars, `limit` 1-25 (default 8). Intended for tools and agents. Returns `floor`, `roster` (planned/deferred/excluded, or null), `scope_hint` (or null) and per hit `via`, `via_kind`, `weak`. |
 | `GET /api/instructions`, `/api/instructions/{name}` | JSON list / full page (no rendered HTML). |
 | `GET /api/evidence`, `/api/evidence/{instructions\|articles}/{slug}` | JSON coverage totals / one page's claims with their sources. |
 | `GET /healthz` | Liveness: process is serving. |
@@ -118,6 +132,7 @@ All settings are environment variables (`src/docx86/config.py`, prefix `DOCX86_`
 | `DOCX86_MODEL_OFFLINE` | `false` | Never touch the network; load from the cache only (`1` in the image). |
 | `DOCX86_EMBED_THREADS` | `1` | ONNX threads. onnxruntime otherwise sizes its pool by *node* cores and ignores the pod CPU limit, causing throttling. |
 | `DOCX86_REBUILD_STALE_INDEX` | `false` | Dev convenience, see above. |
+| `DOCX86_SEARCH_FLOOR` | `0.64` | Relevance floor: hits scoring below it are `weak`; "No good match" when none clears it. Measured for the default model (see *Search algorithm*); the hash embedder's scores are not comparable (tests use 0). |
 | `DOCX86_SDM_PDF` | `docs/docs.x86.pdf` | Used by `docx86 sdm` and the evidence tooling. |
 | `DOCX86_TRACE_USER_DATA` | `false` | Keep the user's search text in traces (`url.query`, `docx86.search.query`). Off by default; see *Observability*. |
 | `DOCX86_WIKIBOOKS_HTML` | `docs/wikibooks_x86.html` | Used by `docx86 wiki` and the evidence tooling. |
@@ -260,6 +275,8 @@ The app is stateless, so scaling is just `replicas`. Content changes ship as a n
   (Linux natively, Windows under Wine). Needs Docker and network on first build; not part of `make check`.
   `tests/test_asm_examples.py` is its fast companion: it checks, without Docker, that long `nasm` listings in articles
   exist in `tests/asm/`.
-- `make eval`: runs `content/eval.yaml` against the real model; fails if an expected page is outside the top 3.
-  With few pages top-3 is a weak bar; tighten it as the corpus grows.
+- `make eval`: runs `content/eval.yaml` against the real model; fails if an expected page is outside its `top` bar
+  (3 by default, 1 where the page should win outright) or if an off-topic query from `negatives` clears the
+  relevance floor. Prints each query's score and lead over the next page, the weakest expected page and the
+  strongest negative, and warns when an expected page is marked weak.
 - `make check` = lint + test + validate + evidence + progress freshness. Run it before committing.

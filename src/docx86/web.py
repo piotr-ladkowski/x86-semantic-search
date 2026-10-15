@@ -13,7 +13,8 @@ from markupsafe import Markup
 
 from .api import DEFAULT_LIMIT, MAX_QUERY_LENGTH, Engine, Evidence, Sources
 from .evidence import STATE_LABELS, STATES, passages
-from .models import Category
+from .models import EXCLUSION_LABELS, Category
+from .scope import scope_hint
 
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 router = APIRouter(include_in_schema=False)
@@ -51,7 +52,23 @@ def search(request: Request, engine: Engine, q: str = ""):
     article_hits = [
         (h, c.articles[h.slug]) for h in engine.search(q, kind="article", limit=ARTICLE_RESULTS)
     ]
-    ctx = {"q": q, "instructions": instruction_hits, "articles": article_hits}
+    # Honesty first: say when the query names an instruction that has no page (planned, deferred
+    # or excluded), when it mentions an out-of-scope family, and when nothing clears the floor.
+    roster = c.resolve_roster(q)
+    ctx = {
+        "q": q,
+        "instructions": instruction_hits,
+        "articles": [(h, a) for h, a in article_hits if not h.weak],
+        "roster": roster,
+        "exclusion_labels": EXCLUSION_LABELS,
+        "hint": None if roster else scope_hint(q),
+        # The roster notice already explains an all-weak list, so do not stack a second box on it.
+        "no_good_match": not roster
+        and bool(instruction_hits)
+        and all(h.weak for h, _ in instruction_hits),
+        "documented": len(c.instructions),
+        "total": len(c.roster.instructions),
+    }
     return templates.TemplateResponse(request, "search.html", ctx)
 
 
@@ -73,7 +90,9 @@ def instruction_page(request: Request, engine: Engine, evidence: Evidence, name:
     c = engine.content
     ins = c.resolve(name)
     if ins is None:
-        raise HTTPException(404)
+        # Still a 404, but one that says whether the page is planned, deferred or out of scope.
+        ctx = {"name": name, "roster": c.resolve_roster(name), "exclusion_labels": EXCLUSION_LABELS}
+        return templates.TemplateResponse(request, "404.html", ctx, status_code=404)
     if name != ins.slug:  # alias, mnemonic or different case -> canonical URL
         return RedirectResponse(f"/instructions/{ins.slug}", status_code=301)
     related = [c.instructions[s] for s in ins.related if s in c.instructions]

@@ -14,9 +14,18 @@
 {% if item.status.value == "reviewed" %}{{ badge("reviewed", "green") }}{% else %}{{ badge("draft", "amber") }}{% endif %}
 {% endmacro %}
 
-{% macro instruction_card(ins) %}
+{# Why a search result is there: the exact mnemonic, one of the page's search phrases, or its summary. #}
+{% macro why_matched(hit) %}
+<p class="mt-1 text-xs text-zinc-500">
+  {% if hit.via is none %}Exact mnemonic match{% elif hit.via_kind == "phrase" %}Matched &ldquo;{{ hit.via }}&rdquo;{% else %}Matched the page summary{% endif %}
+  {%- if hit.match == "mnemonic" and hit.via is not none %} &middot; your search names this instruction{% endif %}
+  {%- if hit.weak %} &middot; <span class="font-medium text-amber-700 dark:text-amber-400">weak match</span>{% endif %}
+</p>
+{% endmacro %}
+
+{% macro instruction_card(ins, hit=none) %}
 <a href="/instructions/{{ ins.slug }}"
-   class="block rounded-lg border border-zinc-200 bg-white p-4 transition hover:border-indigo-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-500">
+   class="block rounded-lg border border-zinc-200 bg-white p-4 transition hover:border-indigo-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-500{% if hit and hit.weak %} opacity-70{% endif %}">
   <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
     <span class="font-mono text-lg font-bold text-indigo-600 dark:text-indigo-400">{{ ins.mnemonic }}</span>
     <span class="font-medium">{{ ins.title }}</span>
@@ -27,17 +36,19 @@
     </span>
   </div>
   <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{{ ins.summary }}</p>
+  {% if hit %}{{ why_matched(hit) }}{% endif %}
 </a>
 {% endmacro %}
 
-{% macro article_card(art) %}
+{% macro article_card(art, hit=none) %}
 <a href="/articles/{{ art.slug }}"
-   class="block rounded-lg border border-zinc-200 bg-white p-4 transition hover:border-indigo-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-500">
+   class="block rounded-lg border border-zinc-200 bg-white p-4 transition hover:border-indigo-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-500{% if hit and hit.weak %} opacity-70{% endif %}">
   <div class="flex items-baseline gap-3">
     <span class="font-medium">{{ art.title }}</span>
     <span class="ml-auto">{{ status_badge(art) }}</span>
   </div>
   <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{{ art.summary }}</p>
+  {% if hit %}{{ why_matched(hit) }}{% endif %}
 </a>
 {% endmacro %}
 

@@ -18,13 +18,15 @@ def test_sync_writes_then_reports_clean(tmp_path, content_dir):
     content = load_content(content_dir)
 
     assert len(sync(content, root, write=False)) == 2  # check mode: both stale, nothing written
-    assert "old" in (root / "README.md").read_text()
+    assert "old" in (root / "README.md").read_text(encoding="utf-8")
 
     sync(content, root, write=True)
-    text = (root / "README.md").read_text()
+    text = (root / "README.md").read_text(encoding="utf-8")
     assert "3 / 4" in text and text.startswith("# x\n") and text.endswith("\ntail\n")
-    assert (
-        "- [x] [`LEA`](instructions/lea.md) — draft" in (root / "content" / "README.md").read_text()
+    assert "- [x] [`LEA`](instructions/lea.md) — draft" in (
+        root / "content" / "README.md"
+    ).read_text(encoding="utf-8")
+    assert "- [ ] `ROL` (`rol`) — todo" in (root / "content" / "README.md").read_text(
+        encoding="utf-8"
     )
-    assert "- [ ] `ROL` (`rol`) — todo" in (root / "content" / "README.md").read_text()
     assert sync(content, root, write=False) == []  # idempotent

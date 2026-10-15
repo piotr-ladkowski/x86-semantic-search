@@ -156,11 +156,14 @@
   <div class="prose prose-zinc mt-10 max-w-none dark:prose-invert prose-h2:text-xl prose-code:before:content-none prose-code:after:content-none">
     <h2>Where it can go wrong</h2>
     <ul>
-      <li><strong>It always shows its best guess.</strong> There is no &ldquo;nothing found&rdquo; cut-off yet, so a
-        weak match can still appear. If the top result looks unrelated, the instruction you want probably is not
-        written yet ({{ documented }} of {{ total }} planned instruction pages exist) or is out of scope: this site
-        covers x86-64 user-space integer instructions, not SIMD/AVX, floating point or operating-system
-        instructions.</li>
+      <li><strong>Weak matches are labelled, not hidden.</strong> Every result says which phrase it matched. A result
+        whose closeness is below a fixed floor is marked <em>weak match</em>, and when nothing clears the floor the
+        page says <em>no good match</em>. The floor only catches questions that are far from everything here: a
+        question about floating point or SIMD scores about as well as a real one, so the site also warns when your
+        words name something out of scope (xmm, avx, float, msr, ...), and says so when the instruction you name is
+        planned but not written yet ({{ documented }} of {{ total }} planned instruction pages exist) or is out of
+        scope: this site covers x86-64 user-space integer instructions, not SIMD/AVX, floating point or
+        operating-system instructions.</li>
       <li><strong>Close scores are a tie.</strong> Scores within a few hundredths of each other do not mean the
         first result is better than the second. The model also leans on shared everyday words such as
         &ldquo;number&rdquo; as much as on meaning, so an unrelated page can briefly outscore the right one. Treat the

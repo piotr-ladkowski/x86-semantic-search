@@ -104,7 +104,12 @@ def cmd_sdm(args: argparse.Namespace, settings: Settings) -> int:
 
 
 def cmd_eval(_: argparse.Namespace, settings: Settings) -> int:
-    """Run content/eval.yaml against the index; fail if an expected page is outside the top 3."""
+    """Run content/eval.yaml against the index.
+
+    Fails if an expected page ranks outside its `top` bar (default 3), or if a query from
+    `negatives` still clears the relevance floor. Also prints what the floor rests on: the
+    weakest expected page and the strongest negative, so the margin is visible on every run.
+    """
     import yaml
 
     from .embedding import get_embedder
@@ -115,21 +120,65 @@ def cmd_eval(_: argparse.Namespace, settings: Settings) -> int:
     embedder = get_embedder(settings)
     index = load_index(settings.index_dir)
     ensure_fresh(index, content, embedder)
-    engine = SearchEngine(content, index, embedder)
+    engine = SearchEngine(content, index, embedder, floor=settings.search_floor)
 
-    queries = yaml.safe_load((settings.content_dir / "eval.yaml").read_text(encoding="utf-8"))
-    top1 = top3 = 0
-    for item in queries["queries"]:
+    data = yaml.safe_load((settings.content_dir / "eval.yaml").read_text(encoding="utf-8"))
+    queries, negatives = data["queries"], data.get("negatives", [])
+    top1 = top3 = misses = 0
+    expected_scores: list[float] = []
+    below_floor: list[str] = []
+    for item in queries:
+        bar = int(item.get("top", 3))
         hits = engine.search(item["query"], kind=item.get("kind", "instruction"), limit=10)
         slugs = [h.slug for h in hits]
         rank = slugs.index(item["expect"]) + 1 if item["expect"] in slugs else None
+        ok = rank is not None and rank <= bar
+        misses += not ok
         top1 += rank == 1
         top3 += rank is not None and rank <= 3
-        mark = "ok  " if rank and rank <= 3 else "MISS"
-        print(f"{mark} rank={rank}  expect={item['expect']:<8} got={slugs[:3]}  {item['query']!r}")
-    n = len(queries["queries"])
-    print(f"hit@1 {top1}/{n}   hit@3 {top3}/{n}   embedder={embedder.id}")
-    return 0 if top3 == n else 1
+        detail = ""
+        if rank is not None:
+            hit = hits[rank - 1]
+            expected_scores.append(hit.score)
+            if hit.weak:
+                below_floor.append(f"{item['expect']} ({hit.score:.3f}) for {item['query']!r}")
+            # How safely the expected page holds its place: its lead over the best other page.
+            other = next((h.score for h in hits if h.slug != item["expect"]), None)
+            lead = f"{hit.score - other:+.3f}" if other is not None else "n/a"
+            detail = f"score={hit.score:.3f} lead={lead}"
+        mark = "ok  " if ok else "MISS"
+        print(
+            f"{mark} rank={rank}/{bar} {detail:<24} expect={item['expect']:<10} "
+            f"got={slugs[:3]}  {item['query']!r}"
+        )
+
+    leaks = 0
+    negative_scores: list[float] = []
+    for q in negatives:
+        hits = engine.search(q, limit=3)
+        top = hits[0] if hits else None
+        rejected = top is None or top.weak
+        leaks += not rejected
+        if top is not None:
+            negative_scores.append(top.score)
+            where = f"top={top.score:.3f} ({top.kind} {top.slug})"
+        else:
+            where = "no results"
+        print(f"{'ok  ' if rejected else 'LEAK'} {where:<40} {q!r}")
+
+    n = len(queries)
+    print(
+        f"hit@1 {top1}/{n}   hit@3 {top3}/{n}   misses {misses}   "
+        f"negatives rejected {len(negatives) - leaks}/{len(negatives)}   embedder={embedder.id}"
+    )
+    if expected_scores and negative_scores:
+        print(
+            f"floor {engine.floor:.2f}: weakest expected page {min(expected_scores):.3f}, "
+            f"strongest negative {max(negative_scores):.3f}"
+        )
+    for line in below_floor:
+        print(f"warning: expected page is marked weak: {line}")
+    return 0 if misses == 0 and leaks == 0 else 1
 
 
 def cmd_wiki(args: argparse.Namespace, settings: Settings) -> int:

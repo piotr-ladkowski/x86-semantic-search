@@ -29,6 +29,15 @@ class Settings(BaseSettings):
     # production, where a stale index must fail the rollout rather than silently re-embed.
     rebuild_stale_index: bool = False
 
+    # Relevance floor: a result whose score (cosine similarity plus the mnemonic boost) is below
+    # this is labelled a weak match, and the site says "no good match" when nothing clears it.
+    # Measured on 2026-10-08 for the default model with 32 pages: every expected eval page scored
+    # 0.649 or more, off-topic queries ("weather tomorrow in berlin") 0.62 or less. x86 queries
+    # that are out of scope score far higher (0.71-0.88) and are handled by `scope.py` instead.
+    # `docx86 eval` prints the current margin; re-measure after changing the model or the
+    # search units. The hash embedder's scores are lexical and not comparable (tests use 0).
+    search_floor: float = 0.64
+
     # Local copy of the Intel SDM, used only by `docx86 sdm ...` while authoring content.
     sdm_pdf: Path = PROJECT_ROOT / "docs" / "docs.x86.pdf"
     # Local copy of the Wikibooks x86 Assembly print version, used only by `docx86 wiki ...`.

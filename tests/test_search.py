@@ -26,6 +26,25 @@ def test_mnemonic_token_in_longer_query_boosts_but_does_not_pin(engine):
     assert hits[0].slug == "lea" and hits[0].match == "mnemonic" and hits[0].score < 1.0
 
 
+def test_hits_say_what_matched(engine):
+    hit = engine.search("population count", kind="instruction")[0]
+    assert (hit.slug, hit.via, hit.via_kind) == ("popcnt", "population count", "phrase")
+    pinned = engine.search("popcnt")[0]
+    assert (pinned.via, pinned.via_kind, pinned.weak) == (None, None, False)
+    summary = engine.search("Title of LEA", kind="instruction")[0]
+    assert summary.slug == "lea" and summary.via_kind == "summary"
+    assert summary.via.startswith("LEA — Title of LEA.")
+
+
+def test_floor_marks_weak_hits(settings):
+    engine = build_engine(settings.model_copy(update={"search_floor": 0.5}))
+    assert engine.floor == 0.5
+    hits = engine.search("count the number of set bits", kind="instruction")
+    assert hits[0].slug == "popcnt" and not hits[0].weak  # a verbatim phrase scores 1.0
+    assert hits[1:] and all(h.weak for h in hits[1:])  # the other pages share almost no words
+    assert not engine.search("popcnt")[0].weak  # an exact-mnemonic pin is never weak
+
+
 def test_kind_filter(engine):
     assert {h.kind for h in engine.search("registers", kind="article")} == {"article"}
     assert {h.kind for h in engine.search("registers", kind="instruction")} == {"instruction"}

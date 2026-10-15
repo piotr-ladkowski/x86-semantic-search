@@ -3,7 +3,22 @@
 {% block content %}
 <div class="py-16 text-center">
   <p class="font-mono text-5xl font-bold text-zinc-300 dark:text-zinc-700">404</p>
+  {% if roster is defined and roster %}
+  {% if roster.status == "planned" %}
+  <p class="mt-4 text-zinc-700 dark:text-zinc-300"><span class="font-mono font-bold">{{ roster.name }}</span>{% if roster.entry.title %} ({{ roster.entry.title }}){% endif %}
+    is planned but not written yet ({{ roster.entry.category.label }}).</p>
+  {% elif roster.status == "deferred" %}
+  <p class="mt-4 text-zinc-700 dark:text-zinc-300"><span class="font-mono font-bold">{{ roster.name }}</span> is not covered yet:
+    whether it belongs in scope is still undecided.</p>
+  <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{{ roster.reason }}</p>
+  {% else %}
+  <p class="mt-4 text-zinc-700 dark:text-zinc-300"><span class="font-mono font-bold">{{ roster.name }}</span> is out of scope for doc/x86:
+    {{ exclusion_labels[roster.reason] }}.</p>
+  {% if roster.note %}<p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{{ roster.note }}</p>{% endif %}
+  {% endif %}
+  {% else %}
   <p class="mt-4 text-zinc-600 dark:text-zinc-400">That page does not exist (yet).</p>
+  {% endif %}
   <p class="mt-2 text-sm"><a href="/instructions" class="text-indigo-600 underline dark:text-indigo-400">Browse documented instructions</a></p>
 </div>
 {% endblock %}

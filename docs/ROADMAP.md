@@ -48,15 +48,22 @@ Run `make eval` after every batch: a new page can steal queries from older ones 
 Typing `call` today returns unrelated semantic matches because CALL is in the roster but unwritten. All of
 these are small changes to `src/docx86/search.py`, `web.py` and the templates.
 
-- [ ] When the query resolves to a roster slug that has no page, say "planned, not written yet" (and which
-      category it is in) instead of showing weak semantic results. Needs the roster in the resolver.
-- [ ] Render the matched phrase next to each result. `Hit.via` already carries it; `search.html` drops it.
-      This makes bad `search_phrases` visible to users and authors.
-- [ ] Relevance floor. ARCHITECTURE.md ("Known limitation: no relevance floor") schedules this for 50+ pages:
-      add negative ("should not match anything") queries to `content/eval.yaml`, measure the score
-      distributions, pick a threshold, and show "no good match" below it.
-- [ ] Tighten the eval: top-1 for mnemonic-shaped and unambiguous queries, top-3 only where two pages are
-      legitimately close. Record `hit@1` over time.
+- [x] (2026-10-08) When the query resolves to a roster slug that has no page, say "planned, not written yet"
+      (and which category it is in) instead of showing weak semantic results. Done as `Content.resolve_roster`:
+      also answers `deferred` and `excluded` names with the roster's reason, and family names (`sete`, `cmovne`,
+      `scasb`, `repne`) resolve while their pages do not exist. `/instructions/{name}` 404s say the same.
+      Not covered: aliases that live only in roster `note` text (`CBW`, `CDQ`, `MOVSXD`, `INT3`, `PUSHFQ`, ...);
+      a structured `aliases` field on roster entries would close that, owner's call.
+- [x] (2026-10-08) Render the matched phrase next to each result ("Matched 'count the set bits'", "Exact
+      mnemonic match", "Matched the page summary"); also in `/api/search` as `via` / `via_kind`.
+- [x] (2026-10-08) Relevance floor, measured: `DOCX86_SEARCH_FLOOR=0.64`, weak results labelled and dimmed,
+      "No good match" when nothing clears it, five off-topic `negatives` in `content/eval.yaml`. Finding: the
+      floor only catches clearly off-topic queries; x86 queries that are out of scope (floats, SIMD, MSRs) score
+      0.71-0.88, above many genuine hits, so `scope.py` adds a word-based out-of-scope notice instead
+      (`xmm0`, `avx`, `float`, `cr3`, ...). Details in ARCHITECTURE.md, "Search algorithm".
+- [x] (2026-10-08) Tighten the eval: per-query `top: 1` bars (36 of 53 queries), `negatives` against the floor,
+      and `make eval` prints each query's lead, the weakest expected page and the strongest negative.
+      Baseline: hit@1 42/53, hit@3 53/53, negatives rejected 5/5, margin 0.649 vs 0.619.
 
 ## 3. Turn the evidence ledger into actual review
 

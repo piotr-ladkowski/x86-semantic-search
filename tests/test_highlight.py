@@ -67,7 +67,7 @@ def test_markdown_fences_are_highlighted_and_other_fences_stay_plain(tmp_path):
         extra_roster=(),
     )
     (root / "instructions" / "lea.md").write_text(
-        page_md("lea", sections=secs, category="miscellaneous")
+        page_md("lea", sections=secs, category="miscellaneous"), encoding="utf-8"
     )
     html = load_content(root).instructions["lea"].body_html
     assert '<code class="language-nasm">' in html and '<span class="nf">mov</span>' in html

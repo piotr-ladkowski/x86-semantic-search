@@ -1,5 +1,9 @@
 import re
 
+from fastapi.testclient import TestClient
+
+from docx86.main import create_app
+
 
 def test_health_and_ready(client):
     assert client.get("/healthz").json() == {"status": "ok"}
@@ -19,6 +23,39 @@ def test_search_page_renders_results(client):
     assert r.status_code == 200
     assert 'href="/instructions/popcnt"' in r.text
     assert "About registers" in r.text  # related articles section
+
+
+def test_search_says_why_each_result_matched(client):
+    r = client.get("/search", params={"q": "population count"})
+    assert "Matched &ldquo;population count&rdquo;" in r.text
+    assert "weak match</span>" not in r.text  # floor is 0 in tests
+    assert "Exact mnemonic match" in client.get("/search", params={"q": "popcnt"}).text
+    r = client.get("/search", params={"q": "what does lea do"})
+    assert "your search names this instruction" in r.text
+
+
+def test_search_says_when_the_instruction_is_planned(client):
+    r = client.get("/search", params={"q": "rol"})
+    assert r.status_code == 200
+    assert "ROL" in r.text and "not written yet" in r.text and "Shift &amp; rotate" in r.text
+    assert "3 of 4 planned pages exist" in r.text
+    assert "No good match" not in r.text
+    assert "not written yet" not in client.get("/search", params={"q": "popcnt"}).text
+
+
+def test_search_hints_at_out_of_scope_words(client):
+    r = client.get("/search", params={"q": "add two values into xmm0"})
+    assert "mentions &ldquo;xmm0&rdquo;" in r.text and "SSE/AVX vector registers" in r.text
+    assert "mentions" not in client.get("/search", params={"q": "double a number"}).text
+
+
+def test_search_says_no_good_match_when_nothing_clears_the_floor(settings):
+    with TestClient(create_app(settings.model_copy(update={"search_floor": 0.9}))) as c:
+        r = c.get("/search", params={"q": "zebra giraffe"})
+        assert "No good match" in r.text and "weak match</span>" in r.text
+        assert "Related articles" not in r.text  # weak articles are dropped, not shown
+        strong = c.get("/search", params={"q": "popcnt"})  # the pin is never weak
+        assert "No good match" not in strong.text
 
 
 def test_empty_search_redirects_home(client):
@@ -58,9 +95,38 @@ def test_article_page(client):
 def test_404_html_vs_json(client):
     html = client.get("/instructions/nope")
     assert html.status_code == 404 and "text/html" in html.headers["content-type"]
+    assert "does not exist" in html.text
     assert client.get("/articles/nope").status_code == 404
     api = client.get("/api/instructions/nope")
     assert api.status_code == 404 and api.json()["detail"].startswith("No documented")
+
+
+def test_404_for_a_planned_instruction_says_so(client):
+    r = client.get("/instructions/rol")
+    assert r.status_code == 404 and "planned but not written yet" in r.text
+    api = client.get("/api/instructions/ROL")
+    assert api.status_code == 404 and "ROL is planned" in api.json()["detail"]
+
+
+def test_api_search_reports_roster_hint_and_why(client):
+    data = client.get("/api/search", params={"q": "rol"}).json()
+    assert data["floor"] == 0.0 and data["scope_hint"] is None
+    assert data["roster"] == {
+        "status": "planned",
+        "name": "ROL",
+        "note": None,
+        "slug": "rol",
+        "title": "Test",
+        "category": "shift-rotate",
+    }
+    data = client.get("/api/search", params={"q": "population count", "kind": "instruction"}).json()
+    first = data["results"][0]
+    assert (first["via"], first["via_kind"], first["weak"]) == ("population count", "phrase", False)
+    assert data["roster"] is None and data["scope_hint"] is None
+    data = client.get("/api/search", params={"q": "load a float into xmm0"}).json()
+    assert data["scope_hint"] == {"word": "float", "about": "floating-point arithmetic"}
+    pinned = client.get("/api/search", params={"q": "popcnt"}).json()["results"][0]
+    assert pinned["via"] is None and pinned["match"] == "mnemonic"
 
 
 def test_api_search(client):

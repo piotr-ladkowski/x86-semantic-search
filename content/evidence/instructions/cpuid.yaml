@@ -1,0 +1,698 @@
+# Evidence ledger: which sentence of which document supports which claim of this page.
+# Pointers (document, page or section, fingerprint) with a short quotation of each cited
+# sentence. Managed by `docx86 evidence ...`; see docs/EVIDENCE.md before editing by hand.
+splitter: 1
+claims:
+- id: 3d8e9507f7
+  gist: Returns the processor's vendor, model and supported features in…
+  support:
+  - doc: sdm
+    at: 907
+    units: [71cb545f05]
+    part: Description
+    quotes:
+      71cb545f05: CPUID returns processor identification and feature information in the EAX, EBX, ECX,
+        and EDX registers.1 The instruction's output is dependent on the contents of the EAX register
+        upon execution and, in some cases, ECX.
+  - doc: sdm
+    at: 441
+    units: [4896e8bc94, 494eaa4e98]
+    part: 21.1.1 Guidelines for Using the CPUID Instruction
+    quotes:
+      4896e8bc94: This instruction returns the family, model, and (for some processors) a brand string
+        for the processor that executes the instruction.
+      494eaa4e98: It also indicates the features that are present in the processor and gives information
+        about the processor's caches and TLB.
+  - doc: sdm
+    at: 447
+    units: [71518aed50]
+    part: 21.3 CPUID LEAVES
+    quotes:
+      71518aed50: A vendor identification string is also returned in EBX, EDX, and ECX.
+- id: 5d81fbbf36
+  gist: CPUID is encoded as 0F A2.
+  support:
+  - doc: sdm
+    at: 907
+    units: [5c83ce8887]
+    part: Opcode table
+    by: match
+    quotes:
+      5c83ce8887: 0F A2 | CPUID | ZO | Valid | Valid | Returns processor identification and feature information
+        to the EAX, EBX, ECX, and EDX registers, as determined by input entered in EAX and, in some cases,
+        ECX.
+- id: 24c97134de
+  gist: No explicit operands.
+  support:
+  - doc: sdm
+    at: 907
+    units: [b330b61ae1]
+    part: Operand encoding
+    quotes:
+      b330b61ae1: ZO | N/A | N/A | N/A | N/A
+- id: 329249cffd
+  gist: Reads EAX (the leaf) and, for some leaves, ECX (the sub-leaf);…
+  support:
+  - doc: sdm
+    at: 907
+    units: [71cb545f05, 38e0c1c5cd]
+    part: Description
+    quotes:
+      71cb545f05: CPUID returns processor identification and feature information in the EAX, EBX, ECX,
+        and EDX registers.1 The instruction's output is dependent on the contents of the EAX register
+        upon execution and, in some cases, ECX.
+      38e0c1c5cd: 1. On Intel 64 processors, CPUID clears the high 32 bits of the RAX/RBX/RCX/RDX registers
+        in all modes.
+  - doc: sdm
+    at: 441
+    units: [e121da6bfa]
+    part: Chapter 21 Processor Identification and Feature Determination
+    quotes:
+      e121da6bfa: Logically, the CPUID name space comprises a series of nodes indexed by leaf (using the
+        input value of EAX) and in some cases further indexed by sub-leaf (using the input value of ECX).
+- id: 6da199390e
+  gist: No flags are affected.
+  support:
+  - doc: sdm
+    at: 907
+    units: [71f8e7976e]
+    part: Flags Affected
+    quotes:
+      71f8e7976e: None.
+- id: 5a10026f8b
+  gist: cpuid reports identification and feature information about the…
+  support:
+  - doc: sdm
+    at: 205
+    units: [e8523c7be7]
+    part: 7.3.16.3 Processor Identification Instruction
+    quotes:
+      e8523c7be7: The CPUID (processor identification) instruction returns information about the processor
+        on which the instruction is executed.
+  - doc: sdm
+    at: 907
+    units: [71cb545f05]
+    part: Description
+    quotes:
+      71cb545f05: CPUID returns processor identification and feature information in the EAX, EBX, ECX,
+        and EDX registers.1 The instruction's output is dependent on the contents of the EAX register
+        upon execution and, in some cases, ECX.
+- id: a355fbf9c7
+  gist: The value in eax selects a leaf (which question to answer) and,…
+  support:
+  - doc: sdm
+    at: 441
+    units: [e121da6bfa, 4bce83dde7]
+    part: Chapter 21 Processor Identification and Feature Determination
+    quotes:
+      e121da6bfa: Logically, the CPUID name space comprises a series of nodes indexed by leaf (using the
+        input value of EAX) and in some cases further indexed by sub-leaf (using the input value of ECX).
+      4bce83dde7: Note that not all leaves have sub-leaf indexing and the input ECX value will be ignored
+        in those cases.
+- id: 11f7995b8d
+  gist: The answer is written to eax, ebx, ecx and edx.
+  support:
+  - doc: sdm
+    at: 441
+    units: [86bc9662c8]
+    part: Chapter 21 Processor Identification and Feature Determination
+    quotes:
+      86bc9662c8: The value of a queried node is returned in EAX, EBX, ECX, and EDX.
+- id: 5ff40d76b3
+  gist: It works at any privilege level, so ordinary user code uses it…
+  support:
+  - doc: sdm
+    at: 907
+    units: [cf0e3175f2]
+    part: Description
+    quotes:
+      cf0e3175f2: CPUID can be executed at any privilege level to serialize instruction execution.
+  - doc: sdm
+    at: 450
+    units: [9b6fa7e83a]
+    part: Description
+    quotes:
+      9b6fa7e83a: Software must confirm that a processor feature is present using feature flags returned
+        by CPUID prior to using the feature.
+- id: 3d67493fbf
+  gist: 'The leaves you need most:'
+  how: editorial
+  note: Introduces the table; the rows carry the claims.
+- id: 9878c6ca38
+  gist: 0 | ignored | eax = highest basic leaf; ebx, edx, ecx = vendor…
+  support:
+  - doc: sdm
+    at: 447
+    units: [24fbf22933, 71518aed50, 369584436d, d865c5cb2c]
+    part: Table
+    quotes:
+      24fbf22933: EAX[31:0] | MAX LEAF _ | Maximum input value for basic CPUID Information. | Platform
+      71518aed50: A vendor identification string is also returned in EBX, EDX, and ECX.
+      369584436d: 'For Intel processors, the string is "Genu-ineIntel" and is expressed: EBX := 756e6547h
+        (* "Genu", with G in the low eight bits of BL *) EDX := 49656e69h (* "ineI", with i in the low
+        eight bits of DL *) ECX := 6c65746eh (* "ntel", with n in the low eight bits of CL *)'
+      d865c5cb2c: This leaf does not contain sub-leaves and provides the same information regardless of
+        the value of ECX.
+- id: fcb70b1a9a
+  gist: 1 | ignored | eax = family, model and stepping; ecx and edx = f…
+  support:
+  - doc: sdm
+    at: 448
+    units: [66eddee7d8, 5e4fa98209, 2bbd70421d, d865c5cb2c]
+    part: Table
+    quotes:
+      66eddee7d8: 'EAX[31:0] | Version information: Type, Family, Model, and Stepping ID (see "CPUID.01H:EAX—Version
+        Information: Type, Family, Model and Stepping ID").'
+      5e4fa98209: ECX[31:0] | Feature information (see "CPUID.01H:ECX—Feature Information").
+      2bbd70421d: EDX[31:0] | Feature information (see "CPUID.01H:EDX—Feature Information").
+      d865c5cb2c: This leaf does not contain sub-leaves and provides the same information regardless of
+        the value of ECX.
+  - doc: sdm
+    at: 451
+    units: [fd8c8e56b5, c4c4d5c7ef, '1314830083', 23cf532f48]
+    part: Table
+    quotes:
+      fd8c8e56b5: ECX[13] | CMPXCHG16B | If 1, supports this instruction. See the "CMPXCHG8B/CMPXCHG16B—Compare
+        and Exchange Bytes" section in this chapter for a description. | Platform
+      c4c4d5c7ef: ECX[22] | MOVBE | If 1, supports MOVBE instruction. | Platform
+      '1314830083': ECX[23] | POPCNT | If 1, supports the POPCNT instruction. | Platform
+      23cf532f48: ECX[30] | RDRAND | If 1, supports RDRAND instruction. | Platform
+- id: 8c1e33af96
+  gist: 7 | 0 | eax = highest sub-leaf; ebx = feature bits, for example…
+  support:
+  - doc: sdm
+    at: 466
+    units: [a6c8023e50, 37df5f2234, 54437a9bfc]
+    part: CPUID.07H.00H:EBX Extended Feature Flags Information
+    quotes:
+      a6c8023e50: CPUID.07H.00H returns the maximum input value of the highest leaf 07H sub-leaf; and
+        EBX, ECX, and EDX contain information of extended feature flags.
+      37df5f2234: EAX[31:0] | MAX SUBLEAF _ | Reports the maximum input value for supported leaf 07H sub-leaves.
+        | Platform
+      54437a9bfc: EBX[3] | BMI1 | If 1, supports the BMI1 instructions. | Platform
+  - doc: sdm
+    at: 467
+    units: [0515f8a9b7, cd6ca02367, a4af02062e]
+    part: Table
+    quotes:
+      0515f8a9b7: EBX[8] | BMI2 | If 1, supports the BMI2 instructions. | Platform
+      cd6ca02367: EBX[18] | RDSEED | If 1, supports the RDSEED instruction. | Platform
+      a4af02062e: EBX[19] | ADX | If 1, supports the ADX instructions. | Platform
+- id: fadf22770e
+  gist: 0x80000000 | ignored | eax = highest extended leaf
+  support:
+  - doc: sdm
+    at: 527
+    units: [b6f93ccbea, d865c5cb2c]
+    part: Table
+    quotes:
+      b6f93ccbea: EAX[31:0] | MAX EXTENDED LEAF _ _ | Maximum input value for Extended Function CPUID
+        Information. | Platform
+      d865c5cb2c: This leaf does not contain sub-leaves and provides the same information regardless of
+        the value of ECX.
+- id: f8ce709bdc
+  gist: 0x80000001 | ignored | ecx bit 0 LAHF/SAHF in 64-bit mode, bit…
+  support:
+  - doc: sdm
+    at: 528
+    units: [56bb27fe3a, f41afd236e, 34147dd8ea, d865c5cb2c]
+    part: Table
+    quotes:
+      56bb27fe3a: ECX[0] | LAHF SAHF 64 _ _ | If 1, supports the LAHF/SAHF instructions in 64-bit mode.
+        LAHF and SAHF are always available in other modes, regardless of the enumeration of this feature
+        flag. | Platform
+      f41afd236e: ECX[5] | LZCNT | If 1, supports the LZCNT instruction. | Platform
+      34147dd8ea: EDX[27] | RDTSCP | If 1, supports RDTSCP and IA32 TSC AUX. _ _ | Platform
+      d865c5cb2c: This leaf does not contain sub-leaves and provides the same information regardless of
+        the value of ECX.
+- id: a153fa1710
+  gist: 0x80000002 to 0x80000004 | ignored | The processor brand string…
+  support:
+  - doc: sdm
+    at: 529
+    units: [d578cd5573, ba9cdc9a23, af4a52f021, 7dc5cba446, 3230344d7e, d865c5cb2c]
+    part: CPUID.80000002H -- Processor Brand String (Bytes 0 to 15)
+    quotes:
+      d578cd5573: CPUID.80000002H -- Processor Brand String (Bytes 0 to 15)
+      ba9cdc9a23: EAX[31:0] | BRAND NAME 0 _ _ | Processor brand string. | Platform
+      af4a52f021: EBX[31:0] | BRAND NAME 1 _ _ | Processor brand string continued. | Platform
+      7dc5cba446: ECX[31:0] | BRAND NAME 2 _ _ | Processor brand string continued. | Platform
+      3230344d7e: EDX[31:0] | BRAND NAME 3 _ _ | Processor brand string continued. | Platform
+      d865c5cb2c: This leaf does not contain sub-leaves and provides the same information regardless of
+        the value of ECX.
+  - doc: sdm
+    at: 530
+    units: [562986a119]
+    part: CPUID.80000003H -- Processor brand string (Bytes 16 to 31)
+    quotes:
+      562986a119: CPUID.80000003H -- Processor brand string (Bytes 16 to 31)
+  - doc: sdm
+    at: 531
+    units: [6a4f15f7b5]
+    part: CPUID.80000004H -- Processor brand string (Bytes 32 to 47)
+    quotes:
+      6a4f15f7b5: CPUID.80000004H -- Processor brand string (Bytes 32 to 47)
+- id: 8aa1007f08
+  gist: 'Choosing a code path once at startup: check whether the CPU has…'
+  how: editorial
+  note: Typical use of the feature flags.
+- id: bd5cbe273f
+  gist: 'Identifying the processor for logs and bug reports: vendor stri…'
+  support:
+  - doc: sdm
+    at: 441
+    units: [4896e8bc94]
+    part: 21.1.1 Guidelines for Using the CPUID Instruction
+    quotes:
+      4896e8bc94: This instruction returns the family, model, and (for some processors) a brand string
+        for the processor that executes the instruction.
+  - doc: sdm
+    at: 447
+    units: [71518aed50]
+    part: 21.3 CPUID LEAVES
+    quotes:
+      71518aed50: A vendor identification string is also returned in EBX, EDX, and ECX.
+- id: 4daa9d53f1
+  gist: 'Serializing execution from user code: cpuid is one of the few s…'
+  support:
+  - doc: sdm
+    at: 3481
+    units: [0ea5a6128d]
+    part: 11.3 SERIALIZING INSTRUCTIONS
+    quotes:
+      0ea5a6128d: Non-privileged serializing instructions — CPUID, IRET, RSM, and SERIALIZE.
+  - doc: sdm
+    at: 907
+    units: [cf0e3175f2]
+    part: Description
+    quotes:
+      cf0e3175f2: CPUID can be executed at any privilege level to serialize instruction execution.
+- id: bce1ad9a38
+  gist: Where CPUID reports the serialize instruction (leaf 7, edx bit…
+  support:
+  - doc: sdm
+    at: 444
+    units: [b80bc58ed9]
+    part: 21.1.7 CPUID Instruction for Serialization
+    quotes:
+      b80bc58ed9: Although the CPUID instruction provides serialization, it is not the preferred method
+        on newer processors that support the SERIALIZE instruction, which is enumerated via CPUID.07H.00H:EDX[14]=1.
+  - doc: sdm
+    at: 469
+    units: [f8039803f5]
+    part: Table
+    quotes:
+      f8039803f5: EDX[14] | SERIALIZE | If 1, supports SERIALIZE instruction. | Platform
+- id: 72e966c1be
+  gist: From C or C++, call the compiler's wrapper instead of writing a…
+  how: external
+  note: 'GCC manual, x86 Built-in Functions (__builtin_cpu_supports, feature name bmi2) and GCC''s <cpuid.h>
+    (__get_cpuid_count): both run with GCC 12.2 in tests/asm/test_cpuid.c. Microsoft Learn, __cpuid/__cpuidex:
+    <intrin.h>, subfunction_id is passed in ECX (read 2026-10-15, not run).'
+- id: 792552b8c1
+  gist: It overwrites rbx, which your caller expects to keep.
+  support:
+  - doc: sdm
+    at: 441
+    units: [151831d4a6]
+    part: 21.1.1 Guidelines for Using the CPUID Instruction
+    quotes:
+      151831d4a6: When the CPUID instruction is executed, selected information is returned in the EAX,
+        EBX, ECX, and EDX registers.
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
+- id: f74a47f3de
+  gist: Both the System V and the Microsoft x64 conventions make rbx ca…
+  support:
+  - doc: sysv
+    at: 16
+    units: [92911cf2d5, 85204c06f9]
+    part: 3.2.1 Registers and the Stack Frame
+    quotes:
+      92911cf2d5: Registers %rbp, %rbx and %r12 through %r15 "belong" to the calling function and the
+        called function is required to preserve their values.
+      85204c06f9: In other words, a called function must preserve these registers' values for its caller.
+  - doc: msx64
+    at: Caller/callee saved registers
+    units: [fa6a8ec5c1, a0664dcfae]
+    part: Caller/callee saved registers
+    quotes:
+      fa6a8ec5c1: The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15
+        nonvolatile.
+      a0664dcfae: They must be saved and restored by a function that uses them.
+- id: df98304b1d
+  gist: 'All four registers are written in full: the upper halves of rax…'
+  support:
+  - doc: sdm
+    at: 907
+    units: [38e0c1c5cd]
+    part: Exceptions (All Operating Modes)
+    quotes:
+      38e0c1c5cd: 1. On Intel 64 processors, CPUID clears the high 32 bits of the RAX/RBX/RCX/RDX registers
+        in all modes.
+- id: 261015e27d
+  gist: Set ecx as well as eax.
+  how: derived
+  note: Leaves with sub-leaves are indexed by the input ECX, so a caller must load ECX as well as EAX.
+  support:
+  - doc: sdm
+    at: 441
+    units: [e121da6bfa]
+    part: Chapter 21 Processor Identification and Feature Determination
+    quotes:
+      e121da6bfa: Logically, the CPUID name space comprises a series of nodes indexed by leaf (using the
+        input value of EAX) and in some cases further indexed by sub-leaf (using the input value of ECX).
+- id: c1dbf8033d
+  gist: Leaf 7 and the other leaves with sub-leaves read ecx, so whatev…
+  support:
+  - doc: sdm
+    at: 441
+    units: [e121da6bfa]
+    part: Chapter 21 Processor Identification and Feature Determination
+    quotes:
+      e121da6bfa: Logically, the CPUID name space comprises a series of nodes indexed by leaf (using the
+        input value of EAX) and in some cases further indexed by sub-leaf (using the input value of ECX).
+  - doc: sdm
+    at: 466
+    units: [a8c8c27410]
+    part: CPUID.07H.00H:EBX Extended Feature Flags Information
+    quotes:
+      a8c8c27410: The maximum sub-leaf value for ECX is specified in CPUID.07H.00H.EAX[31:0] MAX_SUBLEAF.
+- id: cf93f83928
+  gist: A sub-leaf number above the maximum returns all zeros, and BMI2…
+  support:
+  - doc: sdm
+    at: 466
+    units: [23c2bec094, 6dcc61a52a]
+    part: CPUID.07H.00H:EBX Extended Feature Flags Information
+    note: All-zero EBX means the BMI2 (bit 8) and ADX (bit 19) flags read as 0; tests/asm/test_cpuid.c
+      checks the all-zero answer on the build machine.
+    quotes:
+      23c2bec094: If ECX contains an invalid Sub-leaf index, EAX/EBX/ECX/EDX return 0.
+      6dcc61a52a: Sub-leaf index n is invalid if n exceeds the value that sub-leaf 0 returns in EAX.
+- id: eac9b3e954
+  gist: Clear ecx before asking for leaf 7.
+  how: derived
+  note: The feature flags of leaf 07H are in sub-leaf 0, so ECX must be 0.
+  support:
+  - doc: sdm
+    at: 466
+    units: [a6c8023e50]
+    part: CPUID.07H.00H:EBX Extended Feature Flags Information
+    quotes:
+      a6c8023e50: CPUID.07H.00H returns the maximum input value of the highest leaf 07H sub-leaf; and
+        EBX, ECX, and EDX contain information of extended feature flags.
+- id: 71e3255534
+  gist: Check the highest leaf first.
+  how: derived
+  note: Out-of-range leaves return another leaf's data, so the maximum must be checked first.
+  support:
+  - doc: sdm
+    at: 442
+    units: [49f119b2e0, 4078ebe5b5]
+    part: 21.1.3 CPUID Basic and Extended Range
+    quotes:
+      49f119b2e0: If a value entered for CPUID.EAX is higher than the maximum input value for basic or
+        extended function for that processor then the data for the highest basic information leaf is returned.
+      4078ebe5b5: Software should not rely on the values returned by the processor outside of the above
+        ranges.
+- id: 3a9d3465ea
+  gist: Leaf 0 reports the highest basic leaf and leaf 0x80000000 the h…
+  support:
+  - doc: sdm
+    at: 447
+    units: [6698f94121]
+    part: 21.3 CPUID LEAVES
+    quotes:
+      6698f94121: CPUID.00H returns the highest value the CPUID recognizes for returning basic processor
+        information.
+  - doc: sdm
+    at: 527
+    units: [3c3cdd197e]
+    part: CPUID.80000000H -- Maximum Input Value for Extended Function CPUID Information
+    quotes:
+      3c3cdd197e: CPUID.80000000H returns the highest value the processor recognizes for returning extended
+        processor information.
+- id: 8e8cfd9170
+  gist: 'Asking for a leaf above the maximum does not return zeros: you…'
+  support:
+  - doc: sdm
+    at: 442
+    units: [49f119b2e0]
+    part: 21.1.3 CPUID Basic and Extended Range
+    quotes:
+      49f119b2e0: If a value entered for CPUID.EAX is higher than the maximum input value for basic or
+        extended function for that processor then the data for the highest basic information leaf is returned.
+- id: 4ae8601bf9
+  gist: The vendor string comes back in ebx, edx, ecx order, not ebx, e…
+  support:
+  - doc: sdm
+    at: 447
+    units: [71518aed50, 369584436d]
+    part: 21.3 CPUID LEAVES
+    quotes:
+      71518aed50: A vendor identification string is also returned in EBX, EDX, and ECX.
+      369584436d: 'For Intel processors, the string is "Genu-ineIntel" and is expressed: EBX := 756e6547h
+        (* "Genu", with G in the low eight bits of BL *) EDX := 49656e69h (* "ineI", with i in the low
+        eight bits of DL *) ECX := 6c65746eh (* "ntel", with n in the low eight bits of CL *)'
+- id: 3e48e261cf
+  gist: Store the registers in that order to get GenuineIntel.
+  support:
+  - doc: sdm
+    at: 447
+    units: [369584436d]
+    part: 21.3 CPUID LEAVES
+    quotes:
+      369584436d: 'For Intel processors, the string is "Genu-ineIntel" and is expressed: EBX := 756e6547h
+        (* "Genu", with G in the low eight bits of BL *) EDX := 49656e69h (* "ineI", with i in the low
+        eight bits of DL *) ECX := 6c65746eh (* "ntel", with n in the low eight bits of CL *)'
+- id: cf05092c1d
+  gist: The bit meanings on this page are Intel's; the SDM tells softwa…
+  support:
+  - doc: sdm
+    at: 450
+    units: [ca7ea85239]
+    part: Description
+    quotes:
+      ca7ea85239: Software should identify Intel as the vendor to properly interpret feature flags.
+  - doc: sdm
+    at: 441
+    units: [2dd76679f7, 4acec8b39e]
+    part: 21.1.1 Guidelines for Using the CPUID Instruction
+    quotes:
+      2dd76679f7: 'The following guidelines are among the most important and should always be followed
+        when using the CPUID instruction to determine available features: • Always begin by testing for
+        the "GenuineIntel," message in the EBX, EDX, and ECX registers when the CPUID instruction is executed
+        with EAX equal to 0.'
+      4acec8b39e: If the processor is not genuine Intel, the feature identification flags may have different
+        meanings than are described in Intel documentation.
+- id: 099bd754ec
+  gist: Family and model have extended fields.
+  support:
+  - doc: sdm
+    at: 448
+    units: [1d716d8422, 170975507f]
+    part: Table
+    quotes:
+      1d716d8422: EAX[19:16] | EXTENDED MODEL ID _ _ | When the Family ID is 06H or 0FH, this field is
+        prepended to the Model ID to provide an 8-bit model identification. | Platform
+      170975507f: EAX[27:20] | EXTENDED FAMILY ID _ _ | When the Family ID is 0FH, this field is added
+        to the Family ID to provide an 8-bit family identification. | Platform
+- id: 2873f97b76
+  gist: 'In leaf 1 eax, the model in bits 7-4 is only the low part: for…'
+  support:
+  - doc: sdm
+    at: 448
+    units: [457e74cf5d, 1d716d8422]
+    part: Table
+    quotes:
+      457e74cf5d: EAX[7:4] | MODEL ID _ | Identifies a set of processors within a family. Certain models
+        of Pentium® 4 processors allowed mixed Model IDs and would have this identified as a Package Domain.
+        | Platform
+      1d716d8422: EAX[19:16] | EXTENDED MODEL ID _ _ | When the Family ID is 06H or 0FH, this field is
+        prepended to the Model ID to provide an 8-bit model identification. | Platform
+  - doc: sdm
+    at: 449
+    units: [935a3ed91f]
+    part: Description
+    quotes:
+      935a3ed91f: 'Integrate the field into a display using the following rule: IF (Family_ID = 06H or
+        Family_ID = 0FH) THEN DisplayModel = (Extended_Model_ID « 4) + Model_ID; ELSE DisplayModel = Model_ID;
+        FI;'
+- id: 5017b0c8bb
+  gist: For family 15, the extended family in bits 27-20 is added to th…
+  support:
+  - doc: sdm
+    at: 448
+    units: [170975507f]
+    part: Table
+    quotes:
+      170975507f: EAX[27:20] | EXTENDED FAMILY ID _ _ | When the Family ID is 0FH, this field is added
+        to the Family ID to provide an 8-bit family identification. | Platform
+  - doc: sdm
+    at: 449
+    units: [72279cbe06]
+    part: Description
+    quotes:
+      72279cbe06: 'Integrate the fields into a display using the following rule: IF Family_ID ≠ 0FH THEN
+        DisplayFamily = Family_ID; ELSE DisplayFamily = Extended_Family_ID + Family_ID; FI; The Extended
+        Model ID needs to be examined only when the Family ID is 06H or 0FH.'
+- id: 974aa0f554
+  gist: A feature bit says the CPU has a feature, not that the OS enabl…
+  how: derived
+  note: For AVX the SDM requires checking OS support in addition to the processor's flag; OSXSAVE is a
+    bit the OS sets.
+  support:
+  - doc: sdm
+    at: 365
+    units: [0bb7f4e3e6]
+    part: 14.3 DETECTION OF INTEL® AVX INSTRUCTIONS
+    quotes:
+      0bb7f4e3e6: Prior to using Intel AVX, the application must identify that the operating system supports
+        the XGETBV instruction, the YMM register state, in addition to processor's support for YMM state
+        management using XSAVE/XRSTOR and AVX instructions.
+  - doc: sdm
+    at: 451
+    units: [bf63589f1d]
+    part: Table
+    quotes:
+      bf63589f1d: ECX[27] | OSXSAVE | If 1, the OS has set CR4.OSXSAVE[bit 18] to enable XSETBV/XGETBV
+        instructions to access XCR0 and to support processor extended state management using XSAVE/XRSTOR.
+        | Logical Processor
+- id: 6bc4360d06
+  gist: 'For AVX the SDM''s check has three steps: OSXSAVE (leaf 1, ecx b…'
+  support:
+  - doc: sdm
+    at: 365
+    units: [8ca0a3a8e4, 31079df404, 6e2bcce233, 4e8e0cf81a]
+    part: 14.3 DETECTION OF INTEL® AVX INSTRUCTIONS
+    quotes:
+      8ca0a3a8e4: The following simplified sequence accomplishes both and is strongly recommended.
+      31079df404: 1) Detect CPUID.01H:ECX.OSXSAVE[27] = 1 (XGETBV enabled for application use1).
+      6e2bcce233: 2) Issue XGETBV and verify that XCR0[2:1] = '11b' (XMM state and YMM state are enabled
+        by OS).
+      4e8e0cf81a: 3) detect CPUID.01H:ECX.AVX[28] = 1 (AVX instructions supported).
+- id: 607e937d5d
+  gist: Integer extensions such as POPCNT and BMI2 need only their own…
+  how: derived
+  note: 'The #UD conditions of POPCNT and of the BMI1/BMI2 (Type 13) instructions name only their CPUID
+    flag and encoding errors, with no OS-enable check like the AVX procedure.'
+  support:
+  - doc: sdm
+    at: 1695
+    units: [3054813a7d]
+    part: 64-Bit Mode Exceptions
+    quotes:
+      3054813a7d: '#UD If CPUID.01H:ECX.POPCNT[23] = 0.'
+  - doc: sdm
+    at: 651
+    units: [86a05338a7, afe0b415e7]
+    part: Table
+    quotes:
+      86a05338a7: Type 13 | ANDN, BEXTR, BLSI, BLSMSK, BLSR, BZHI, MULX, PDEP, PEXT, RORX, SARX, SHLX,
+        SHRX
+      afe0b415e7: 'Invalid Opcode, #UD | X | X | X | X | If BMI1/BMI2 CPUID feature flag is ''0''.'
+- id: d479776932
+  gist: Call it once and keep the answer.
+  how: editorial
+  note: Advice following from the VM-exit cost; not stated by the SDM.
+- id: 2084a7ce8f
+  gist: In a virtual machine every cpuid is a VM exit into the hypervis…
+  support:
+  - doc: sdm
+    at: 907
+    units: [e5782fd0f9]
+    part: Description
+    note: VMX non-root operation is execution inside a virtual machine.
+    quotes:
+      e5782fd0f9: Execution of CPUID causes a VM exit when executed in VMX non-root operation.
+- id: ef8898dc3b
+  gist: And although cpuid serializes, the SDM's RDTSC entry orders rdt…
+  support:
+  - doc: sdm
+    at: 907
+    units: [cf0e3175f2]
+    part: Description
+    quotes:
+      cf0e3175f2: CPUID can be executed at any privilege level to serialize instruction execution.
+  - doc: sdm
+    at: 1850
+    units: [3ab68d8176, d75677fbce]
+    part: Description
+    quotes:
+      3ab68d8176: The RDTSC instruction is not a serializing instruction.
+      d75677fbce: 'The following items may guide software seeking to order executions of RDTSC: • If software
+        requires RDTSC to be executed only after all previous instructions have executed and all previous
+        loads are globally visible,1 it can execute LFENCE immediately before RDTSC.'
+- id: 4b5f5ba0e1
+  gist: Some fields differ between cores.
+  support:
+  - doc: sdm
+    at: 443
+    units: [fe10f45c1a]
+    part: 21.1.4 CPUID Domains
+    quotes:
+      fe10f45c1a: Logical Processor Domain—A properly configured platform can provide different values
+        for these CPUID fields for each logical processor in the platform.
+- id: d2eff4e657
+  gist: Instruction feature bits such as POPCNT or BMI2 are the same on…
+  support:
+  - doc: sdm
+    at: 442
+    units: [04adc6aac1]
+    part: 21.1.4 CPUID Domains
+    quotes:
+      04adc6aac1: Platform Domain—A properly configured platform would provide consistent values for these
+        CPUID fields for each logical processor in the platform.
+  - doc: sdm
+    at: 451
+    units: ['1314830083']
+    part: Table
+    quotes:
+      '1314830083': ECX[23] | POPCNT | If 1, supports the POPCNT instruction. | Platform
+  - doc: sdm
+    at: 467
+    units: [0515f8a9b7]
+    part: Table
+    quotes:
+      0515f8a9b7: EBX[8] | BMI2 | If 1, supports the BMI2 instructions. | Platform
+  - doc: sdm
+    at: 450
+    units: [c9bb6bdad5]
+    part: Table
+    quotes:
+      c9bb6bdad5: EBX[31:24] | INITIAL APIC ID _ _ | This number is the 8-bit ID that is assigned to the
+        local APIC on the processor during power up. This field was introduced in the Penium 4 processor.
+        The 8-bit initial APIC ID in EBX[31:24] is replaced by the 32-bit x2APIC ID, available in Leaf
+        0BH and Leaf 1FH. | Logical Processor
+- id: f4cbffc887
+  gist: The OS can move your thread to another core right after cpuid r…
+  how: editorial
+  note: Operating-system scheduling; not an SDM statement.
+- id: cb09df1091
+  gist: 'A lock prefix raises #UD.'
+  support:
+  - doc: sdm
+    at: 907
+    units: [2166ae34ad]
+    part: Exceptions (All Operating Modes)
+    quotes:
+      2166ae34ad: '#UD If the LOCK prefix is used.'
+- id: b337b09c53
+  gist: 'has_bmi2: ; int has_bmi2(void): 1 if this CPU has BMI2, else 0…'
+  how: run
+  ref: tests/asm/cpuid.asm
+  note: test_cpuid.c checks has_bmi2 against GCC's __builtin_cpu_supports and __get_cpuid_count, and that
+    rbx survives.

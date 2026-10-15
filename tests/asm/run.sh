@@ -26,6 +26,10 @@ check "linux register/ABI functions" "$(cat expected_linux.txt)" "$(./test_linux
 nasm -f elf64 exceptions.asm -o exceptions.o && gcc -O1 test_exceptions.c exceptions.o -o test_exceptions
 check "linux: CPU exceptions arrive as these signals" "$(cat expected_exceptions.txt)" "$(./test_exceptions 2>&1)"
 
+# ---- the CPUID page's example: has_bmi2 must agree with GCC's CPUID helpers on this machine ---------
+nasm -f elf64 cpuid.asm -o cpuid.o && gcc -O1 test_cpuid.c cpuid.o -o test_cpuid
+check "linux: CPUID page example (has_bmi2)" "$(cat expected_cpuid.txt)" "$(./test_cpuid)"
+
 # ---- statements the NASM-on-Linux article makes about tools and mistakes ----------------------------
 contains() {  # contains <name> <needle> <haystack>
     case "$3" in *"$2"*) echo "ok    $1" ;; *) echo "FAIL  $1"; echo "   expected to contain: $2"; echo "   actual:   $3"; fail=1 ;; esac

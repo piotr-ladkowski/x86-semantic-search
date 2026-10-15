@@ -1,0 +1,4 @@
+has_bmi2 agrees with __builtin_cpu_supports: yes
+has_bmi2 agrees with __get_cpuid_count: yes
+rbx preserved: yes
+leaf 7, sub-leaf above the maximum: all zero

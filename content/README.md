@@ -2,7 +2,7 @@
 
 # Content progress
 
-Roster against Intel SDM `325462-093`. **32 / 102** instruction pages written (0 reviewed, 32 draft). `draft` = written and checked against the SDM by an LLM; `reviewed` = a human has checked it. To add a page, follow [docs/CONTENT_GUIDE.md](../docs/CONTENT_GUIDE.md).
+Roster against Intel SDM `325462-093`. **33 / 102** instruction pages written (0 reviewed, 33 draft). `draft` = written and checked against the SDM by an LLM; `reviewed` = a human has checked it. To add a page, follow [docs/CONTENT_GUIDE.md](../docs/CONTENT_GUIDE.md).
 
 ## Data transfer (6/13)
 
@@ -101,13 +101,13 @@ Roster against Intel SDM `325462-093`. **32 / 102** instruction pages written (0
 - [ ] `PUSHF` (`pushf`) — todo
 - [ ] `POPF` (`popf`) — todo
 
-## Miscellaneous (2/12)
+## Miscellaneous (3/12)
 
 - [x] [`LEA`](instructions/lea.md) — draft
 - [x] [`NOP`](instructions/nop.md) — draft
 - [ ] `UD2` (`ud2`) — todo
 - [ ] `XLAT` (`xlat`) — todo
-- [ ] `CPUID` (`cpuid`) — todo
+- [x] [`CPUID`](instructions/cpuid.md) — draft
 - [ ] `MOVBE` (`movbe`) — todo
 - [ ] `PAUSE` (`pause`) — todo
 - [ ] `RDTSC` (`rdtsc`) — todo

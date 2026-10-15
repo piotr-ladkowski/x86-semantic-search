@@ -16,7 +16,7 @@ trace service name).
 ## Progress
 
 <!-- progress:start -->
-**Instructions documented: 32 / 102 (31%)** · reviewed: 0 · draft: 32 · articles: 11
+**Instructions documented: 33 / 102 (32%)** · reviewed: 0 · draft: 33 · articles: 11
 
 | Category | Documented | Total | Reviewed |
 |---|---:|---:|---:|
@@ -28,7 +28,7 @@ trace service name).
 | Control transfer | 2 | 8 | 0 |
 | String | 3 | 6 | 0 |
 | Flag control | 0 | 9 | 0 |
-| Miscellaneous | 2 | 12 | 0 |
+| Miscellaneous | 3 | 12 | 0 |
 | Random number | 0 | 2 | 0 |
 | BMI1 / BMI2 | 0 | 15 | 0 |
 

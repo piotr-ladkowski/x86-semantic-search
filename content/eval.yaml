@@ -71,6 +71,10 @@ queries:
   - {query: "fill an array with the same value quickly", expect: stos, top: 1}
   - {query: "find the length of a zero-terminated string", expect: rep, top: 1}
   - {query: "repeat one instruction until the counter register is zero", expect: rep}
+  # cpuid
+  - {query: "how do I know if my processor supports bmi2", expect: cpuid, top: 1}
+  - {query: "is this machine running an intel or amd chip", expect: cpuid, top: 1}
+  - {query: "print the model name of the cpu", expect: cpuid, top: 1}
 
 # Off-topic queries. Measured 2026-10-08 with 32 pages: these scored 0.46-0.62 against the closest page, every
 # expected page above scored 0.649 or more, so the floor (0.64) sits between them. If one of these starts to
